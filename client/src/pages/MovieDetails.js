@@ -10,13 +10,17 @@ import imdb from '../api/Imdb';
 import imdblogo from '../styles/images/imdblogo.svg'
 const MoreDetails = () => {
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const id = searchParams.get('id');
+        const [id, setMovieId] = useState([]);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const identity = searchParams.get('id');
+        setMovieId(identity);
+      }, [location.search]);
     const [movies, setMovies] = useState([]);
     const [ytvideos, setVideos] = useState([]);
-    const [rating, setRating] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
+console.log(id);
     const searchMovie = () => {
         Movieapi.searchMovies(id)
             .then((res) => {
@@ -42,7 +46,7 @@ const MoreDetails = () => {
         searchMovie();
         videos();
 
-    }, [])
+    }, [id])
     const getRating = () => {
         console.log(movies.name);
 
@@ -95,8 +99,7 @@ const MoreDetails = () => {
                                         <div className='mx-auto'>
                                             <h1 className="text-white mx-auto mt-5 mb-5">{movies.name}</h1>
                                             <div className='w-25 ratingcontainer'>
-                                                <img src={imdblogo}></img>
-                                                <p>{rating.imDbRating}</p>
+                                                <img src={imdblogo}></img> 
                                                 <div>
                                                     <CircularProgressbar value={percentage} maxValue={10} text={`${percentage}%`} />
                                                 </div>

@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Navigate, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 
+import { QUERY_USER, QUERY_ME } from '../utils/queries';
+
+import Auth from '../utils/auth';
 import helper from '../styles/images/helper.svg'
 function App() {
 //   const [generatedText, setGeneratedText] = useState('');
@@ -8,14 +13,34 @@ function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [showChat, setShowChat] = useState(false);
 
+  const { username: userParam } = useParams();
+
+  const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+    variables: { username: userParam },
+  });
+
+  const user = data?.me || data?.user || {};
+  // // navigate to personal profile page if username is yours
+  
+  // if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
+  //   return setShowChat(false);
+  // }
+  
+  if (Auth.loggedIn()){
+      console.log(Auth.getProfile().data.username );
+
+  } else{
+    console.log('login');
+  }
   const generateText = async () => {
     try {
       const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-        prompt: showName ,
+        prompt:`Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. answer the following question in a proffesional way and try to repeat my name in your response. ${showName} `,
         max_tokens: 400,
         n: 1,
         stop: null,
         temperature: 0.5,
+        user: "Jake",
       }, {
         headers: {
           'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
@@ -53,7 +78,7 @@ function App() {
               <div className="box-header with-border text-center">
                 <h3 className="box-title">Chat Messages</h3>
                 <div className="box-tools pull-right">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleHideChat}></button>
+                <button type="button" class="btn-close" onClick={handleHideChat}></button>
                 </div>
               </div>
               <div className="box-body">
@@ -110,7 +135,7 @@ function App() {
         </div>
       )}
       {!showChat && (
-        <a className='chat-container' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
+        <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
 
       )}
     </main>

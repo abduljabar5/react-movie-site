@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import Chat from './pages/Chat';
 import MoreDetails from './pages/MoreDetails';
 import MovieDetails from './pages/MovieDetails';
+import AnimeDetails from './pages/AnimeDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -47,8 +48,8 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
-         
-          
+         <div className='dark'>
+          <Header />
             <Routes>
               <Route 
                 path="/" 
@@ -69,7 +70,10 @@ function App() {
                <Route 
                 path="/moviedetails"
                 element={<MovieDetails />}
-              />
+              />  <Route 
+              path="/anime"
+              element={<AnimeDetails />}
+            />
               {/* <Route 
                 path="/me" 
                 element={<Profile />}
@@ -84,7 +88,7 @@ function App() {
               /> */}
             </Routes>
             <Chat />
-          <Footer />
+          <Footer /></div>
       </BrowserRouter>
     </ApolloProvider>
   );

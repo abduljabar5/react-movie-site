@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/icons/arrow-bar-right.svg'
 import 'bootstrap/js/src/collapse';
+import 'bootstrap/js/src/carousel';
+import 'bootstrap/js/src/modal';
 
 import './styles/index.css';
 import App from './App';
