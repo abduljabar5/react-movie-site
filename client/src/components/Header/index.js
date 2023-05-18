@@ -1,8 +1,17 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link } from 'react-router-dom';
 
 import Auth from '../../utils/auth';
 import Search from '../Search';
+import IconHome from '../Icons/Home';
+import IconMovieOpenPlayOutline from '../Icons/Movie';
 const Header = () => {
   const logout = (event) => {
     event.preventDefault();
@@ -20,43 +29,66 @@ const Header = () => {
        
     //   </div>
     // </header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Pricing</a>
-            <a class="nav-link disabled">Disabled</a>
-          </div>
-        </div>
-      </div>
-     <Search /> <div>
-          {Auth.loggedIn() ? (
+    <>
+    
+      <Navbar key='lg' bg="light" expand='lg' className="mb-3">
+        <Container fluid>
+          <Navbar.Brand href="#">Navbar Offcanvas</Navbar.Brand>
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} />
+          <Navbar.Offcanvas
+            id={`offcanvasNavbar-expand-$'lg'`}
+            aria-labelledby={`offcanvasNavbarLabel-expand-$'lg'`}
+            placement="end"
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-$'lg'`}>
+                Offcanvas
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Link className='nav-link' to="/"><IconHome /> Home</Link>
+                <Nav.Link href="/movies"><IconMovieOpenPlayOutline /> Movies</Nav.Link>
+                <NavDropdown
+                  title="Dropdown"
+                  id={`offcanvasNavbarDropdown-expand-$'lg'`}
+                >
+                  <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
+                  <NavDropdown.Item href="#action4">
+                    Another action
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#action5">
+                    Something else here
+                  </NavDropdown.Item>
+                </NavDropdown>
+                <Search />
+                {Auth.loggedIn() ? (
             <>
-              <Link className="btn btn-lg btn-info m-2" to="/me">
+              <Link className="nav-link" to="/me">
                 {Auth.getProfile().data.username}'s profile
               </Link>
-              <button className="btn btn-lg btn-light m-2" onClick={logout}>
+              
+              <button className="btn btn-outline-dark" onClick={logout}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link className="btn btn-lg btn-info m-2" to="/login">
+              <Link className="nav-link" to="/login">
                 Login
               </Link>
-              <Link className="btn btn-lg btn-light m-2" to="/signup">
+              <Link className="nav-link" to="/signup">
                 Signup
               </Link>
             </>
           )}
-        </div>
-    </nav>
+          
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar></>
 
   );
 };

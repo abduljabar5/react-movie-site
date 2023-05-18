@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-
+import Card from 'react-bootstrap/Card';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
-
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import Auth from '../utils/auth';
 import helper from '../styles/images/helper.svg'
 import video from '../styles/images/trailer1.mp4';
@@ -35,6 +35,7 @@ const Movies = () => {
     }, []);
 
     const [shows, setShow] = useState([]);
+    let [progress, setProgress] = useState(89);
     const [movies, setMovies] = useState([]);
     const [nowplaying, seNowplaying] = useState([]);
     const [trendingToday, setTrendingToday] = useState([]);
@@ -63,7 +64,22 @@ const Movies = () => {
         fetchData();
     }, []);
 
-    // Rest of the code
+    useEffect(() => {
+        const timer = setInterval(() => {
+          setProgress((oldProgress) => {
+            if (oldProgress === 100) {
+              setIsLoading(false);
+              clearInterval(timer);
+              return 98;
+            }
+            return oldProgress + 20;
+          });
+        },1);
+    
+        return () => {
+          clearInterval(timer);
+        };
+      }, []);
 
 
     const style = {
@@ -71,7 +87,6 @@ const Movies = () => {
         width: '100%',
         height: 'auto',
         minHeight: '35rem',
-        padding: '15rem 0',
         backgroundAttachment: 'fixed',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -82,9 +97,7 @@ const Movies = () => {
     return (
         <main>
              {isLoading ? (
-               <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"  style={{height: "20px"}}>
-               <div class="progress-bar progress-bar-striped" style={{width: "85%"}}></div>
-             </div>
+              <ProgressBar animated now={progress} />
             ) : (
                 <div>
          <div>
@@ -93,32 +106,19 @@ const Movies = () => {
       {trendingToday.map((today, index) => {
         return (
           <div  class={`carousel-item${index === 0 ? " active" : ""}`}>
-            <header
-              className=""
-              style={{
+            <Card className="bg-dark text-white">
+      <Card.Img style={{
                 ...style,
                 backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${today.backdrop_path})`,
-              }}
-            >
-              <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
-                <div class="d-flex justify-content-center">
-                  <div class="text-center">
-                    {/* <h1 class="mx-auto my-0 text-uppercase">Black Taxi</h1>  */}
-                    <h1 class="text-white mt-2 mb-5">
-                     {today.title}
-                    </h1>
-                    <div class="mainbtn">
-                      <a class="btn btn-primary" href="tel:(612) 991-4250">
-                        Call Now
-                      </a>
-                      <a class="btn btn-primary" href="form.html">
-                        Book Now
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </header>
+              }} />
+      <Card.ImgOverlay className='today-trend-name'>
+        <Card.Title className='today-trend-h5'>{today.original_title}</Card.Title>
+        <Card.Text>
+          {today.overview}
+        </Card.Text>
+        <Card.Text>Last updated 3 mins ago</Card.Text>
+      </Card.ImgOverlay>
+    </Card>
           </div>
         );
       })}
@@ -155,7 +155,7 @@ const Movies = () => {
                         <div className="row">
                             <div className="row">
                                 <div className="div-title">
-                                    <h4>Trending Now</h4>
+                                    <h4>Trending Series</h4>
                                 </div>
                             </div>
                             <div className="row">
@@ -178,12 +178,12 @@ const Movies = () => {
                                                     <div className="comment"><i className="fa fa-comments"></i> 11</div>
                                                     <div className="view"><i className="fa fa-eye"></i> {show.vote_average}</div>
                                                 </div></Link>
-                                            <div className="product__item__text">
+                                            {/* <div className="product__item__text">
                                                 <ul>
                                                     <li className='text-dark'><h4>{show.name}</h4></li>
                                                     <li className='text-danger'><cite>{show.first_air_date}</cite></li>
                                                 </ul>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     )
                                 }
@@ -201,7 +201,7 @@ const Movies = () => {
                         <div className="row">
                             <div className="row">
                                 <div className="div-title">
-                                    <h4>Trending Now</h4>
+                                    <h4>Trending Movies</h4>
                                 </div>
                             </div>
                             <div className="row">
@@ -224,12 +224,12 @@ const Movies = () => {
                                                 <div className="comment"><i className="fa fa-comments"></i> 11</div>
                                                 <div className="view"><i className="fa fa-eye"></i> {show.vote_average}</div>
                                             </div></Link>
-                                        <div className="product__item__text">
+                                        {/* <div className="product__item__text">
                                             <ul>
                                                 <li className='text-dark'><h4>{show.name}</h4></li>
                                                 <li className='text-danger'><cite>{show.first_air_date}</cite></li>
                                             </ul>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 )
                                 // }
@@ -248,7 +248,7 @@ const Movies = () => {
                         <div className="row">
                             <div className="row">
                                 <div className="div-title">
-                                    <h4>In Theaters</h4>
+                                    <h4>Now Playing in Theaters</h4>
                                 </div>
                             </div>
                             <div className="row">
@@ -271,12 +271,12 @@ const Movies = () => {
                                                 <div className="comment"><i className="fa fa-comments"></i> 11</div>
                                                 <div className="view"><i className="fa fa-eye"></i> {playing.vote_average}</div>
                                             </div></Link>
-                                        <div className="product__item__text">
+                                        {/* <div className="product__item__text">
                                             <ul>
                                                 <li className='text-dark'><h4>{playing.name}</h4></li>
                                                 <li className='text-danger'><cite>{playing.first_air_date}</cite></li>
                                             </ul>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 )
                                 // }

@@ -71,6 +71,9 @@ function App() {
 
   return (
     <main>
+       {Auth.loggedIn() ? (
+       <div>
+       
       {showChat && (
         <div className='chat-container'>
           <div className="">
@@ -137,7 +140,8 @@ function App() {
       {!showChat && (
         <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
 
-      )}
+      )}</div>
+      ):( <div>Login</div>)}
     </main>
   );
   

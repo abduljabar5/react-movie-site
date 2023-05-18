@@ -2,7 +2,6 @@ import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import 'bootstrap-icons/icons/arrow-bar-right.svg';
 
 
 import Movieapi from '../api/ShowDetail';

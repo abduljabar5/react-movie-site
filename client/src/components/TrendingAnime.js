@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Placeholder from 'react-bootstrap/Placeholder';
 import API from '../api/Kitsu'
 
-const TrendingAnime = () => {
+const Trendinganime = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [animes, setAnime] = useState([]);
 
@@ -41,7 +43,16 @@ const TrendingAnime = () => {
                         <li data-filter=".years">Years</li>
                     </ul>
                     {isLoading ? (
-                        <p>Loading...</p>
+                       <Card.Body>
+                       <Placeholder as={Card.Title} animation="glow">
+                         <Placeholder xs={6} />
+                       </Placeholder>
+                       <Placeholder as={Card.Text} animation="glow">
+                         <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
+                         <Placeholder xs={6} /> <Placeholder xs={8} />
+                       </Placeholder>
+                       <Placeholder.Button variant="primary"  xs={6} />
+                     </Card.Body>
                     ) : (
 
                         <div className='img-container'>
@@ -66,4 +77,4 @@ const TrendingAnime = () => {
     )
 }
 
-export default TrendingAnime
+export default Trendinganime;

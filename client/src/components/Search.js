@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from 'react-router-dom';
-import API from '../api/Search'
-import API2 from '../api/AnimeDetails'
+import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
+import API from '../api/Search';
+import API2 from '../api/AnimeDetails';
+import { Modal, Button } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
 
 const Search = () => {
@@ -11,17 +13,8 @@ const Search = () => {
     const [isAnime, setIsAnime] = useState(false);
     const [views, setView] = useState([]);
     const [animeviews, setAnimeView] = useState([]);
-    console.log(isAnime);
-    const location = useLocation();
-    const [showModal, setShowModal] = useState(true);
+    const [show, setShow] = useState(false);
 
-    const initialPage = useRef(location.pathname);
-
-    useEffect(() => {
-        if (location.pathname !== initialPage.current) {
-            setShowModal(false);
-        }
-    }, [location]);
     const search = () => {
         setIsLoading(true);
         API.search(searching, isMovie)
@@ -48,99 +41,109 @@ const Search = () => {
         }
     };
 
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     useEffect(() => {
         const timer = setTimeout(() => {
-            if(isAnime){
+            if (isAnime) {
                 setIsLoading(true);
                 getAnime();
-            }else{
+            } else {
                 search();
             }
         }, 1500);
         return () => clearTimeout(timer);
-    }, [isMovie, searching, isAnime]);
+    }, [isMovie, searching, isAnime, show]);  // Add show to the dependency array
 
     useEffect(() => {
         console.log(views);
         console.log(animeviews);
     }, [views, animeviews]);
 
-
     return (
         <div>
-          {/* Add a loading indicator */}
-        
+            {/* Add a loading indicator */}
             <div>
-  <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Launch static backdrop modal
-  </button>
+                {/* <Button variant="outline-info" >
+                    Search
+                </Button> */}
+                <Form className="d-flex">
+                    <Form.Control
+                        type="search"
+                        placeholder="Search"
+                        className="me-2"
+                        aria-label="Search"
+                        onClick={handleShow} />
+                    <Button variant="outline-success">Search</Button>
+                </Form>
+                <Modal show={show} dialogClassName="modal-xl" onHide={handleClose}>
+                    <Modal.Header className="" closeButton>
+                        <Modal.Title className="ms-auto">
+                            <div class="form">
+                            <input className='form-input input ms-auto' placeholder="Search" autoComplete="off" id='search' onChange={(e) => setSearching(e.target.value)}></input>
+                             <span class="input-border"></span>
+                            </div>
+                        </Modal.Title>
+                        <Button variant="outline-dark" onClick={() => setIsMovie(isMovie === 'movie' ? 'tv' : 'movie')}>Toggle Movie/TV</Button>
+                        <label class="switch">
+                            <input type="checkbox" class="checkbox" onClick={() => setIsAnime(isAnime === false ? true : false)}></input>
+                            <div class="slider"></div>
+                        </label>
+                    </Modal.Header>
+                    {isLoading ? (
+                        <Modal.Body className="bg-dark "><div class="wrapper mx-auto">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="shadow"></div>
+                            <div class="shadow"></div>
+                            <div class="shadow"></div>
+                        </div>.</Modal.Body>
+                    ) : (
+                        <Modal.Body className="serach-container">
+                            {isAnime && !isLoading ? (
+                                animeviews.map((view) => {
+                                    const id = view.id;
+                                    const name = view.attributes.canonicalTitle;
+                                    return (
+                                        <div class="card search-cards" key={id}>
+                                            <img src={view.attributes.posterImage.original} class="card-img-top" alt="..."></img>
+                                            <div class="card-body">
+                                                <h5 class="card-title">{view.original_title}</h5>
+                                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 
-<div className='model fade' id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div className="modal-dialog modal-xl modal-dialog-scrollable">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h1 className="modal-title fs-5" id="staticBackdropLabel">
-            <input className='form-input mx-auto' id='search' onChange={(e) => setSearching(e.target.value)}></input>
-          </h1>
-          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <Link to={`/anime?name=${name}`} onClick={handleClose}>Go somewhere</Link>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            ) : (
+                                views.map((view) => {
+                                    const id = view.id;
+                                    return (
+                                        <div class="card search-cards" key={id}>
+                                            <img src={`https://image.tmdb.org/t/p/original/${view.poster_path}`} class="card-img-top" alt="..."></img>
+                                            <div class="card-body">
+                                                <h5 class="card-title">{view.original_title}</h5>
+                                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                                {isMovie === 'movie' ? (
+                                                    <Link to={`/moviedetails?id=${id}`} onClick={handleClose} class="btn btn-primary" >Go somewhere</Link>
+                                                ) : isMovie === 'tv' ? (
+                                                    <Link to={`/details?id=${id}`} onClick={handleClose} class="btn btn-primary" >Go somewhere</Link>
+                                                ) : null}
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            )}
+                        </Modal.Body>
+                    )}
+                </Modal>
+            </div>
         </div>
-        {isLoading ? (
-            <div>Loading...</div>
-          ) : (
-        <div className="modal-body serach-container">
-          {isAnime && !isLoading? (
-             animeviews.map((view) => {
-                const id = view.id;
-                const name = view.attributes.canonicalTitle;
-                return (
-                  <div class="card search-cards" key={id}>
-                    <img src={view.attributes.posterImage.original} class="card-img-top" alt="..."></img>
-                    <div class="card-body">
-                      <h5 class="card-title">{view.original_title}</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    
-                      <Link to={`/anime?name=${name}`}  onClick={() => {
-      setShowModal(false);
-   }} >Go somewhere</Link>
-                  
-                      
-                  
-                    </div>
-                  </div>
-                )
-              })
-          ) : (
-            views.map((view) => {
-              const id = view.id;
-              return (
-                <div class="card search-cards" key={id}>
-                  <img src={`https://image.tmdb.org/t/p/original/${view.poster_path}`} class="card-img-top" alt="..."></img>
-                  <div class="card-body">
-                    <h5 class="card-title">{view.original_title}</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    {isMovie === 'movie' ? (
-                      <Link to={`/moviedetails?id=${id}`} class="btn btn-primary">Go somewhere</Link>
-                    ) : isMovie === 'tv' ? (
-                      <Link to={`/details?id=${id}`} class="btn btn-primary">Go somewhere</Link>
-                    ) : null}
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>)}
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" className="btn btn-primary" onClick={() => setIsMovie(isMovie === 'movie' ? 'tv' : 'movie')}>Toggle Movie/TV</button>
-          <button type="button" className="btn btn-primary" onClick={() => setIsAnime(isAnime === false ? true : false)}>search Anime</button>
-        </div>
-      </div>
-    </div>
-    </div>
-  </div> 
-</div>
-
-    )
+    );
 }
 
-export default Search
+export default Search;

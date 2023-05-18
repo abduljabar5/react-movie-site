@@ -12,6 +12,71 @@
   background-color: #282828;
   color: #CCCCCC ;
 }
+.contentcard {
+  position: relative; /* Make this the bounding box for absolute positioning */
+  border-color: black !important;
+  transition: .5s;
+}
+
+.cardimage {
+  transition: .5s;
+  width: 100%;
+  height: auto;
+}
+
+.imageoverlay {
+  position: absolute; /* Position this within .contentcard */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  width: 100%; /* Take up full width */
+  height: 100%; /* Take up full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transition: .4s;
+  background: rgba(0,0,0,0.5); /* You might want to add some background to make the text visible */
+  color: white; /* Change color as necessary */
+}
+.imageoverlay div{
+  margin-top: 215px;
+}
+
+.playbtn {
+  position: absolute; /* Position this within .contentcard */
+  width: 5rem;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Necessary for true centering */
+  opacity: 0; /* Hide it initially */
+  transition: .4s; /* Optional: add transition for smoother visual effect */
+
+}
+.contentcard:hover .playbtn {
+  opacity: 1; /* Show it when card is hovered */
+}
+.contentcard:hover + img {
+  filter: brightness(.8) blur(5px);
+}
+
+.contentcard:hover .imageoverlay {
+  opacity: 1;
+}
+.sort {
+  width: 15% !important;
+  margin: 0px 20px 0px 10px;
+}
+.sort-container{
+  display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.sort-container p{
+  margin-left: auto;
+  display: contents;
+}
 /* search */
 .serach-container{
   display: flex;
@@ -131,11 +196,9 @@ body {
 }
 .movie-tv-container{
   width: 67%;
+  margin-top: 80px;
 }
 .product {
-  padding-bottom: 60px;
-  padding-top: 80px;
-  
   margin-left: 30px;
 }
 
@@ -147,10 +210,82 @@ body {
 	text-align: right;
 	margin-bottom: 30px;
 }
-
+.today-trend-name{
+  top: auto !important;
+}
+.today-trend-h5{
+  font-size: 4.25rem !important;
+}
+@media (max-width: 977px){
+  .all-container{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .movie-tv-container{
+    width: 100%;
+    margin-top: 80px;
+  }
+  .boobo {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: scroll;
+    width: 97%;
+}
+.img-container {
+  margin-bottom: 80px;
+  display: flex;
+  overflow: scroll;
+  margin: 46px 25px;
+}
+.img-container a{
+  width: 25%;
+}
+}
 /* .trending__product {
 	margin-bottom: 50px;
 } */
+.checkbox {
+  display: none;
+}
+
+.slider {
+  width: 60px;
+  height: 30px;
+  background-color: lightgray;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: 4px solid transparent;
+  transition: .3s;
+  box-shadow: 0 0 10px 0 rgb(0, 0, 0, 0.25) inset;
+  cursor: pointer;
+}
+
+.slider::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  transform: translateX(-30px);
+  border-radius: 20px;
+  transition: .3s;
+  box-shadow: 0 0 10px 3px rgb(0, 0, 0, 0.25);
+}
+
+.checkbox:checked ~ .slider::before {
+  transform: translateX(30px);
+  box-shadow: 0 0 10px 3px rgb(0, 0, 0, 0.25);
+}
+
+.checkbox:checked ~ .slider {
+  background-color: #2196F3;
+}
+
+.checkbox:active ~ .slider::before {
+  transform: translate(0);
+}
 
 .popular__product {
 	margin-bottom: 50px;
@@ -174,6 +309,94 @@ body {
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+.wrapper {
+  width: 200px;
+  height: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: #fff;
+  left: 15%;
+  transform-origin: 50%;
+  animation: circle7124 .5s alternate infinite ease;
+}
+
+@keyframes circle7124 {
+  0% {
+    top: 60px;
+    height: 5px;
+    border-radius: 50px 50px 25px 25px;
+    transform: scaleX(1.7);
+  }
+
+  40% {
+    height: 20px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+.circle:nth-child(2) {
+  left: 45%;
+  animation-delay: .2s;
+}
+
+.circle:nth-child(3) {
+  left: auto;
+  right: 15%;
+  animation-delay: .3s;
+}
+
+.shadow {
+  width: 20px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.9);
+  position: absolute;
+  top: 62px;
+  transform-origin: 50%;
+  z-index: -1;
+  left: 15%;
+  filter: blur(1px);
+  animation: shadow046 .5s alternate infinite ease;
+}
+
+@keyframes shadow046 {
+  0% {
+    transform: scaleX(1.5);
+  }
+
+  40% {
+    transform: scaleX(1);
+    opacity: .7;
+  }
+
+  100% {
+    transform: scaleX(.2);
+    opacity: .4;
+  }
+}
+
+.shadow:nth-child(4) {
+  left: 45%;
+  animation-delay: .2s
+}
+
+.shadow:nth-child(5) {
+  left: auto;
+  right: 15%;
+  animation-delay: .3s;
 }
 
 .product__item__pic .ep {

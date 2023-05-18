@@ -15,10 +15,12 @@ import Login from './pages/Login';
 // import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import MoreDetails from './pages/MoreDetails';
+import Movies from './pages/Movies';
 import MovieDetails from './pages/MovieDetails';
 import AnimeDetails from './pages/AnimeDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -66,6 +68,10 @@ function App() {
               <Route 
                 path="/details"
                 element={<MoreDetails />}
+              />
+              <Route
+              path='/movies'
+              element={<Movies />}
               />
                <Route 
                 path="/moviedetails"
