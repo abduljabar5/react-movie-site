@@ -16,7 +16,10 @@ import Login from './pages/Login';
 import Chat from './pages/Chat';
 import MoreDetails from './pages/MoreDetails';
 import Movies from './pages/Movies';
+import Shows from './pages/Series';
+import Ainme from './pages/Anime';
 import MovieDetails from './pages/MovieDetails';
+import ImdbShows from './pages/ImdbShowDetails';
 import AnimeDetails from './pages/AnimeDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -72,6 +75,18 @@ function App() {
               <Route
               path='/movies'
               element={<Movies />}
+              />
+              <Route
+              path='/TV-Shows'
+              element={<Shows />}
+              />
+              <Route
+              path='/show'
+              element={<ImdbShows />}
+              />
+               <Route
+              path='/animepage'
+              element={<Ainme />}
               />
                <Route 
                 path="/moviedetails"

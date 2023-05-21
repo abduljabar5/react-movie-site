@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 
 import Auth from '../utils/auth';
 import helper from '../styles/images/helper.svg'
 function App() {
-//   const [generatedText, setGeneratedText] = useState('');
+  //   const [generatedText, setGeneratedText] = useState('');
   const [showName, setShowName] = useState('');
   const [conversationHistory, setConversationHistory] = useState([]);
   const [showChat, setShowChat] = useState(false);
+  const [isLoading, setloading] = useState(false);
 
   const { username: userParam } = useParams();
 
@@ -21,21 +23,26 @@ function App() {
 
   const user = data?.me || data?.user || {};
   // // navigate to personal profile page if username is yours
-  
+
   // if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
   //   return setShowChat(false);
   // }
-  
-  if (Auth.loggedIn()){
-      console.log(Auth.getProfile().data.username );
 
-  } else{
+  if (Auth.loggedIn()) {
+    console.log(Auth.getProfile().data.username);
+
+  } else {
     console.log('login');
   }
+  const messagesEndRef = React.useRef(null);
+
   const generateText = async () => {
+
     try {
+      setloading(true);
+
       const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-        prompt:`Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. answer the following question in a proffesional way and try to repeat my name in your response. ${showName} `,
+        prompt: `Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. answer the following question in a proffesional way and try to repeat my name in your response. ${showName} `,
         max_tokens: 400,
         n: 1,
         stop: null,
@@ -48,17 +55,27 @@ function App() {
         },
       });
       const newGeneratedText = response.data.choices[0].text;
-    //   setGeneratedText(newGeneratedText);
+      //   setGeneratedText(newGeneratedText);
       const newConversation = {
         showName: showName,
         generatedText: newGeneratedText,
         timestamp: Date.now(),
       };
       setConversationHistory([...conversationHistory, newConversation]);
+      scrollToBottom();
+      setloading(false);
     } catch (error) {
       console.error(error);
     }
   };
+  useEffect(() => {
+    setShowName('');
+    scrollToBottom();
+  }, [isLoading])
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   const handleHideChat = () => {
     setShowChat(false);
@@ -67,85 +84,100 @@ function App() {
   const handleShowChat = () => {
     setShowChat(true);
   };
-  
+
 
   return (
     <main>
-       {Auth.loggedIn() ? (
-       <div>
-       
-      {showChat && (
-        <div className='chat-container'>
-          <div className="">
-            <div className="box box-warning direct-chat direct-chat-warning">
-              <div className="box-header with-border text-center">
-                <h3 className="box-title">Chat Messages</h3>
-                <div className="box-tools pull-right">
-                <button type="button" class="btn-close" onClick={handleHideChat}></button>
-                </div>
-              </div>
-              <div className="box-body">
+      {Auth.loggedIn() ? (
+        <div>
 
-                <div className="direct-chat-messages">
-                     <div class="direct-chat-info clearfix">
-                    <span class="direct-chat-name pull-left">Timona Siera</span>
-                    <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+          {showChat && (
+            <div className='chat-container'>
+              <div className="">
+                <div className="box box-warning direct-chat direct-chat-warning">
+                  <div className="box-header with-border text-center">
+                    <h3 className="box-title">Chat Messages</h3>
+                    <div className="box-tools pull-right">
+                      <button type="button" class="btn-close" onClick={handleHideChat}></button>
+                    </div>
                   </div>
-                 
-                  <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image"></img>
-               
-                  <div class="direct-chat-text">
-                    For what reason would it be advisable for me to think about business content?
-                  </div>
-                  {conversationHistory.map((conversation) => (
-                    <><div class="direct-chat-msg right">
+                  <div className="box-body">
+
+                    <div className="direct-chat-messages">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-left">Timona Siera</span>
+                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                      </div>
+
+                      <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image"></img>
+
+                      <div class="direct-chat-text">
+                        For what reason would it be advisable for me to think about business content?
+                      </div>
+                      {conversationHistory.map((conversation) => (
+                        <><div class="direct-chat-msg right">
                           <div class="direct-chat-info clearfix">
-                              <span class="direct-chat-name pull-right"></span>
-                              <span class="direct-chat-timestamp pull-left">{new Date(conversation.timestamp).toLocaleString()}</span>
+                            <span class="direct-chat-name pull-right"></span>
+                            <span class="direct-chat-timestamp pull-left">{new Date(conversation.timestamp).toLocaleString()}</span>
                           </div>
 
                           <img class="direct-chat-img" src="https://img.icons8.com/office/36/000000/person-female.png" alt="message user image"></img>
 
                           <div class="direct-chat-text mychat">
-                             {conversation.showName}
+                            {conversation.showName}
                           </div>
 
-                      </div><div className="direct-chat-msg">
-                              <div className="direct-chat-info clearfix">
-                                  <span className="direct-chat-name pull-right"></span>
-                                  <span className="direct-chat-timestamp pull-right">{new Date(conversation.timestamp).toLocaleString()}</span>
-                              </div>
-                              <img className="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image"></img>
-                              <div className="direct-chat-text aichat">
-                                  {conversation.generatedText}
-                              </div>
-                          </div></>
-                  ))}
-                </div>
-                <div className="box-footer">
-                  <form action="#" method="post">
-                    <div className="input-group">
-                      <input className='form-control' type="text" onChange={(e) => setShowName(e.target.value)} />
-                      <span className="input-group-btn">
-                        <button type="button" className="btn btn-primary" onClick={generateText}>Send</button>
-                      </span>
-                    </div>
-                  </form>
+                        </div><div className="direct-chat-msg">
+                            <div className="direct-chat-info clearfix">
+                              <span className="direct-chat-name pull-right"></span>
+                              <span className="direct-chat-timestamp pull-right">{new Date(conversation.timestamp).toLocaleString()}</span>
+                            </div>
+                            <img className="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image"></img>
+                            <div className="direct-chat-text aichat">
+                              {conversation.generatedText}
+                            </div>
+                          </div> </>
+                      ))}
+                      {isLoading ? (
+                        <div className='text-center'><Spinner animation="grow" variant="secondary" /><Spinner animation="grow" variant="secondary" /><Spinner animation="grow" variant="secondary" /></div>
+
+                      ) : (
+                        <div></div>
+                      )}
+                      <div ref={messagesEndRef} />
+                  
+
+                  </div>
+                  <div className="box-footer">
+                  <form action="#" method="post" onSubmit={(e) => {
+  e.preventDefault();  // Prevents form from being submitted normally
+  generateText();
+}}>
+  <div className="input-group">
+    <input className='form-control' type="text" value={showName} onChange={(e) => setShowName(e.target.value)} />
+    <span className="input-group-btn">
+      <button type="submit" className="btn btn-primary">Send</button>
+    </span>
+  </div>
+</form>
+
+
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       )}
       {!showChat && (
         <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
 
       )}</div>
-      ):( <div>Login</div>)}
-    </main>
+  ): (<div>Login</div>)
+}
+    </main >
   );
   
   }
-  export default App;
+export default App;
 
-  
+

@@ -12,6 +12,8 @@ import Auth from '../../utils/auth';
 import Search from '../Search';
 import IconHome from '../Icons/Home';
 import IconMovieOpenPlayOutline from '../Icons/Movie';
+import Shows from '../Icons/Shows'
+import Naruto from '../../styles/images/anime.svg'
 const Header = () => {
   const logout = (event) => {
     event.preventDefault();
@@ -49,6 +51,10 @@ const Header = () => {
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Link className='nav-link' to="/"><IconHome /> Home</Link>
                 <Nav.Link href="/movies"><IconMovieOpenPlayOutline /> Movies</Nav.Link>
+                <Nav.Link href="/TV-Shows"><Shows /> Shows</Nav.Link>
+                <Nav.Link href="/animepage">
+                  <img className='naruto' src={Naruto}></img>
+                   Anime</Nav.Link>
                 <NavDropdown
                   title="Dropdown"
                   id={`offcanvasNavbarDropdown-expand-$'lg'`}

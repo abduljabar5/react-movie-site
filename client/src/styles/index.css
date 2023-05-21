@@ -12,12 +12,31 @@
   background-color: #282828;
   color: #CCCCCC ;
 }
+.transparent{
+  background-color: transparent !important;
+}
+.naruto{
+  width: 20px;
+}
+.watch-icons{
+  width: 88px;
+  border-style: ridge;
+  padding: 10px;
+  border-radius: 14px;
+  transition: 1s;
+}
+.watch-icons:hover{
+  background-color: #1b9cff;
+}
 .contentcard {
   position: relative; /* Make this the bounding box for absolute positioning */
   border-color: black !important;
   transition: .5s;
 }
+.contentcard:hover{
+  box-shadow: 0 0 20px -10px rgb(4 246 255 / 50%);
 
+}
 .cardimage {
   transition: .5s;
   width: 100%;
@@ -57,6 +76,32 @@
 .contentcard:hover .playbtn {
   opacity: 1; /* Show it when card is hovered */
 }
+.comment{
+  opacity: 0;
+  width: fit-content;
+  padding: 0px 10px;
+  color: black;
+  border-radius: 5px;
+  text-align: center;
+  filter: brightness(2);
+}
+.view{
+  opacity: 0;
+    background-color: #25393f;
+    width: fit-content;
+    padding: 0px 10px;
+    color: black;
+    border-radius: 5px;
+    text-align: center;
+    filter: brightness(2);
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+.contentcard:hover .view,
+.contentcard:hover .comment  {
+  opacity: 1; /* Show it when card is hovered */
+}
 .contentcard:hover + img {
   filter: brightness(.8) blur(5px);
 }
@@ -77,6 +122,30 @@
   margin-left: auto;
   display: contents;
 }
+.cast-container {
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  margin: 20px;
+  gap: 20px;
+    border-radius: 10px;
+}
+
+.cast-card-container {
+  display: inline-block;
+  min-width: 28%;
+
+}
+.cast-card{
+  height: 77% !important;
+    overflow: hidden;
+}
+.cast-card img{
+  border-radius: 100%;
+  min-height: -webkit-fill-available;
+}
+
 /* search */
 .serach-container{
   display: flex;
@@ -517,9 +586,14 @@ a {
   gap: 70px;
     flex-wrap: wrap;
 }
+.showdetail-sec-imgcontainer img{
+  object-fit: contain;
+}
 .showdetail-sec-imgcontainer p{
   width: 100%;
   color: #fff;
+  max-height: 170px;
+  overflow: scroll;
 }
 .smallimage{
   border-radius: 10px;
