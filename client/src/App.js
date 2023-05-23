@@ -23,6 +23,7 @@ import ImdbShows from './pages/ImdbShowDetails';
 import AnimeDetails from './pages/AnimeDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import AccountNotification from './components/Notification/LoginNotify'
 
 
 // Construct our main GraphQL API endpoint
@@ -55,6 +56,7 @@ function App() {
       <BrowserRouter>
          <div className='dark'>
           <Header />
+          <AccountNotification />
             <Routes>
               <Route 
                 path="/" 

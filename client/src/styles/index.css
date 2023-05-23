@@ -18,6 +18,9 @@
 .naruto{
   width: 20px;
 }
+.video-center{
+  display: flex;
+}
 .watch-icons{
   width: 88px;
   border-style: ridge;
@@ -36,6 +39,43 @@
 .contentcard:hover{
   box-shadow: 0 0 20px -10px rgb(4 246 255 / 50%);
 
+}
+.comment{
+  opacity: 0;
+  width: fit-content;
+  padding: 0px 10px;
+  color: black;
+  border-radius: 5px;
+  text-align: center;
+  filter: brightness(2);
+}
+.product__item__pic .comment {
+	font-size: 13px;
+	color: #ffffff;
+	background: #3d3d3d;
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 4px;
+	position: absolute;
+	left: 10px;
+	bottom: 10px;
+}
+.contentcard:hover .comment  {
+  opacity: 1; /* Show it when card is hovered */
+}
+.contentcard:hover .view  {
+  opacity: 1; /* Show it when card is hovered */
+}
+.product__item__pic .comment {
+	font-size: 13px;
+	color: #ffffff;
+	background: #3d3d3d;
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 4px;
+	position: absolute;
+	left: 10px;
+	bottom: 10px;
 }
 .cardimage {
   transition: .5s;
@@ -76,15 +116,8 @@
 .contentcard:hover .playbtn {
   opacity: 1; /* Show it when card is hovered */
 }
-.comment{
-  opacity: 0;
-  width: fit-content;
-  padding: 0px 10px;
-  color: black;
-  border-radius: 5px;
-  text-align: center;
-  filter: brightness(2);
-}
+
+
 .view{
   opacity: 0;
     background-color: #25393f;
@@ -97,13 +130,6 @@
     position: absolute;
     right: 10px;
     top: 20px;
-}
-.contentcard:hover .view,
-.contentcard:hover .comment  {
-  opacity: 1; /* Show it when card is hovered */
-}
-.contentcard:hover + img {
-  filter: brightness(.8) blur(5px);
 }
 
 .contentcard:hover .imageoverlay {
@@ -127,7 +153,7 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  margin: 20px;
+  margin: 63px;
   gap: 20px;
     border-radius: 10px;
 }
@@ -257,9 +283,7 @@
     background: #03C4EB;
     border: 2px solid #03C4EB;
   }
-body {
-  margin: 0;
-}
+
 .all-container{
   display: flex;
 }
@@ -367,6 +391,8 @@ body {
 .product__item {
 	margin-bottom: 30px;
   width: 305;
+  scroll-snap-align: start;
+  transition: all 0.2s;
 }
 
 .product__item__pic {
@@ -480,17 +506,7 @@ body {
 	top: 10px;
 }
 
-.product__item__pic .comment {
-	font-size: 13px;
-	color: #ffffff;
-	background: #3d3d3d;
-	display: inline-block;
-	padding: 2px 10px;
-	border-radius: 4px;
-	position: absolute;
-	left: 10px;
-	bottom: 10px;
-}
+
 
 .product__item__pic .view {
 	font-size: 13px;
@@ -529,9 +545,151 @@ body {
 }
 
 .video-container:hover::after {
-  opacity: 0.5; /* Change the opacity value to adjust the darkness */
+  opacity: 0.5; /* Change the opac ity value to adjust the darkness */
+}
+/*  */
+:root {
+  --red: #2196F3;;
+  --darkred: #2196F3;;
+  --platinum: #e5e5e5;
+  --black: #2b2d42;
+  --white: #fff;
+  --thumb: #edf2f4;
+}
+body {
+  font: 16px / 24px "Rubik", sans-serif;
+  color: var(--black);
+  background: var(--platinum);
+  margin: 50px 0;
 }
 
+.container {
+  max-width: 1400px;
+  padding: 0 15px;
+  margin: 50px auto;
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 1em;
+}
+
+.cards {
+  display: flex;
+  padding: 25px 0px;
+  list-style: none;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+    gap: 15px;
+
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 100%;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 15%);
+  scroll-snap-align: start;
+  transition: all 0.2s;
+}
+
+.card:not(:last-child) {
+  margin-right: 10px;
+}
+
+.card:hover {
+  color: var(--white);
+  background: var(--red);
+}
+
+.card .card-title {
+  font-size: 20px;
+}
+
+.card .card-content {
+  margin: 20px 0;
+  max-width: 85%;
+}
+
+.card .card-link-wrapper {
+  margin-top: auto;
+}
+
+.card .card-link {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  background: var(--red);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.card:hover .card-link {
+  background: var(--darkred);
+}
+
+.cards::-webkit-scrollbar {
+  height: 12px;
+}
+
+.cards::-webkit-scrollbar-thumb,
+.cards::-webkit-scrollbar-track {
+  border-radius: 92px;
+}
+
+.cards::-webkit-scrollbar-thumb {
+  background: var(--darkred);
+}
+
+.cards::-webkit-scrollbar-track {
+  background: var(--thumb);
+}
+@media (max-width: 576px) {
+ .similar .card {
+    flex-basis: calc(100% - 10px) !important;
+    width: 355PX;
+  }
+
+  .card:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .card {
+    flex-basis: calc(50% - 10px);
+  }
+
+  .card:not(:last-child) {
+    margin-right: 20px;
+  }
+}
+
+@media (min-width: 700px) {
+  .card {
+    flex-basis: calc(calc(100% / 3) - 20px);
+  }
+
+  .card:not(:last-child) {
+    margin-right: 30px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .card {
+    flex-basis: calc(25% - 30px);
+  }
+
+  .card:not(:last-child) {
+    margin-right: 40px;
+  }
+
+}
+
+/*  */
 .text-container {
   position: absolute;
   bottom: 0;
@@ -560,11 +718,6 @@ body {
 }
 
 
-
-/**
- * 1. Correct the inheritance and scaling of font size in all browsers.
- * 2. Correct the odd `em` font sizing in all browsers.
- */
 pre {
   font-family: monospace, monospace;
   /* 1 */
@@ -579,6 +732,8 @@ a {
   display: flex;
   flex-wrap: nowrap;
   overflow: scroll;
+  scroll-snap-type: x mandatory;
+
 }
 /* tv show detail page */
 .showdetail-sec-imgcontainer{
@@ -755,58 +910,117 @@ a {
 	margin-bottom: 55px;
 }
 
-.anime__review__item {
-	overflow: hidden;
-	margin-bottom: 15px;
+/* comments section */
+.be-comment-block {
+  margin-bottom: 50px !important;
+  border-radius: 2px;
+  padding: 50px 70px;
 }
 
-.anime__review__item__pic {
-	float: left;
-	margin-right: 20px;
-	position: relative;
+.comments-title {
+  font-size: 16px;
+  color: #262626;
+  margin-bottom: 15px;
+  font-family: 'Conv_helveticaneuecyr-bold';
 }
 
-.anime__review__item__pic:before {
-	position: absolute;
-	right: -30px;
-	top: 15px;
-	border-top: 15px solid transparent;
-	border-left: 15px solid #1d1e39;
-	content: "";
-	-webkit-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	transform: rotate(45deg);
+.be-img-comment {
+  width: 60px;
+  height: 60px;
+  float: left;
+  margin-bottom: 15px;
 }
 
-.anime__review__item__pic img {
-	height: 50px;
-	width: 50px;
-	border-radius: 50%;
+.be-ava-comment {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
-.anime__review__item__text {
-	overflow: hidden;
-	background: #1d1e39;
-	padding: 18px 30px 16px 20px;
-	border-radius: 10px;
+.be-comment-content {
+  margin-left: 80px;
 }
 
-.anime__review__item__text h6 {
-	color: #ffffff;
-	font-weight: 700;
-	margin-bottom: 10px;
+.be-comment-content span {
+  display: inline-block;
+  width: 49%;
+  margin-bottom: 15px;
 }
 
-.anime__review__item__text h6 span {
-	color: #b7b7b7;
-	font-weight: 400;
+.be-comment-name {
+  font-size: 13px;
+  font-family: 'Conv_helveticaneuecyr-bold';
 }
 
-.anime__review__item__text p {
-	color: #b7b7b7;
-	line-height: 23px;
-	margin-bottom: 0;
+.be-comment-content a {
+  color: #383b43;
 }
+
+.be-comment-content span {
+  display: inline-block;
+  width: 49%;
+  margin-bottom: 15px;
+}
+
+.be-comment-time {
+  text-align: right;
+}
+
+.be-comment-time {
+  font-size: 11px;
+  color: #b4b7c1;
+}
+
+.be-comment-text {
+  font-size: 13px;
+  line-height: 18px;
+  color: #7a8192;
+  display: block;
+  background: #f6f6f7;
+  border: 1px solid #edeff2;
+  padding: 15px 20px 20px 20px;
+}
+
+.form-group.fl_icon .icon {
+  position: absolute;
+  top: 1px;
+  left: 16px;
+  width: 48px;
+  height: 48px;
+  background: #f6f6f7;
+  color: #b5b8c2;
+  text-align: center;
+  line-height: 50px;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-bottomleft: 2px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.form-group .form-input {
+  font-size: 13px;
+  line-height: 50px;
+  font-weight: 400;
+  color: #b4b7c1;
+  width: 100%;
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px solid #edeff2;
+  border-radius: 3px;
+}
+
+.form-group.fl_icon .form-input {
+  padding-left: 70px;
+}
+
+.form-group textarea.form-input {
+  height: 150px;
+}
+
+/* end of comments section */
 
 .anime__details__form form textarea {
 	width: 100%;
@@ -898,6 +1112,8 @@ a {
     height: 620px;
     overflow: scroll;
     margin: 47px 10px;
+    scroll-snap-type: y mandatory;
+
 }
 
 .product__sidebar__view .filter__controls {
@@ -925,6 +1141,8 @@ a {
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+  scroll-snap-align: start;
+  transition: all 0.2s;
 }
 
 .product__sidebar__view__item .ep {

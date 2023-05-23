@@ -113,7 +113,7 @@ const Movies = () => {
               }} />
       <Card.ImgOverlay className='today-trend-name'>
         <Card.Title className='today-trend-h5'>{today.original_title}</Card.Title>
-        <Card.Text>
+        <Card.Text className='w-50'>
           {today.overview}
         </Card.Text>
         <Card.Text>Last updated 3 mins ago</Card.Text>
