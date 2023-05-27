@@ -7,11 +7,12 @@ import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Auth from '../utils/auth';
 import helper from '../styles/images/helper.svg'
-import video from '../styles/images/trailer1.mp4';
+import IconDoubleRight from '../components/Icons/Right-arrow';
 import API from '../api/Trending';
 import TrendingAnime from '../components/TrendingAnime';
 import MovieNews from '../components/Movie-tv-news';
-
+import youtube from '../styles/images/youtubetv.png'
+import axios from 'axios'; 
 const Movies = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showchat, setShowChat] = useState(false);
@@ -37,14 +38,23 @@ const Movies = () => {
     const [shows, setShow] = useState([]);
     let [progress, setProgress] = useState(89);
     const [movies, setMovies] = useState([]);
+    const [genres, setGenres] = useState([]);
+
     const [nowplaying, seNowplaying] = useState([]);
     const [trendingToday, setTrendingToday] = useState([]);
-
+    const genreColors = {
+        Action: '#FF0000', // Red for Action
+        Comedy: '#FFFF00', // Yellow for Comedy
+        Drama: '#0000FF', // Blue for Drama
+        // Add more genre-color mappings as needed...
+        default: '#888' // Grey for other genres
+    };
     useEffect(() => {
         const fetchData = async () => {
             const Today = await API.trendingToday();
             setTrendingToday(Today.data.results);
-
+            const genresResponse = await axios.get(`https://api.themoviedb.org/3/genre/tv/list?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
+            setGenres(genresResponse.data.genres);
             const showResults = await API.search();
             setShow(showResults.data.results);
 
@@ -63,7 +73,23 @@ const Movies = () => {
 
         fetchData();
     }, []);
-
+    const Stars = ({ vote_average }) => {
+        const starRating = Math.round(vote_average / 2); // assuming vote_average is 1 to 10
+        let stars = [];
+      
+        for (let i = 1; i <= 5; i++) {
+          if (i <= starRating) {
+            stars.push(<i key={i} className="fa fa-star text-danger"></i>);
+          } else if (i === Math.ceil(vote_average / 2) && vote_average % 2 !== 0) {
+            stars.push(<i key={i} className="fa fa-star-half-o text-danger"></i>);
+          } else {
+            stars.push(<i key={i} className="fa fa-star-o text-danger"></i>);
+          }
+        }
+      
+        return <span className="col_red me-3">{stars}</span>;
+      };
+      
     useEffect(() => {
         const timer = setInterval(() => {
           setProgress((oldProgress) => {
@@ -93,7 +119,6 @@ const Movies = () => {
         backgroundAttachment: 'scroll',
         backgroundSize: 'cover'
     };
-
     return (
         <main>
              {isLoading ? (
@@ -101,22 +126,40 @@ const Movies = () => {
             ) : (
                 <div>
          <div>
-  <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
-    <div class="carousel-inner">
+  <div id="carouselExampleAutoplaying" className="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div className="carousel-inner">
       {trendingToday.map((today, index) => {
         return (
-          <div  class={`carousel-item${index === 0 ? " active" : ""}`}>
+          <div  className={`carousel-item${index === 0 ? " active" : ""}`}>
             <Card className="bg-dark text-white">
       <Card.Img style={{
                 ...style,
                 backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${today.backdrop_path})`,
               }} />
-      <Card.ImgOverlay className='today-trend-name'>
-        <Card.Title className='today-trend-h5'>{today.original_title}</Card.Title>
-        <Card.Text className='w-50'>
-          {today.overview}
-        </Card.Text>
-        <Card.Text>Last updated 3 mins ago</Card.Text>
+      <Card.ImgOverlay className='today-trend-name' style={{width:'45%', margin:'30px 130px'}}>
+      <h1 className="font_60"> {today.original_title||today.original_name}</h1>
+	   <h6 className="mt-3">
+	   <Stars vote_average={today.vote_average} />({today.media_type}) Year : {today?.release_date?.split('-')[0] ?? ''}
+         <p className="my-2"><span className="col_red me-1 fw-bold">Genres:</span> {
+                    today.genre_ids.map(id => {
+                        const genre = genres.find(genre => genre.id === id);
+                        const genreColor = genre ? genreColors[genre.name] || genreColors.default : genreColors.default;
+                        return genre ? 
+                        <span style={{padding: '2px 8px', backgroundColor: genreColor, color: '#fff', borderRadius: '4px', marginRight: '5px'}}>
+                          {genre.name}
+                        </span> 
+                        : 
+                        <span>
+                          
+                        </span>;
+                    })
+                }</p>
+	   </h6>
+	   <p className="mt-3">{today.overview}</p>
+       <Link to= {today.media_type === 'tv' ? (`/details?id=${today.id}`) : (`/moviedetails?id=${today.id}`)}>
+        	   <h6 className="mt-4"><p className="button" ><i className="fa fa-play-circle align-middle me-1"></i> Watch Trailer</p></h6>
+       </Link>
+      
       </Card.ImgOverlay>
     </Card>
           </div>
@@ -124,26 +167,75 @@ const Movies = () => {
       })}
     </div>
     <button
-      class="carousel-control-prev"
+      className="carousel-control-prev"
       type="button"
       data-bs-target="#carouselExampleAutoplaying"
       data-bs-slide="prev"
     >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+      <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span className="visually-hidden">Previous</span>
     </button>
     <button
-      class="carousel-control-next"
+      className="carousel-control-next"
       type="button"
       data-bs-target="#carouselExampleAutoplaying"
       data-bs-slide="next"
     >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+      <span className="carousel-control-next-icon" aria-hidden="true"></span>
+      <span className="visually-hidden">Next</span>
     </button>
   </div>
 </div>
 
+<section id='logos-slider'>
+<div className="logo-slider">
+	<div className="slide-track">
+	<div className="slide">
+			<img src='https://www.logo.wine/a/logo/20th_Century_Fox/20th_Century_Fox-Logo.wine.svg' height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Netflix/Netflix-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Prime_Video/Prime_Video-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Disney%2B/Disney%2B-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Hulu/Hulu-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/HBO_Max/HBO_Max-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Apple_TV/Apple_TV-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Aniplex_of_America/Aniplex_of_America-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/IMDb/IMDb-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Tubi/Tubi-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Crunchyroll/Crunchyroll-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Funimation/Funimation-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/Bandai_Namco_Holdings/Bandai_Namco_Holdings-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+		<div className="slide">
+			<img src="https://www.logo.wine/a/logo/YouTube/YouTube-Logo.wine.svg" height="100" width="250" alt="" />
+		</div>
+	</div>
+</div>
+
+</section>
                   
 <div className='all-container'>
 <div className='movie-tv-container'>
@@ -153,14 +245,17 @@ const Movies = () => {
 
                     <div className="trending__product">
                         <div className="row">
+                        
                             <div className="row">
-                                <div className="div-title">
-                                    <h4>Trending Series</h4>
+                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
+                                    <div className="div-title">
+                                    <h4>Trending Series
+
+                                         <div className='header-underline'></div>
+                                    </h4>
+                                   
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="btn__all">
-                                    <a href="#" className="primary-btn">View All <span className="arrow_right"></span></a>
+                                    <Link  to='/TV-Shows' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
                         </div>
@@ -200,13 +295,12 @@ const Movies = () => {
                     <div className="trending__product">
                         <div className="row">
                             <div className="row">
-                                <div className="div-title">
+                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
+                                     <div className="div-title">
                                     <h4>Trending Movies</h4>
+                                    <div className='header-underline'></div>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="btn__all">
-                                    <a href="#" className="primary-btn">View All <span className="arrow_right"></span></a>
+                                <Link  to='/movies' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
                         </div>
@@ -246,16 +340,17 @@ const Movies = () => {
 
                     <div className="trending__product">
                         <div className="row">
+                        <div className="row">
                             <div className="row">
-                                <div className="div-title">
-                                    <h4>Now Playing in Theaters</h4>
+                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
+                                     <div className="div-title">
+                                    <h4>Now Playing</h4>
+                                    <div className='header-underline'></div>
+                                </div>
+                                <Link  to='/movies' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="btn__all">
-                                    <a href="#" className="primary-btn">View All <span className="arrow_right"></span></a>
-                                </div>
-                            </div>
+                        </div>
                         </div>
                         <div className='boobo'>
                             {nowplaying.map((playing) => {

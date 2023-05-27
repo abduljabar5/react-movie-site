@@ -4,6 +4,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/js/src/collapse';
 import 'bootstrap/js/src/carousel';
 import 'bootstrap/js/src/modal';
+import 'bootstrap/js/src/dropdown';
 
 import './styles/index.css';
 import App from './App';

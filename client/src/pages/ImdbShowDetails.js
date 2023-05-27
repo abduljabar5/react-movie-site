@@ -145,13 +145,13 @@ const MoreDetails = () => {
            </div>
             ) : (
                 <div>
-                    <header className="masthead" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(${additionalData.image})` }}>
+                    <header className="masthead" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${reviewsAndEpisodeGroups.episodeGroups.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
                                 <div className="text-center">
                                     <div className='showdetail-sec-imgcontainer'>
                                         <div>
-                                            <img className=' smallimage mx-auto' src={`${shows.Poster}`} alt="Backdrop Image" />
+                                            <img className=' smallimage mx-auto' src={`${additionalData.image}`} alt="Backdrop Image" />
                                             {reviewsAndEpisodeGroups.episodeGroups.networks.length > 0 ? (
                                                 <div style={{ display: 'flex', marginTop: '20px' }}>
                                                     <img src={`https://image.tmdb.org/t/p/original/${reviewsAndEpisodeGroups.episodeGroups.networks[0].logo_path}`} style={{ width: '70px' }}></img>

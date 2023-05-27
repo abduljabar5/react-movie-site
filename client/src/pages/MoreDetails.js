@@ -2,92 +2,91 @@ import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
+import { Button, Card, Carousel } from 'react-bootstrap';
 
 import Tvapi from '../api/ShowDetail';
 // import { generateText } from'../api/ShowDetail';
 import imdb from '../api/Imdb';
 import imdblogo from '../styles/images/imdblogo.svg'
+import axios from 'axios';
+import { openDB } from 'idb';
+
+// Note: It's assumed that Tvapi is imported correctly
+
+// create and open the database
+const setupDB = async () => {
+    return openDB('MyDB', 1, {
+        upgrade(db) {
+            db.createObjectStore('tmdbshows');
+        },
+    });
+};
+
 const MoreDetails = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
-    const [movies, setMovies] = useState([]);
-    const [ytvideos, setVideos] = useState([]);
-    const [rating, setRating] = useState([]);
-    const [chat, setChat] = useState([]);
+
+    const [show, setShow] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const searchMovie = () => {
-        Tvapi.searchTv(id)
-            .then((res) => {
-                setMovies(res.data);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                // handle errors
-            });
-    };
-    // gets videos
-    const videos = () => {
-        Tvapi.tvVideos(id)
-            .then((res) => {
-                setVideos(res.data.results);
-            })
-            .catch((err) => {
-                // handle errors
-            });
-    }
-    const ai = () => {
-        Tvapi.generateText("what is the oldest movie")
-          .then((res) => {
-            console.log("chat:" + res);
-            setChat(res);
-          })
-          .catch((err) => {
-            // handle errors
-            console.log('err');
-          });
-      }
-      
-    console.log(movies);
+    // fetches data from themoviedb API and IMDB API, then save them into IndexedDB
     useEffect(() => {
-        searchMovie();
-        videos();
-        ai();
+        const fetchData = async () => {
+            const db = await setupDB();
 
-    }, [])
-    const getRating = () => {
-        console.log(movies.name);
+            const cache = await db.get('tmdbshows', id);
 
-        imdb.imdbRating(movies.name)
-        .then((res) => {
-                    console.log(res.data.results);
-          setRating(res.data.results[0]);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          // handle errors
-        });
-    }
-    const [hasFetchedRating, setHasFetchedRating] = useState(false);
+            if (!cache || Date.now() - cache.timestamp > 86400000) {
+                // if no cached data or the data is older than a day, fetch the data again
+                try {
+                    const themoviedbRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/external_ids?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+                    const imdbRes = await axios.get(`https://imdb-api.com/en/API/Title/k_mmsg1u7d/${themoviedbRes.data.imdb_id}/Trailer,WikipediaFullActor,FullCast`);
 
+                    const showRes = await Tvapi.searchTv(id);
+                    const videoRes = await Tvapi.tvVideos(id);
+
+                    const newShow = {
+                        id,
+                        themoviedb: themoviedbRes.data,
+                        imdb: imdbRes.data,
+                        show: showRes.data,
+                        videos: videoRes.data.results,
+                        timestamp: Date.now(),
+                    };
+
+                    await db.put('tmdbshows', newShow, id);
+
+                    setShow(newShow);
+                } catch (error) {
+                    console.error('Error fetching data', error);
+                }
+            } else {
+                setShow(cache);
+            }
+
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, [id]);
     useEffect(() => {
-        if (!isLoading && !hasFetchedRating) {
-            getRating();
-            setHasFetchedRating(true);
-        }
-    }, [isLoading, hasFetchedRating]);
-    // animating rating
-    console.log(ytvideos);
-    const percentage = movies.vote_average;
+        console.log(show);
+
+    }, [show])
+
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    const percentage = show.show.vote_average;
     // Define the style
     const style = {
         position: 'relative',
         width: '100%',
         height: 'auto',
         minHeight: '35rem',
-        padding: '15rem 0',
+        padding: '5rem 0',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'scroll',
@@ -100,87 +99,130 @@ const MoreDetails = () => {
                 <p>Loading...</p>
             ) : (
                 <div>
-                    <header className="masthead" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${movies.backdrop_path})` }}>
+                    <header className="" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${show.show.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
                                 <div className="text-center">
                                     <div className='showdetail-sec-imgcontainer'>
-                                        <img className='shadow smallimage mx-auto' src={`https://image.tmdb.org/t/p/original/${movies.poster_path}`} alt="Backdrop Image" />
+                                        <div>
+                                            <img className=' smallimage mx-auto' src={`https://image.tmdb.org/t/p/original/${show.show.poster_path}`} alt="Backdrop Image" />
+                                            {show.show.networks.length > 0 ? (
+                                                <div style={{ display: 'flex', marginTop: '20px' }}>
+                                                    <img src={`https://image.tmdb.org/t/p/original/${show.show.networks[0].logo_path}`} style={{ width: '70px' }}></img>
+                                                    <a
+                                                        type='button'
+                                                        href={show.show.homepage
+                                                            ? show.show.homepage
+                                                            : `https://www.${show.show.networks[0].name}.com`}
+                                                        className='btn btn-outline-danger w-100 ms-4'
+                                                        target='_blank'
+                                                        rel='noreferrer'  // It's a good practice to add rel='noreferrer' whenever target='_blank' is used
+                                                    >
+                                                        Watch Now
+                                                    </a>
+                                                </div>
+                                            ) : (<div></div>)}</div>
                                         <div className='mx-auto'>
-                                            <h1 className="text-white mx-auto mt-5 mb-5">{movies.name}</h1>
+                                            <h1 className="text-white mx-auto mt-5 mb-5">{show.show.name}</h1>
                                             <div className='w-25 ratingcontainer'>
                                                 <img src={imdblogo}></img>
-                                                <p>{rating.imDbRating}</p>
+                                                <h5 style={{ alignSelf: 'center', margin: '10px', fontSize: '30px' }}>{show.imdb.imDbRating}</h5>
                                                 <div>
                                                     <CircularProgressbar value={percentage} maxValue={10} text={`${percentage}%`} />
                                                 </div>
                                             </div>
-
-
                                             <h4 className='text-light'>overview:</h4>
-                                            <p className='mx-auto'>{movies.overview}</p>
+                                            <p className='mx-auto'>{show.show.overview}</p>
                                             <div class="anime__details__widget text-light">
                                                 <div className="row">
                                                     <div className="col-lg-6 col-md-6 mx-auto">
                                                         <ul>
                                                             <li><span>Type:</span>TV Series</li>
-                                                            <li><span>Studios:</span>{movies.networks[0].name}</li>
-                                                            <li><span>Date aired:</span>{movies.first_air_date}</li>
-                                                            <li><span>Status:</span>{movies.status}</li>
-                                                            <li><span>Genre:</span>{movies.genres.map((genre) => { return <span className='tv-genre-headings'>{genre.name}, </span> })}</li>
+                                                            <li><span>Studios:</span>{show.show.networks[0].name}</li>
+                                                            <li><span>Date aired:</span>{show.show.first_air_date}</li>
+                                                            <li><span>Status:</span>{show.show.status}</li>
+                                                            <li><span>Genre:</span>{show.show.genres.map((genre) => { return <span className='tv-genre-headings'>{genre.name}, </span> })}</li>
                                                         </ul>
                                                     </div>
                                                     <div className="col-lg-5 col-md-6">
                                                         <ul>
-                                                            <li><span>Last aired:</span>{movies.last_air_date}</li>
-                                                            <li><span>Rating:</span>{movies.vote_average} / {movies.vote_count} times</li>
-                                                            <li><span>Duration:</span>{movies.episode_run_time[0]} min/ep</li>
-                                                            <li><span>Seasons:</span>{movies.number_of_seasons} Seasons/ {movies.number_of_episodes} Episode</li>
-                                                            <li><span>Last episode:</span>{movies.last_episode_to_air.air_date}</li>
+                                                            <li><span>Last aired:</span>{show.show.last_air_date}</li>
+                                                            <li><span>Rating:</span>{show.show.vote_average} / {show.show.vote_count} times</li>
+                                                            <li><span>Duration:</span>{show.show.episode_run_time[0]} min/ep</li>
+                                                            <li><span>Seasons:</span>{show.show.number_of_seasons} Seasons/ {show.show.number_of_episodes} Episode</li>
+                                                            {/* <li><span>Last episode:</span>{show.show.last_episode_to_air.air_date||'hi'}</li> */}
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="anime__details__btn">
-                                                <a href="#" className="follow-btn"><i class="fa fa-heart-o"></i> Report</a>
-                                                <a href="#" className="follow-btn"><i class="fa fa-heart-o"></i> Follow</a>
-                                                <a href="#" className="watch-btn"><span>Watch Now</span> <i className="bi bi-arrow-bar-right"></i></a>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                                <div style={{ display: 'flex' }}>
+                                                    <h1 className='position-absolute'>Cast:</h1>
+                                                    <div class="cast-container">
+                                                        {show.imdb.actorList.map((item, index) => (
+                                                            <div class="cast-item">
+                                                                <div className=" border-0" key={index}>
+                                                                    <div className=''>
+                                                                        {/* <Link to={`/show?id=${item.id}`}> */}
+                                                                        <Card.Img
+                                                                            className='cardimage'
+                                                                            style={{ minHeight: '250px', maxHeight: '250px', backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '15px' }}
+                                                                        />
+                                                                        <Card.ImgOverlay className='imageoverlay'>
+                                                                            <Card.Title>{item.title}</Card.Title>
+                                                                            <Card.Text>{item.imDbRating}</Card.Text>
+                                                                        </Card.ImgOverlay>
+                                                                        {/* </Link> */}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div></div>
+                                                <div className="d-flex flex-column mx-auto m-auto gap-4">
+                                                    <Button variant="outline-primary" size="lg">
+                                                        Save
+                                                    </Button>
+                                                    <Button variant="danger" size="lg">
+                                                        Watch Trailer
+                                                    </Button>
+                                                    <Button variant="primary" size="lg">
+                                                        Watch Now
+                                                    </Button>
+                                                
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </header>
-                    <section class="about-section text-center" id="about">
-                        <div>
-                            <div class="row gx-4 gx-lg-5 m-0 justify-content-center">
-                                <div class="col-lg-8">
-                                    <div className='videocontainer'>
-                                        {ytvideos.map((video) => (
-                                            <div key={video.id}>
-                                                <h2>{video.name}</h2>
-                                                {video.key && (
-                                                    <iframe
-                                                        width="960"
-                                                        height="555"
-                                                        src={`https://www.youtube.com/embed/${video.key}`}
-                                                        title={video.name}
-                                                        frameBorder="0"
-                                                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen
-                                                    ></iframe>
-                                                )}
-                                            </div>
-                                        ))}
-
+                    <section id='trailers'>
+                        <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers</h1>
+                        <Carousel className='carousel-btn'>
+                            {show.videos.map((video) =>
+                                <Carousel.Item interval={16000}>
+                                    <div key={video.id} className='video-center'>
+                                        {video.key && (
+                                            <iframe
+                                                className='flex'
+                                                width="960"
+                                                height="555"
+                                                src={`https://www.youtube.com/embed/${video.key}`}
+                                                title={video.name}
+                                                frameBorder="0"
+                                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        )}
                                     </div>
-                                </div>
-                            </div>
-                          </div>
+                                    <Carousel.Caption>
+                                        <h3>{video.name}</h3>
+                                    </Carousel.Caption>
+                                </Carousel.Item>
+                            )}
+                        </Carousel>
                     </section>
-
                 </div>
             )}
         </div>

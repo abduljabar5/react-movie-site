@@ -94,7 +94,7 @@ console.log(id);
                             <div className="d-flex justify-content-center">
                                 <div className="text-center">
                                     <div className='showdetail-sec-imgcontainer'>
-                                        <img className='shadow smallimage mx-auto' src={`https://image.tmdb.org/t/p/original/${movies.poster_path}`} alt="Backdrop Image" />
+                                        <img className='smallimage mx-auto' src={`https://image.tmdb.org/t/p/original/${movies.backdrop_path}`} alt="Backdrop Image" />
                                         <div className='mx-auto'>
                                             <h1 className="text-white mx-auto mt-5 mb-5">{movies.name}</h1>
                                             <div className='w-25 ratingcontainer'>
