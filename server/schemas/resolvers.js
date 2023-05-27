@@ -1,14 +1,22 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Thought } = require('../models');
+const GraphQLJSON = require('graphql-type-json');
+const { User, Thought,Show } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
+  JSON: GraphQLJSON, 
   Query: {
     users: async () => {
       return User.find().populate('thoughts');
     },
     user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('thoughts');
+      const user = await User.findOne({ username }).populate('thoughts');
+      
+      // Query the shows for this user and add to the user object
+      // This is a placeholder, you should replace this with your actual logic for fetching the shows
+      user.shows = []; 
+
+      return user;
     },
     thoughts: async (parent, { username }) => {
       const params = username ? { username } : {};
@@ -48,6 +56,20 @@ const resolvers = {
 
       return { token, user };
     },
+    addShow: async (parent, { show }, context) => {
+      if (context.user) {
+        const newShow = await Show.create(show);  // Create the new show
+        return User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { shows: newShow } }, // push the _id of the new show
+          { new: true } // return the updated document
+        ).populate('shows'); // populate the shows field before returning
+    
+      }
+    
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    
     addThought: async (parent, { thoughtText }, context) => {
       if (context.user) {
         const thought = await Thought.create({

@@ -1,18 +1,22 @@
 import { gql } from '@apollo/client';
 
 export const QUERY_USER = gql`
-  query user($username: String!) {
-    user(username: $username) {
+query user($username: String!) {
+  user(username: $username) {
+    _id
+    username
+    email
+    thoughts {
       _id
-      username
-      email
-      thoughts {
-        _id
-        thoughtText
-        createdAt
-      }
+      thoughtText
+      createdAt
+    }
+    shows {
+      _id
+      themoviedb
     }
   }
+}
 `;
 
 export const QUERY_THOUGHTS = gql`
@@ -44,17 +48,21 @@ export const QUERY_SINGLE_THOUGHT = gql`
 `;
 
 export const QUERY_ME = gql`
-  query me {
-    me {
+query me {
+  me {
+    _id
+    username
+    email
+    thoughts {
       _id
-      username
-      email
-      thoughts {
-        _id
-        thoughtText
-        thoughtAuthor
-        createdAt
-      }
+      thoughtText
+      thoughtAuthor
+      createdAt
+    }
+    shows {
+      _id
+      themoviedb
     }
   }
+}
 `;

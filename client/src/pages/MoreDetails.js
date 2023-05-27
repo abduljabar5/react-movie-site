@@ -1,6 +1,13 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { useMutation } from '@apollo/client';
+import Auth from '../utils/auth';
+import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import { Navigate, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+
+import { ADD_SHOW } from '../utils/mutations';
 import 'react-circular-progressbar/dist/styles.css';
 import { Button, Card, Carousel } from 'react-bootstrap';
 
@@ -11,7 +18,7 @@ import imdblogo from '../styles/images/imdblogo.svg'
 import axios from 'axios';
 import { openDB } from 'idb';
 
-// Note: It's assumed that Tvapi is imported correctly
+
 
 // create and open the database
 const setupDB = async () => {
@@ -26,9 +33,15 @@ const MoreDetails = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
-
     const [show, setShow] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
+const { username: userParam } = useParams();
+
+const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+  variables: { username: userParam },
+});
+console.log( QUERY_ME );
 
     // fetches data from themoviedb API and IMDB API, then save them into IndexedDB
     useEffect(() => {
@@ -74,7 +87,29 @@ const MoreDetails = () => {
         console.log(show);
 
     }, [show])
-
+    const handleSaveShow = async () => {
+        try {
+            if (Auth.loggedIn()) {
+                const userId = Auth.getProfile().data._id;
+                const { themoviedb } = show; 
+                const showData = {
+                    themoviedb
+                };
+      
+                console.log(userId);
+                console.log(showData);
+                        
+                const { data } = await addShow({
+                  variables: { userId, show: showData },
+                });
+                // You can handle the response here...
+            } else {
+              console.log('User is not logged in');
+            }
+          } catch (err) {
+            console.error(err);
+          }
+      };
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -155,7 +190,12 @@ const MoreDetails = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            <div class="anime__details__btn">
+                                <button class="follow-btn" onClick={handleSaveShow}><i class="fa fa-heart-o"></i> Follow</button>
+                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
+                                    class="fa fa-angle-right"></i></a>
+                                </div>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection:'column' }}>
                                                 <div style={{ display: 'flex' }}>
                                                     <h1 className='position-absolute'>Cast:</h1>
                                                     <div class="cast-container">

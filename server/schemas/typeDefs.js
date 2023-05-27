@@ -1,12 +1,25 @@
 const { gql } = require('apollo-server-express');
+const GraphQLJSON = require('graphql-type-json');
 
 const typeDefs = gql`
+scalar JSON
   type User {
     _id: ID
     username: String
     email: String
     password: String
     thoughts: [Thought]!
+    shows: [Show]   
+
+  }
+  type Show {
+    _id: ID
+    themoviedb: JSON
+  }
+
+  input ShowInput {
+    _id: ID
+    themoviedb: JSON
   }
 
   type Thought {
@@ -40,6 +53,7 @@ const typeDefs = gql`
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
+    addShow(userId: ID!, show: ShowInput!): User
     addThought(thoughtText: String!): Thought
     addComment(thoughtId: ID!, commentText: String!): Thought
     removeThought(thoughtId: ID!): Thought

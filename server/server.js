@@ -22,7 +22,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // The "catchall" handler: for any request that doesn't match the ones above, send back the React app's index.html file.
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
+  if (req.url === '/graphql') return next();
+  
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
