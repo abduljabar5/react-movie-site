@@ -58,6 +58,7 @@ scalar JSON
     addComment(thoughtId: ID!, commentText: String!): Thought
     removeThought(thoughtId: ID!): Thought
     removeComment(thoughtId: ID!, commentId: ID!): Thought
+    removeShow(showId: ID!): User
   }
 `;
 

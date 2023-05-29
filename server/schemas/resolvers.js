@@ -7,15 +7,11 @@ const resolvers = {
   JSON: GraphQLJSON, 
   Query: {
     users: async () => {
-      return User.find().populate('thoughts');
+      return User.find().populate('thoughts').populate('shows');
     },
     user: async (parent, { username }) => {
-      const user = await User.findOne({ username }).populate('thoughts');
-      
-      // Query the shows for this user and add to the user object
-      // This is a placeholder, you should replace this with your actual logic for fetching the shows
-      user.shows = []; 
-
+      console.log("user ran")
+      const user = await User.findOne({ username }).populate('thoughts').populate('shows');
       return user;
     },
     thoughts: async (parent, { username }) => {
@@ -25,9 +21,11 @@ const resolvers = {
     thought: async (parent, { thoughtId }) => {
       return Thought.findOne({ _id: thoughtId });
     },
-    me: async (parent, context) => {
+    me: async (parent, args, context) => {
+      console.log(args);
+      console.log(context)
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('thoughts');
+        return User.findOne({ _id: context.user._id }).populate('shows').populate('thoughts');
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -57,6 +55,8 @@ const resolvers = {
       return { token, user };
     },
     addShow: async (parent, { show }, context) => {
+      console.log(context)
+
       if (context.user) {
         const newShow = await Show.create(show);  // Create the new show
         return User.findByIdAndUpdate(
@@ -135,7 +135,19 @@ const resolvers = {
         );
       }
       throw new AuthenticationError('You need to be logged in!');
-    },
+    }, 
+    removeShow: async (parent, { showId }, context) => {
+      if (context.user) {
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $pull: { shows: showId }
+          },
+          { new: true }
+        ).populate('shows'); // populate the shows field before returning
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },    
   },
 };
 

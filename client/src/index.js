@@ -5,6 +5,8 @@ import 'bootstrap/js/src/collapse';
 import 'bootstrap/js/src/carousel';
 import 'bootstrap/js/src/modal';
 import 'bootstrap/js/src/dropdown';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css/animate.min.css';
 
 import './styles/index.css';
 import App from './App';

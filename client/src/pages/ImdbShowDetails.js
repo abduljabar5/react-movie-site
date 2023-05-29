@@ -1,6 +1,13 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { openDB } from 'idb';
+import { useMutation } from '@apollo/client';
+import Auth from '../utils/auth';
+import { QUERY_USER, QUERY_ME } from '../utils/queries';
+import { Navigate, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+
+import { ADD_SHOW } from '../utils/mutations';
 
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -8,6 +15,7 @@ import axios from 'axios';
 import imdblogo from '../styles/images/imdblogo.svg'
 import moviebox from '../styles/images/moviebox.webp'
 import flixhq from '../styles/images/flixhq.png'
+import Notification from '../components/Notification/Alerts';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import Carousel from 'react-bootstrap/Carousel';
@@ -21,9 +29,28 @@ const MoreDetails = () => {
     const [shows, setShows] = useState([]);
     const [additionalData, setAdditionalData] = useState({});
     const [reviewsAndEpisodeGroups, setReviewsAndEpisodeGroups] = useState(null);
-
+    const [heartFilled, setHeartFilled] = useState(null);
+    const [savedShows, setSavedShows] = useState({});
+    const [notification, setNotification] = useState(null);  
     const [isLoading, setIsLoading] = useState(true);
-
+    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
+    const { username: userParam } = useParams();
+    
+    const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+        variables: { username: userParam },
+      });
+      useEffect(() => {
+        if (!loading && reviewsAndEpisodeGroups) {  // Check that reviewsAndEpisodeGroups is ready
+            const user = data?.me || data?.user || {};
+            console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id))
+            console.log("pageid:",reviewsAndEpisodeGroups.themoviedb.id);
+            // Assuming that `user.shows` is an array of saved shows
+            const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id) : false;
+            setHeartFilled(isShowSaved)
+            setSavedShows({ ...savedShows, [id]: isShowSaved });
+        }
+    }, [loading, data, id, reviewsAndEpisodeGroups]);
+    
     const fetchShows = async () => {
         const res = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=810b2ac0`);
         console.log('hihihihi', res.data);
@@ -45,12 +72,14 @@ const MoreDetails = () => {
 
     const fetchReviewsAndEpisodeGroups = async (seriesId) => {
         const reviewsResponse = await axios.get(`https://api.themoviedb.org/3/tv/${seriesId}/reviews?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`);
+        const themoviedbRes = await axios.get(`https://api.themoviedb.org/3/tv/${seriesId}/external_ids?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
         const episodeGroupsResponse = await axios.get(`https://api.themoviedb.org/3/tv/${seriesId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
         const trailers = await axios.get(`https://api.themoviedb.org/3/tv/${seriesId}/videos?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
         return {
             reviews: reviewsResponse.data.results,
             episodeGroups: episodeGroupsResponse.data,
             trailers: trailers.data.results,
+            themoviedb: themoviedbRes.data
         };
     };
 
@@ -117,7 +146,48 @@ const MoreDetails = () => {
 
     }, [additionalData])
     console.log(reviewsAndEpisodeGroups);
+    const handleSaveShow = async () => {
+        try {
+            if (Auth.loggedIn()) {
+                const userId = Auth.getProfile().data._id;
+                const { themoviedb } = reviewsAndEpisodeGroups; 
+                const showData = {
+                    themoviedb
+                };
+      
+                console.log(userId);
+                console.log(showData);
+                        
+                const { data } = await addShow({
+                  variables: { userId, show: showData },
+                });
+                const newHeartFilledState = !heartFilled;
+                setHeartFilled(newHeartFilledState);
 
+                const updatedSavedShows = { ...savedShows, [id]: newHeartFilledState };
+                setSavedShows(updatedSavedShows);
+                // You can handle the response here...
+                setNotification({
+                    message: "Go to profile to view saved content",
+                    variant: "success",
+                    key: Date.now()
+                });
+
+            } else {
+                console.log('User is not logged in');
+                setNotification({
+                    message: "Login Or Sigh Up",
+                    key: Date.now()
+                });
+            }
+          } catch (err) {
+            console.error(err);
+          }
+      };
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
     // const percentage = shows.vote_average;
     // Define the style
     const style = {
@@ -145,6 +215,15 @@ const MoreDetails = () => {
            </div>
             ) : (
                 <div>
+                     <div>
+                        {notification && (
+                            <Notification
+                                message={notification.message}
+                                variant={notification.variant}
+                                key={notification.key}
+                            />
+                        )}
+                    </div>
                     <header className="masthead" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${reviewsAndEpisodeGroups.episodeGroups.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
@@ -203,7 +282,26 @@ const MoreDetails = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="anime__details__btn">
+                                            <button
+                                                    className="follow-btn"
+                                                    onClick={() => {
+                                                        if (!heartFilled) {
+                                                            handleSaveShow();
+                                                        } else {
+                                                            setNotification({
+                                                                message: "This show is already saved",
+                                                                variant: "danger",
+                                                                key: Date.now()
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+<i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+                                                </button>
+                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
+                                    class="fa fa-angle-right"></i></a>
+                                </div>
                                             <div class="anime__details__btn m-4">
                                                 <button type="button" class="follow-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                     Watch Trailer

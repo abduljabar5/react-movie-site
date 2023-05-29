@@ -6,6 +6,8 @@ import Auth from '../utils/auth';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import CarouselCards from '../components/Similar';
+
 
 import { ADD_SHOW } from '../utils/mutations';
 import 'react-circular-progressbar/dist/styles.css';
@@ -14,6 +16,7 @@ import { Button, Card, Carousel } from 'react-bootstrap';
 import Tvapi from '../api/ShowDetail';
 // import { generateText } from'../api/ShowDetail';
 import imdb from '../api/Imdb';
+import Notification from '../components/Notification/Alerts';
 import imdblogo from '../styles/images/imdblogo.svg'
 import axios from 'axios';
 import { openDB } from 'idb';
@@ -35,13 +38,32 @@ const MoreDetails = () => {
     const id = searchParams.get('id');
     const [show, setShow] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
-const { username: userParam } = useParams();
+    const [heartFilled, setHeartFilled] = useState(null);
+    const [savedShows, setSavedShows] = useState({});
+    const [notification, setNotification] = useState(null);  // initialize state variable
 
-const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
-  variables: { username: userParam },
-});
-console.log( QUERY_ME );
+    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
+    const { username: userParam } = useParams();
+
+    const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+        variables: { username: userParam },
+    });
+
+    console.log(data);
+    console.log(err);  // log the error
+
+    useEffect(() => {
+        if (!loading) {
+            const user = data?.me || data?.user || {};
+console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === id))
+console.log("pageid:",Number(id));
+            // Assuming that `user.shows` is an array of saved shows
+            const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === Number(id)) : false;
+            setHeartFilled(isShowSaved)
+            setSavedShows({ ...savedShows, [id]: isShowSaved });
+
+        }
+    }, [loading, data, id]);
 
     // fetches data from themoviedb API and IMDB API, then save them into IndexedDB
     useEffect(() => {
@@ -84,33 +106,70 @@ console.log( QUERY_ME );
         fetchData();
     }, [id]);
     useEffect(() => {
-        console.log(show);
+        console.log("show:",show);
 
     }, [show])
     const handleSaveShow = async () => {
+
+        // if (heartFilled && !window.confirm('Are you sure you want to unsave this show? You can always find it in your profile.')) {
+        //     return;
+        // }
+        console.log('handleSaveShow is called'); // add this line
+
+        if (heartFilled) {
+            setNotification({
+                message: "This show is already saved",
+                variant: "danger",
+                key: Date.now()
+            });
+            console.log(notification);
+            return;
+        }
         try {
+            console.log('trying');
             if (Auth.loggedIn()) {
                 const userId = Auth.getProfile().data._id;
-                const { themoviedb } = show; 
+                const { themoviedb } = show;
                 const showData = {
                     themoviedb
                 };
-      
-                console.log(userId);
-                console.log(showData);
-                        
+
+                console.log("user:",userId);
+                console.log("show",showData);
+
                 const { data } = await addShow({
-                  variables: { userId, show: showData },
+                    variables: { userId, show: showData },
                 });
                 // You can handle the response here...
-            } else {
-              console.log('User is not logged in');
-            }
-          } catch (err) {
-            console.error(err);
-          }
-      };
+                const newHeartFilledState = !heartFilled;
+                setHeartFilled(newHeartFilledState);
 
+                const updatedSavedShows = { ...savedShows, [id]: newHeartFilledState };
+                setSavedShows(updatedSavedShows);
+                setNotification({
+                    message: "Go to profile to view saved content",
+                    variant: "success",
+                    key: Date.now()
+                });
+
+            } else {
+                console.log('User is not logged in');
+                setNotification({
+                    message: "Login Or Sigh Up",
+                    key: Date.now()
+                });
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+    };
+    useEffect(() => {
+        console.log(notification);
+    }, [notification]);
+
+  
+    console.log("hearttttt",heartFilled);
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -134,6 +193,15 @@ console.log( QUERY_ME );
                 <p>Loading...</p>
             ) : (
                 <div>
+                    <div>
+                        {notification && (
+                            <Notification
+                                message={notification.message}
+                                variant={notification.variant}
+                                key={notification.key}
+                            />
+                        )}
+                    </div>
                     <header className="" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${show.show.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
@@ -191,11 +259,27 @@ console.log( QUERY_ME );
                                                 </div>
                                             </div>
                                             <div class="anime__details__btn">
-                                <button class="follow-btn" onClick={handleSaveShow}><i class="fa fa-heart-o"></i> Follow</button>
-                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
-                                    class="fa fa-angle-right"></i></a>
-                                </div>
-                                            <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection:'column' }}>
+                                                <button
+                                                    className="follow-btn"
+                                                    onClick={() => {
+                                                        if (!heartFilled) {
+                                                            handleSaveShow();
+                                                        } else {
+                                                            setNotification({
+                                                                message: "This show is already saved",
+                                                                variant: "danger",
+                                                                key: Date.now()
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+<i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+                                                </button>
+
+                                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
+                                                    class="fa fa-angle-right"></i></a>
+                                            </div>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
                                                 <div style={{ display: 'flex' }}>
                                                     <h1 className='position-absolute'>Cast:</h1>
                                                     <div class="cast-container">
@@ -228,7 +312,7 @@ console.log( QUERY_ME );
                                                     <Button variant="primary" size="lg">
                                                         Watch Now
                                                     </Button>
-                                                
+
                                                 </div>
                                             </div>
                                         </div>
@@ -263,9 +347,12 @@ console.log( QUERY_ME );
                             )}
                         </Carousel>
                     </section>
-                </div>
+                    <CarouselCards additionalData={show.imdb} />
+
+                </div >
+
             )}
-        </div>
+        </div >
     );
 };
 

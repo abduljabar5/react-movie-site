@@ -12,7 +12,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 // import SingleThought from './pages/SingleThought';
-// import Profile from './pages/Profile';
+import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import MoreDetails from './pages/MoreDetails';
 import Movies from './pages/Movies';
@@ -97,11 +97,11 @@ function App() {
               path="/anime"
               element={<AnimeDetails />}
             />
-              {/* <Route 
+              <Route 
                 path="/me" 
                 element={<Profile />}
               />
-              <Route 
+              {/* <Route 
                 path="/profiles/:username" 
                 element={<Profile />}
               />

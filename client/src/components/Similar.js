@@ -11,7 +11,7 @@ function CarouselCards({ additionalData }) {
             <h2>Similar</h2>
             <ul className="cards">
                 {additionalData.similars.map((item, index) => (
-                    <div className="col-lg-3 col-md-4 col-sm-6 mb-3" style={{width:'24%'}} key={index}>
+                    <div className="col-lg-3 col-md-4 col-sm-6 mb-3"  key={index}>
                     <Card className='contentcard'>
                     <Link to={`/show?id=${item.id}`}>
                         <Card.Img className='cardimage' style={{minHeight:'433px', maxHeight:'433px'}}  src={item.image} alt="Card image" />

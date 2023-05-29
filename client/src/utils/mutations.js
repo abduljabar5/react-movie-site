@@ -68,3 +68,22 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+export const REMOVE_SHOW = gql`
+  mutation removeShow($showId: ID!) {
+    removeShow(showId: $showId) {
+      _id
+      username
+      email
+      shows {
+        _id
+      themoviedb
+      }
+    }
+  }
+`;
+
+
+
+
+
+
