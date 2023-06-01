@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('apollo-server-express');
 const GraphQLJSON = require('graphql-type-json');
-const { User, Thought,Show } = require('../models');
+const { User, Thought, Show, Movie } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -25,7 +25,7 @@ const resolvers = {
       console.log(args);
       console.log(context)
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('shows').populate('thoughts');
+        return User.findOne({ _id: context.user._id }).populate('shows').populate('movies').populate('thoughts');
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -70,6 +70,27 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
     
+    addMovie: async (parent, { movie }, context) => {
+      console.log(context)
+    
+      if (context.user) {
+        let movieExists = await Movie.findOne(movie); // Check if the movie already exists
+    
+        // If the movie does not exist in the database, create a new one
+        if (!movieExists) {
+          movieExists = await Movie.create(movie);
+        }
+    
+        // Add the movie to the user's list
+        return User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { movies: movieExists._id } },
+          { new: true }
+        ).populate('movies');
+      }
+      
+      throw new AuthenticationError('You need to be logged in!');
+    },
     addThought: async (parent, { thoughtText }, context) => {
       if (context.user) {
         const thought = await Thought.create({
@@ -147,7 +168,19 @@ const resolvers = {
         ).populate('shows'); // populate the shows field before returning
       }
       throw new AuthenticationError('You need to be logged in!');
-    },    
+    }, 
+    removeMovie: async (parent, { movieId }, context) => {
+      if (context.user) {
+        // Just pull the movie from the user's list, do not delete the movie from the database
+        return User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $pull: { movies: movieId } },
+          { new: true }
+        ).populate('movies');
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    
   },
 };
 

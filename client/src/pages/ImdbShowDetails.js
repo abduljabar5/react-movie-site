@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { openDB } from 'idb';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import {MyContext, MyProvider} from '../components/MyContext';
 
 import { ADD_SHOW } from '../utils/mutations';
 
@@ -33,16 +34,16 @@ const MoreDetails = () => {
     const [savedShows, setSavedShows] = useState({});
     const [notification, setNotification] = useState(null);  
     const [isLoading, setIsLoading] = useState(true);
+    const { incrementMyState } = useContext(MyContext);
     const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
     const { username: userParam } = useParams();
-    
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
         variables: { username: userParam },
       });
       useEffect(() => {
         if (!loading && reviewsAndEpisodeGroups) {  // Check that reviewsAndEpisodeGroups is ready
             const user = data?.me || data?.user || {};
-            console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id))
+            // console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id))
             console.log("pageid:",reviewsAndEpisodeGroups.themoviedb.id);
             // Assuming that `user.shows` is an array of saved shows
             const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id) : false;
@@ -172,6 +173,8 @@ const MoreDetails = () => {
                     variant: "success",
                     key: Date.now()
                 });
+                incrementMyState();
+
 
             } else {
                 console.log('User is not logged in');

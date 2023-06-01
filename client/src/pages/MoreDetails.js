@@ -7,7 +7,7 @@ import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import CarouselCards from '../components/Similar';
-
+import ButtonSlideOut from '../components/WatchNow';
 
 import { ADD_SHOW } from '../utils/mutations';
 import 'react-circular-progressbar/dist/styles.css';
@@ -17,6 +17,7 @@ import Tvapi from '../api/ShowDetail';
 // import { generateText } from'../api/ShowDetail';
 import imdb from '../api/Imdb';
 import Notification from '../components/Notification/Alerts';
+import Comments from '../components/Comments';
 import imdblogo from '../styles/images/imdblogo.svg'
 import axios from 'axios';
 import { openDB } from 'idb';
@@ -55,8 +56,8 @@ const MoreDetails = () => {
     useEffect(() => {
         if (!loading) {
             const user = data?.me || data?.user || {};
-console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === id))
-console.log("pageid:",Number(id));
+            // console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === id))
+            console.log("pageid:", Number(id));
             // Assuming that `user.shows` is an array of saved shows
             const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === Number(id)) : false;
             setHeartFilled(isShowSaved)
@@ -77,6 +78,7 @@ console.log("pageid:",Number(id));
                 try {
                     const themoviedbRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/external_ids?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
                     const imdbRes = await axios.get(`https://imdb-api.com/en/API/Title/k_mmsg1u7d/${themoviedbRes.data.imdb_id}/Trailer,WikipediaFullActor,FullCast`);
+                    const reviewsResponse = await axios.get(`https://api.themoviedb.org/3/tv/${id}/reviews?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`);
 
                     const showRes = await Tvapi.searchTv(id);
                     const videoRes = await Tvapi.tvVideos(id);
@@ -87,6 +89,7 @@ console.log("pageid:",Number(id));
                         imdb: imdbRes.data,
                         show: showRes.data,
                         videos: videoRes.data.results,
+                        reviews: reviewsResponse.data.results,
                         timestamp: Date.now(),
                     };
 
@@ -106,7 +109,7 @@ console.log("pageid:",Number(id));
         fetchData();
     }, [id]);
     useEffect(() => {
-        console.log("show:",show);
+        console.log("show:", show);
 
     }, [show])
     const handleSaveShow = async () => {
@@ -134,8 +137,8 @@ console.log("pageid:",Number(id));
                     themoviedb
                 };
 
-                console.log("user:",userId);
-                console.log("show",showData);
+                console.log("user:", userId);
+                console.log("show", showData);
 
                 const { data } = await addShow({
                     variables: { userId, show: showData },
@@ -168,8 +171,8 @@ console.log("pageid:",Number(id));
         console.log(notification);
     }, [notification]);
 
-  
-    console.log("hearttttt",heartFilled);
+
+    console.log("hearttttt", heartFilled);
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -258,7 +261,7 @@ console.log("pageid:",Number(id));
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="anime__details__btn">
+                                            <div class="anime__details__btn" style={{display:'flex', justifyContent:'center'}}>
                                                 <button
                                                     className="follow-btn"
                                                     onClick={() => {
@@ -273,11 +276,12 @@ console.log("pageid:",Number(id));
                                                         }
                                                     }}
                                                 >
-<i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+                                                    <i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
                                                 </button>
 
-                                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
-                                                    class="fa fa-angle-right"></i></a>
+                                                {/* <button href="#" class="watch-btn" style={{borderStyle:'none',backgroundColor:'transparent'}}><span>Watch Now</span> <i
+                                                    class="fa fa-angle-right"></i></button> */}
+                                                    <ButtonSlideOut prompt={show} />
                                             </div>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
                                                 <div style={{ display: 'flex' }}>
@@ -302,7 +306,7 @@ console.log("pageid:",Number(id));
                                                             </div>
                                                         ))}
                                                     </div></div>
-                                                <div className="d-flex flex-column mx-auto m-auto gap-4">
+                                                {/* <div className="d-flex flex-column mx-auto m-auto gap-4">
                                                     <Button variant="outline-primary" size="lg">
                                                         Save
                                                     </Button>
@@ -313,7 +317,7 @@ console.log("pageid:",Number(id));
                                                         Watch Now
                                                     </Button>
 
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
@@ -349,6 +353,7 @@ console.log("pageid:",Number(id));
                     </section>
                     <CarouselCards additionalData={show.imdb} />
 
+                    <Comments reviewsAndEpisodeGroups={show} />
                 </div >
 
             )}

@@ -25,6 +25,12 @@ const userSchema = new Schema({
       ref: 'Show',
     },
   ],
+  movies: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Movie',
+    },
+  ],
   thoughts: [
     {
       type: Schema.Types.ObjectId,

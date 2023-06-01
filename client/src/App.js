@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,7 +7,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter , Routes, Route } from 'react-router-dom';
-
+import { MyProvider } from './components/MyContext';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -51,10 +51,15 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const [myState, setMyState] = React.useState(0);
+
+  const incrementMyState = () => setMyState(prev => prev + 1);
+
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
          <div className='dark'>
+         <MyProvider>
           <Header />
           <AccountNotification />
             <Routes>
@@ -111,7 +116,9 @@ function App() {
               /> */}
             </Routes>
             <Chat />
-          <Footer /></div>
+          <Footer />
+          </MyProvider>
+          </div>
       </BrowserRouter>
     </ApolloProvider>
   );

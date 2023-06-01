@@ -38,6 +38,20 @@ mutation ($userId: ID!, $show: ShowInput!) {
 
 `;
 
+export const ADD_MOVIE = gql`
+mutation ($userId: ID!, $movie: MovieInput!) {
+  addMovie(userId: $userId, movie: $movie) {
+    _id
+    username
+    movies {
+      _id
+      tmdbId
+      imdbId  
+    }    
+  }
+}
+`;
+
 export const ADD_THOUGHT = gql`
   mutation addThought($thoughtText: String!) {
     addThought(thoughtText: $thoughtText) {
@@ -82,7 +96,20 @@ export const REMOVE_SHOW = gql`
   }
 `;
 
-
+export const REMOVE_MOVIE = gql`
+  mutation removeMovie($movieId: ID!) {
+    removeMovie(movieId: $movieId) {
+      _id
+      username
+      email
+      movies {
+        _id
+        tmdbId
+        imdbId
+      }
+    }
+  }
+`;
 
 
 

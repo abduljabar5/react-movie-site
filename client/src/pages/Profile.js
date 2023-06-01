@@ -1,25 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Navigate, useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { openDB } from 'idb';
 import axios from 'axios';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { useMutation } from '@apollo/client';
-import { REMOVE_SHOW } from '../utils/mutations';
+import { REMOVE_SHOW, REMOVE_MOVIE } from '../utils/mutations';
 import Auth from '../utils/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faPlay, faRankingStar, faArrowRight, faTrashCanArrowUp } from '@fortawesome/free-solid-svg-icons';
-
+import { MyContext } from '../components/MyContext';
+import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 const Profile = () => {
   const { username: userParam } = useParams();
   const [isLoading, setIsLoading] = useState(true)
+  const { myState, setMyState } = useContext(MyContext);
   const { loading, data, error } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { username: userParam },
   });
   const user = data?.me || data?.user || {};
+  console.log("user:",user);
+  const [view, setView] = useState('shows');
+
   const [db, setDb] = useState(null);
   const [cachedShows, setCachedShows] = useState([]);
+  const [cachedMovies, setCachedMovies] = useState([]);
   const [removeShow, { errr }] = useMutation(REMOVE_SHOW);
+  const [removeMovie, { er }] = useMutation(REMOVE_MOVIE);
 
   // When the delete button is clicked:
   const handleDeleteShow = async (showId, id) => {
@@ -39,7 +46,25 @@ const Profile = () => {
       console.error(err);
     }
   };
-  console.log('just user', user);
+  const handleDeleteMovie = async (movieId, id) => {
+    try {
+      await removeMovie({ variables: { movieId } });
+      const savedMoviesData = JSON.parse(localStorage.getItem('savedMovies'));
+      if (savedMoviesData) {
+        // If the movie is saved, remove it from local storage
+        if (savedMoviesData.hasOwnProperty(id)) {
+          delete savedMoviesData[id];
+  
+          // Save the updated data back to local storage
+          localStorage.setItem('savedMovies', JSON.stringify(savedMoviesData));
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
+ 
   useEffect(() => {
     const setupDB = async () => {
       try {
@@ -59,8 +84,10 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
+    setMyState(0);
     const fetchShows = async () => {
       console.log("just edit", user.shows);
+      console.log('just user', user);
       if (!user.shows || !db) {
         return;
       }
@@ -95,8 +122,35 @@ const Profile = () => {
     fetchShows();
   }, [user.shows, db]);
   useEffect(() => {
+    const fetchMovies = async () => {
+      console.log("fetching movies", user.movies);
+      if (!user.movies) {
+        return;
+      }
+      const dbmovie = await openDB('MyDBMovies', 1, {
+        upgrade(dbmovie) {
+          dbmovie.createObjectStore('tmdbmovies');
+        },
+      });
+      const moviesCache = [];
+      for (let movie of user.movies) {
+        const cache = await dbmovie.get('tmdbmovies', movie.tmdbId.toString());
+  
+        if (cache) {
+          moviesCache.push({ ...cache, movieId: movie._id });
+        }
+      }
+  
+      setCachedMovies(moviesCache);
+      console.log("fetched movies", moviesCache);
+    };
+  
+    fetchMovies();
+  }, [user.movies]);
+  
+  useEffect(() => {
 
-    console.log('jojojoj', cachedShows);
+    console.log('jojojoj', cachedShows, cachedMovies);
     setIsLoading(false);
 
   }, [cachedShows])
@@ -122,8 +176,126 @@ const Profile = () => {
       </h4>
     );
   }
-
+  console.log("fetched movies", cachedMovies);
   // The rest of your component...
+  const renderView = () => {
+    switch (view) {
+      case 'movies':
+        return cachedMovies.map(card => (
+          // Replace this with your Card component for movies
+          <section className="dark text-dark">
+            <div className="container py-4">
+            <article className={`postcard ${cards.theme} ${getRatingColor(card.imdb ? card.imdb.imDbRating : card.additionalData.imDbRating)}`}>
+                <a className="postcard__img_link" >
+                  <img className="postcard__img" src={card.imdb && card.imdb.image} alt={card.imdb && card.imdb.fullTitle} />
+                </a>
+                <div className="postcard__text">
+                  <h1 className={`postcard__title ${card.color}`}>
+                    <a href="#">{card.imdb && card.imdb.fullTitle}</a>
+                  </h1>
+                  <div className="postcard__subtitle small">
+                    <time datetime={card.imdb && card.imdb.releaseDate}>
+                      <FontAwesomeIcon icon={faCalendarAlt} className="mx-2" />
+                      {card.imdb ? (card.imdb.releaseDate) : ('')}
+                    </time>
+                  </div>
+                  <div className="postcard__bar"></div>
+                  <div className="postcard__preview-txt">{card.imdb.wikipedia.plotFull.plainText}</div>
+                  <ul className="postcard__tagbox">
+                    <li className="tag__item hover-delete">
+                      <FontAwesomeIcon icon={faTrashCanArrowUp} className="mx-2" />
+                      <button className='' style={{ borderStyle: 'none', backgroundColor: 'transparent', color: 'white' }} onClick={() => handleDeleteMovie(card.movieId, card?.movieId)}>Delete</button>
+                    </li>
+                    <li className="tag__item">
+                      <FontAwesomeIcon icon={faRankingStar} className="mx-2" />
+                     {card.imdb ? (card.imdb.imDbRating) : ('')}
+                    </li>
+                    <li className={`tag__item play ${card.color}`}>
+                      <Link to={`/moviedetails?id=${card.movie.id}`}>
+                        <FontAwesomeIcon icon={faPlay} className="mx-2" />
+                        Play Episode
+                      </Link>
+
+                    </li>
+                    {/* <li className="tag__item">
+                      {card.movie.networks[0].name}
+                   <FontAwesomeIcon icon={faArrowRight} className="mx-2" />
+                    </li> */}
+                   
+                  </ul>
+                </div>
+              </article>
+
+            </div>
+          </section>
+        ));
+        case 'shows':
+          return cachedShows.map(card => (
+            <section className="dark text-dark">
+            <div className="container py-4">
+            <article className={`postcard ${cards.theme} ${getRatingColor(card.imdb ? card.imdb.imDbRating : card.additionalData.imDbRating)}`}>
+                <a className="postcard__img_link" href="#">
+                  <img className="postcard__img" src={(card.imdb && card.imdb.image) || (card.additionalData && card.additionalData.image)} alt={card.imdb && card.imdb.fullTitle} />
+                </a>
+                <div className="postcard__text">
+                  <h1 className={`postcard__title ${card.color}`}>
+                    <a href="#">{(card.imdb && card.imdb.fullTitle) || (card.additionalData.fullTitle)}</a>
+                  </h1>
+                  <div className="postcard__subtitle small">
+                    <time datetime={card.imdb && card.imdb.releaseDate}>
+                      <FontAwesomeIcon icon={faCalendarAlt} className="mx-2" />
+                      {card.imdb ? (card.imdb.releaseDate) : (card.additionalData.releaseDate)}
+                    </time>
+                  </div>
+                  <div className="postcard__bar"></div>
+                  <div className="postcard__preview-txt">{card.show ? (card.imdb && card.imdb.wikipedia.plotFull.plainText) : (card.additionalData.wikipedia.plotFull.plainText)}</div>
+                  <ul className="postcard__tagbox">
+                    <li className="tag__item hover-delete">
+                      <FontAwesomeIcon icon={faTrashCanArrowUp} className="mx-2" />
+                      <button className='' style={{ borderStyle: 'none', backgroundColor: 'transparent', color: 'white' }} onClick={() => handleDeleteShow(card.showId, card?.showId, card?.show?.id || card?.reviewsAndEpisodeGroups?.episodeGroups?.id)}>Delete</button>
+                    </li>
+                    <li className="tag__item">
+                      <FontAwesomeIcon icon={faRankingStar} className="mx-2" />
+                     {card.imdb ? (card.imdb.imDbRating) : (card.additionalData.imDbRating)}
+                    </li>
+                    <li className={`tag__item play ${card.color}`}>
+                      <Link to={card?.show?.id ? `/details?id=${card.show.id}` : `/details?id=${card?.reviewsAndEpisodeGroups?.episodeGroups?.id || ''}`}>
+                        <FontAwesomeIcon icon={faPlay} className="mx-2" />
+                        Play Episode
+                      </Link>
+
+                    </li>
+                    <li className="tag__item">
+                      {card.show ? (card.show.networks[0].name) : (card.reviewsAndEpisodeGroups.episodeGroups.networks[0].name)}
+                   <FontAwesomeIcon icon={faArrowRight} className="mx-2" />
+                    </li>
+                   
+                  </ul>
+                </div>
+              </article>
+
+            </div>
+          </section>
+          ));
+      case 'anime':
+        return  (
+          // Replace this with your Card component for anime
+          <div></div>
+        );
+      default:
+        return null;
+    }
+  };
+  const getRatingColor = (rating) => {
+    if (rating >= 8) {
+      return "green";
+    } else if (rating >= 6) {
+      return "yellow";
+    } else {
+      return "red";
+    }
+  };
+  
   let cards = [
     {
       theme: "dark",
@@ -140,67 +312,34 @@ const Profile = () => {
   console.log('jojojoj', cachedShows);
 
   return (
-    <div>
-      <div className="flex-row justify-center mb-3">
-        <h2 className="col-12 col-md-10 bg-dark text-light p-3 mb-5">
+    <Container>
+    <Row className="justify-content-md-center mb-3">
+      <Col xs={12} md={10} className="bg-dark text-light p-3 mb-5">
+        <h2>
           Viewing {userParam ? `${user.username}'s` : 'your'} profile.
         </h2>
+      </Col>
 
-        {isLoading ? (
-          <div> loaded</div>
-        ) : (
-          <div>
-            {cachedShows.map(card => (
-              <section className="dark text-dark">
-                <div className="container py-4">
-                  <article className={`postcard ${cards.theme} green`}>
-                    <a className="postcard__img_link" href="#">
-                      <img className="postcard__img" src={(card.imdb && card.imdb.image) || (card.additionalData && card.additionalData.image)} alt={card.imdb && card.imdb.fullTitle} />
-                    </a>
-                    <div className="postcard__text">
-                      <h1 className={`postcard__title ${card.color}`}>
-                        <a href="#">{(card.imdb && card.imdb.fullTitle) || (card.additionalData.fullTitle)}</a>
-                      </h1>
-                      <div className="postcard__subtitle small">
-                        <time datetime={card.imdb && card.imdb.releaseDate}>
-                          <FontAwesomeIcon icon={faCalendarAlt} className="mx-2" />
-                          {card.imdb ? (card.imdb.releaseDate) : (card.additionalData.releaseDate)}
-                        </time>
-                      </div>
-                      <div className="postcard__bar"></div>
-                      <div className="postcard__preview-txt">{card.show ? (card.show && card.show.overview) : (card.reviewsAndEpisodeGroups.episodeGroups.overview)}</div>
-                      <ul className="postcard__tagbox">
-                        <li className="tag__item hover-delete">
-                          <FontAwesomeIcon icon={faTrashCanArrowUp} className="mx-2" />
-                          <button className='' style={{ borderStyle: 'none', backgroundColor: 'transparent', color: 'white' }} onClick={() => handleDeleteShow(card.showId, card?.showId, card?.show?.id || card?.reviewsAndEpisodeGroups?.episodeGroups?.id)}>Delete</button>
-                        </li>
-                        <li className="tag__item">
-                          <FontAwesomeIcon icon={faRankingStar} className="mx-2" />
-                         {card.imdb ? (card.imdb.imDbRating) : (card.additionalData.imDbRating)}
-                        </li>
-                        <li className={`tag__item play ${card.color}`}>
-                          <Link to={card?.show?.id ? `/details?id=${card.show.id}` : `/details?id=${card?.reviewsAndEpisodeGroups?.episodeGroups?.id || ''}`}>
-                            <FontAwesomeIcon icon={faPlay} className="mx-2" />
-                            Play Episode
-                          </Link>
+      {isLoading ? (
+        <Col>loading...</Col>
+      ) : (
+        <Col>
+          <Dropdown onSelect={(value) => setView(value)}>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              Choose View
+            </Dropdown.Toggle>
 
-                        </li>
-                        <li className="tag__item">
-                          {card.show ? (card.show.networks[0].name) : (card.reviewsAndEpisodeGroups.episodeGroups.networks[0].name)}
-                       <FontAwesomeIcon icon={faArrowRight} className="mx-2" />
-                        </li>
-                       
-                      </ul>
-                    </div>
-                  </article>
-
-                </div>
-              </section>
-            ))}
-          </div>
-        )}
-      </div>
-    </div> // <--- added closing tag here
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="shows">Shows</Dropdown.Item>
+              <Dropdown.Item eventKey="movies">Movies</Dropdown.Item>
+              <Dropdown.Item eventKey="anime">Anime</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          {renderView()}
+        </Col>
+      )}
+    </Row>
+  </Container>
   );
 }
 

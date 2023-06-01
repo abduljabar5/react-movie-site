@@ -1739,10 +1739,10 @@ border-left: 0 !important;
 	 flex-direction: column;
 }
  .postcard .postcard__preview-txt {
-	 overflow: hidden;
+	 overflow: scroll;
 	 text-overflow: ellipsis;
 	 text-align: justify;
-	 height: 100%;
+	 height: 200px;
 }
  .postcard .postcard__tagbox {
 	 display: flex;

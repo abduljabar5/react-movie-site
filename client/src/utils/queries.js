@@ -15,10 +15,14 @@ query user($username: String!) {
       _id
       themoviedb
     }
+    movies {
+      _id
+      tmdbId
+      imdbId
+    }
   }
 }
 `;
-
 export const QUERY_THOUGHTS = gql`
   query getThoughts {
     thoughts {
@@ -62,6 +66,11 @@ query me {
     shows {
       _id
       themoviedb
+    }
+    movies {
+      _id
+      tmdbId
+      imdbId
     }
   }
 }
