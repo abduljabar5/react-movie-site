@@ -8,6 +8,27 @@
 .hiide{
   display: none;
 }
+.brand {
+  font-size: 6em;  /* Change as needed */
+  background: linear-gradient(90deg, rgb(247, 0, 255), rgb(60, 0, 255), rgb(255, 30, 0), gold);
+  background-size: 200% auto;
+  color: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 13s alternate infinite;
+}
+
+@keyframes gradient {
+  0% {
+   filter: hue-rotate(279deg);
+  }
+  50%{
+    filter: hue-rotate(197deg);
+  }
+  100% {
+filter: hue-rotate(12deg);  }
+}
+
 .dark{
   background-color: #282828;
   color: #CCCCCC ;
@@ -124,6 +145,15 @@
   opacity: 1; /* Show it when card is hovered */
 }
 
+.movie-detail-page{
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 1154px) {
+  .movie-detail-page{
+    flex-wrap: wrap;
+  }
+}
 
 .view{
   opacity: 0;
@@ -435,11 +465,15 @@
 .img-container {
   margin-bottom: 80px;
   display: flex;
+  flex-wrap: wrap;
   overflow: scroll;
   margin: 46px 25px;
+  flex-direction: column;
+  scroll-snap-type: x mandatory !important;
 }
 .img-container a{
-  width: 25%;
+  width: 100vw;
+  margin: 0 10px;
 }
 }
 /* .trending__product {
@@ -739,22 +773,6 @@ h2 {
   background: var(--darkred);
 }
 
-.cards::-webkit-scrollbar {
-  height: 12px;
-}
-
-.cards::-webkit-scrollbar-thumb,
-.cards::-webkit-scrollbar-track {
-  border-radius: 92px;
-}
-
-.cards::-webkit-scrollbar-thumb {
-  background: var(--darkred);
-}
-
-.cards::-webkit-scrollbar-track {
-  background: var(--thumb);
-}
 @media (max-width: 576px) {
  .similar .card {
     flex-basis: calc(100% - 10px) !important;
@@ -1218,7 +1236,7 @@ a {
 }
 .img-container{
    margin-bottom: 80px;
-    height: 620px;
+    height: 420px;
     overflow: scroll;
     margin: 47px 10px;
     scroll-snap-type: y mandatory;
@@ -1936,4 +1954,107 @@ border-left: 0 !important;
 
 .postcard__tagbox .hover-delete:hover {
   background: rgba(78, 1, 1, 0.8) !important;
+}
+/* anime loadmore */
+
+.anime1-wrapper{
+    width:200px;
+    height:60px;
+    position: relative;
+    margin: 0px auto;
+    top: -5px;
+}
+.anime1-circle{
+    width:20px;
+    height:20px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: #fff;
+    left:15%;
+    transform-origin: 50%;
+    animation: circle .5s alternate infinite ease;
+}
+
+@keyframes circle{
+    0%{
+        top:60px;
+        height:5px;
+        border-radius: 50px 50px 25px 25px;
+        transform: scaleX(1.7);
+    }
+    40%{
+        height:20px;
+        border-radius: 50%;
+        transform: scaleX(1);
+    }
+    100%{
+        top:0%;
+    }
+}
+.anime1-circle:nth-child(2){
+    left:45%;
+    animation-delay: .2s;
+}
+.anime1-circle:nth-child(3){
+    left:auto;
+    right:15%;
+    animation-delay: .3s;
+}
+.anime1-shadow{
+    width:20px;
+    height:4px;
+    border-radius: 50%;
+    background-color: #1DE9B6 !important;
+    position: absolute;
+    top:62px;
+    transform-origin: 50%;
+    z-index: -1;
+    left:15%;
+    filter: blur(1px);
+    animation: shadow .5s alternate infinite ease;
+}
+
+@keyframes shadow{
+    0%{
+        transform: scaleX(1.5);
+    }
+    40%{
+        transform: scaleX(1);
+        opacity: .7;
+    }
+    100%{
+        transform: scaleX(.2);
+        opacity: .4;
+    }
+}
+.anime1-shadow:nth-child(4){
+    left: 45%;
+    animation-delay: .2s
+}
+.anime1-shadow:nth-child(5){
+    left:auto;
+    right:15%;
+    animation-delay: .3s;
+}
+.anime1-wrapper span{
+    position: absolute;
+    top:75px;
+    font-family: 'Lato';
+    font-size: 20px;
+    letter-spacing: 12px;
+    color: #fff;
+    left:15%;
+}
+
+
+/* end of anime laod more */
+.image-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7));
+  pointer-events: none;  /* so the image remains interactive */
 }

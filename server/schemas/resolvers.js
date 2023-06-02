@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('apollo-server-express');
 const GraphQLJSON = require('graphql-type-json');
-const { User, Thought, Show, Movie } = require('../models');
+const { User, Thought, Show, Movie, Anime } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -25,7 +25,7 @@ const resolvers = {
       console.log(args);
       console.log(context)
       if (context.user) {
-        return User.findOne({ _id: context.user._id }).populate('shows').populate('movies').populate('thoughts');
+        return User.findOne({ _id: context.user._id }).populate('shows').populate('movies').populate('thoughts').populate('animes'); 
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -180,7 +180,39 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+    addAnime: async (parent, { anime }, context) => {
+      console.log(context)
     
+      if (context.user) {
+        let animeExists = await Anime.findOne({ animeId: anime.animeId }); // Check if the anime already exists
+    
+        // If the anime does not exist in the database, create a new one
+        if (!animeExists) {
+          animeExists = await Anime.create(anime);
+        }
+    
+        // Add the anime to the user's list
+        return User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { animes: animeExists._id } }, // push the _id of the anime
+          { new: true } // return the updated document
+        ).populate('animes'); // populate the animes field before returning
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    
+    removeAnime: async (parent, { animeId }, context) => {
+      if (context.user) {
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $pull: { animes: animeId }
+          },
+          { new: true }
+        ).populate('animes'); // populate the animes field before returning
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
   },
 };
 

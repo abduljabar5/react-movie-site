@@ -32,19 +32,19 @@ const Series = () => {
             }));
             const db = await openDB('anime-db', 1, {
                 upgrade(db) {
-                    db.createObjectStore('anime', {keyPath: 'id'});
+                    db.createObjectStore('anime', { keyPath: 'id' });
                 },
             });
             for (const item of dataToStore) {
                 await db.put('anime', item);
             }
             setContent((prevContent) => [...prevContent, ...response.data.data]);
-             setIsLoading(false);
-             setIloadmore(false);
+            setIsLoading(false);
+            setIloadmore(false);
         } catch (err) {
             console.log(err);
         } finally {
-           
+
         }
     };
 
@@ -61,7 +61,7 @@ const Series = () => {
         setContent([]);
         setPage(1);
     };
-
+    console.log(contents);
     return (
         <div>
             {isLoading ? (
@@ -94,11 +94,12 @@ const Series = () => {
                     <Row xs={1} md={4} className="g-5 m-4">
                         {contents.map((content, index) => (
                             <Col key={`${content.mal_id}-${index}`}>
-                               <Link to={`/anime?name=${content.title}`}>
+                                <Link to={`/anime?name=${content.title_english}`}>
                                     <Card className='contentcard'>
                                         <Card.Img
                                             className='cardimage'
                                             src={content.images?.jpg?.large_image_url}
+                                            style={{ height: '464px', objectFit: 'fill' }}
                                             alt="Card image"
                                         />
                                         <Card.ImgOverlay>
@@ -113,20 +114,22 @@ const Series = () => {
                             </Col>
                         ))}
                     </Row>
-                            {loadmore ? (
-                                <div> <Spinner animation="grow" variant="primary" />
-                                  <Spinner animation="grow" variant="secondary" />
-                                  <Spinner animation="grow" variant="success" />
-                                  <Spinner animation="grow" variant="danger" />
-                                  <Spinner animation="grow" variant="warning" />
-                                  <Spinner animation="grow" variant="info" />
-                                  <Spinner animation="grow" variant="light" />
-                                  <Spinner animation="grow" variant="dark" /></div>
-                                 
-                            ):(
-                                <div></div>
-                            )}
-                    <Button onClick={handleLoadMore}>Load more</Button>
+                    {loadmore ? (<div class="anime1-wrapper">
+                        <div class="anime1-circle"></div>
+                        <div class="anime1-circle"></div>
+                        <div class="anime1-circle"></div>
+                        <div class="anime1-shadow"></div>
+                        <div class="anime1-shadow"></div>
+                        <div class="anime1-shadow"></div>
+                        <span>Loading</span>
+                    </div>
+
+
+                    ) : (
+                        <Button variant='outline-secondary' className='w-100' onClick={handleLoadMore}>Load more</Button>
+
+                    )}
+
                 </>
             )}
         </div>

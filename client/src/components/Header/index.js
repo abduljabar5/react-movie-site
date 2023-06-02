@@ -54,7 +54,7 @@ const Header = () => {
     
     <Navbar key='lg' expand='lg' className={navbar ? 'fixed-top' : ''} style={{backgroundColor:'#008080'}}>
         <Container fluid>
-          <Navbar.Brand href="#">Navbar Offcanvas</Navbar.Brand>
+          <Navbar.Brand className='brand' href="#">Navbar Offcanvas</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-$'lg'`}

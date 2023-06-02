@@ -11,6 +11,7 @@ scalar JSON
     thoughts: [Thought]!
     shows: [Show]
     movies: [Movie]
+    animes: [Anime]    
   }
 
   type Show {
@@ -24,6 +25,13 @@ scalar JSON
     imdbId: String
   }
 
+  
+  type Anime {
+    _id: ID
+    animeId: String
+    animeName: String
+  }
+
   input ShowInput {
     _id: ID
     themoviedb: JSON
@@ -33,6 +41,12 @@ scalar JSON
     _id: ID
     tmdbId: String
     imdbId: String
+  }
+
+  input AnimeInput {
+    _id: ID
+    animeId: String
+    animeName: String
   }
 
   type Thought {
@@ -63,6 +77,8 @@ scalar JSON
     me: User
     movies: [Movie]
     movie(tmdbId: String!): Movie
+    animes: [Anime]      
+    anime(animeId: String!): Anime   
   }
 
   type Mutation {
@@ -70,12 +86,14 @@ scalar JSON
     login(email: String!, password: String!): Auth
     addShow(userId: ID!, show: ShowInput!): User
     addMovie(userId: ID!, movie: MovieInput!): User
+    addAnime(userId: ID!, anime: AnimeInput!): User  
     addThought(thoughtText: String!): Thought
     addComment(thoughtId: ID!, commentText: String!): Thought
     removeThought(thoughtId: ID!): Thought
     removeComment(thoughtId: ID!, commentId: ID!): Thought
     removeShow(showId: ID!): User
     removeMovie(movieId: ID!): User
+    removeAnime(animeId: ID!): User   
   }
 `;
 

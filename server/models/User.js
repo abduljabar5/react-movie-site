@@ -31,6 +31,12 @@ const userSchema = new Schema({
       ref: 'Movie',
     },
   ],
+  animes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Anime',
+    },
+  ],
   thoughts: [
     {
       type: Schema.Types.ObjectId,

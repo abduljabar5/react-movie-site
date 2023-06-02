@@ -113,4 +113,32 @@ export const REMOVE_MOVIE = gql`
 
 
 
+export const ADD_ANIME = gql`
+mutation ($userId: ID!, $anime: AnimeInput!) {
+  addAnime(userId: $userId, anime: $anime) {
+    _id
+    username
+    animes {
+      _id
+      animeId
+      animeName
+    }    
+  }
+}
+`;
+
+export const REMOVE_ANIME = gql`
+  mutation removeAnime($animeId: ID!) {
+    removeAnime(animeId: $animeId) {
+      _id
+      username
+      email
+      animes {
+        _id
+        animeId
+        animeName
+      }
+    }
+  }
+`;
 

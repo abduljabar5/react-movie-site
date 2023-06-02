@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
@@ -8,6 +8,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import CarouselCards from '../components/Similar';
 import ButtonSlideOut from '../components/WatchNow';
+import {MyContext, MyProvider} from '../components/MyContext';
 
 import { ADD_SHOW } from '../utils/mutations';
 import 'react-circular-progressbar/dist/styles.css';
@@ -42,6 +43,7 @@ const MoreDetails = () => {
     const [heartFilled, setHeartFilled] = useState(null);
     const [savedShows, setSavedShows] = useState({});
     const [notification, setNotification] = useState(null);  // initialize state variable
+    const { incrementMyState } = useContext(MyContext);
 
     const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
     const { username: userParam } = useParams();
@@ -149,6 +151,7 @@ const MoreDetails = () => {
 
                 const updatedSavedShows = { ...savedShows, [id]: newHeartFilledState };
                 setSavedShows(updatedSavedShows);
+                incrementMyState();
                 setNotification({
                     message: "Go to profile to view saved content",
                     variant: "success",
@@ -281,7 +284,7 @@ const MoreDetails = () => {
 
                                                 {/* <button href="#" class="watch-btn" style={{borderStyle:'none',backgroundColor:'transparent'}}><span>Watch Now</span> <i
                                                     class="fa fa-angle-right"></i></button> */}
-                                                    <ButtonSlideOut prompt={show} />
+                                                    <ButtonSlideOut prompt={show.imdb} />
                                             </div>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
                                                 <div style={{ display: 'flex' }}>

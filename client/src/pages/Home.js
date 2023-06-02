@@ -131,7 +131,7 @@ const Movies = () => {
       {trendingToday.map((today, index) => {
         return (
           <div  className={`carousel-item${index === 0 ? " active" : ""}`}>
-            <Card className="bg-dark text-white">
+            <Card className="bg-dark text-white image-container">
       <Card.Img style={{
                 ...style,
                 backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${today.backdrop_path})`,

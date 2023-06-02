@@ -20,6 +20,11 @@ query user($username: String!) {
       tmdbId
       imdbId
     }
+    animes {
+      _id
+      animeId
+      animeName
+    }
   }
 }
 `;
@@ -71,6 +76,11 @@ query me {
       _id
       tmdbId
       imdbId
+    }
+    animes {
+      _id
+      animeId
+      animeName
     }
   }
 }

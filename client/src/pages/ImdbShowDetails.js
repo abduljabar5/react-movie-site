@@ -20,7 +20,7 @@ import Notification from '../components/Notification/Alerts';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import Carousel from 'react-bootstrap/Carousel';
-import { Button } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 
 import CarouselCards from '../components/Similar';
 const MoreDetails = () => {
@@ -198,7 +198,7 @@ const MoreDetails = () => {
         width: '100%',
         height: 'auto',
         minHeight: '35rem',
-        padding: '15rem 0',
+        padding: '5rem 0',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'scroll',
@@ -363,28 +363,33 @@ const MoreDetails = () => {
                             </div>
                         </div>
                     </header>
-                     <h1 style={{margin:'20px 63px', color:'white'}}>Casts</h1>
-                    <section className='cast-container'>
-                       
-                        {additionalData.actorList.slice(0, 10).map((actor) => (
-                            <div className="cast-card-container">
-                                <div className="card mb-3 cast-card bg-dark">
-                                    <div className="row g-0">
-                                        <div className="col-md-4">
-                                            <img src={actor.image} className="img-fluid rounded-start" alt="..."></img>
-                                        </div>
-                                        <div className="col-md-8">
-                                            <div className="card-body">
-                                                <h5 className="card-title">{actor.name}</h5>
-                                                <p className="card-text">{actor.asCharacter}</p>
-                                                <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </section>
+                    <section>
+                     <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+                                                <div style={{ display: 'flex' }}>
+                                                    <h1 className='position-absolute'style={{margin:'20px 63px', color:'white'}}>Cast</h1>
+                                                    <div class="cast-container mx-auto" style={{ width: "87vw" }}>
+                                                        {additionalData.actorList.map((item, index) => (
+                                                            <div class="cast-item">
+                                                                <div className=" border-0" key={index}>
+                                                                    <div className=''>
+                                                                        {/* <Link to={`/show?id=${item.id}`}> */}
+                                                                        <Card.Img
+                                                                            className='cardimage'
+                                                                            style={{ minHeight: '250px', maxHeight: '250px', backgroundImage: `url(${item.image})`, backgroundSize: 'cover',borderColor: 'black', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '15px' }}
+                                                                        />
+                                                                        <Card.ImgOverlay className='imageoverlay'>
+                                                                            <Card.Title>{item.title}</Card.Title>
+                                                                            <Card.Text>{item.imDbRating}</Card.Text>
+                                                                        </Card.ImgOverlay>
+                                                                        {/* </Link> */}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    </div>
+                                                    </div>
+                                                    </section>
                     <section id='trailers'>
                     <Carousel>                    
                         <h1 style={{margin:'20px 63px', color:'white'}}>Trailers</h1>
@@ -456,13 +461,12 @@ const MoreDetails = () => {
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="form-group fl_icon">
-                                            <div class="icon"><i class="fa fa-user"></i></div>
+                                            
                                             <input class="form-input" type="text" placeholder="Your name"></input>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-6 fl_icon">
                                         <div class="form-group fl_icon">
-                                            <div class="icon"><i class="fa fa-envelope-o"></i></div>
                                             <input class="form-input" type="text" placeholder="Your email"></input>
                                         </div>
                                     </div>

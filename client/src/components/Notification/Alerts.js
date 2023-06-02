@@ -10,7 +10,7 @@ const Notification = ({ message, variant }) => {
   }, []);
 
   return (
-    show && <Alert position='top-start' style={{position: 'fixed', zIndex: '2', }} variant={variant} dismissible>{message}</Alert>
+    show && <Alert position='top-end' style={{position: 'fixed', zIndex: 2, right: '0px', top: '100px'}} variant={variant} dismissible>{message}</Alert>
     );
 };
 
