@@ -53,7 +53,7 @@ const MoreDetails = () => {
     }, [loading, data, id, reviewsAndEpisodeGroups]);
     
     const fetchShows = async () => {
-        const res = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=810b2ac0`);
+        const res = await axios.get(`https://www.omdbapi.com/?i=${id}&apikey=810b2ac0`);
         console.log('hihihihi', res.data);
         return res.data;
     };

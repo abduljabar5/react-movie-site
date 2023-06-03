@@ -110,6 +110,10 @@ filter: hue-rotate(12deg);  }
   width: 100%;
   height: auto;
 }
+.homepage-subtext{
+  width: 45%;
+  margin:30px 130px;
+}
 
 .imageoverlay {
   position: absolute; /* Position this within .contentcard */
@@ -152,6 +156,14 @@ filter: hue-rotate(12deg);  }
 @media (max-width: 1154px) {
   .movie-detail-page{
     flex-wrap: wrap;
+  }
+  .homepage-subtext{
+    width: 100%;
+    margin: 0px;
+  }
+  .homepage-subtext p{
+    height: 100px;
+    overflow: scroll;
   }
 }
 
@@ -331,6 +343,7 @@ filter: hue-rotate(12deg);  }
     #hero {
       background-attachment: fixed;
     }
+  
   }
   
   #hero .hero-logo {
@@ -1347,6 +1360,15 @@ a {
   .padding {
       padding: 1.5rem
   }
+  .news-block-container{
+   flex-wrap: wrap;
+   }
+   .smaller-new{
+    flex-wrap: wrap;
+   }
+   .news-slit{
+    width: 100% !important;
+   }
 }
 
 @media (max-width:767px) {
@@ -1635,6 +1657,110 @@ a {
   float: right;
   cursor: pointer;
 }
+/* news block at bottom of home page */
+.news-block-container{
+ border-style: groove;
+ border-color: #1DE9B6; 
+ display: flex;
+ justify-content: center;
+}
+.main-news-img{
+  margin: 10px;
+}
+.news-slit{
+  border-style: groove;
+  border-color: #1DE9B6;
+  width: 50%;
+  margin: 5px;
+}
+.smaller-new{
+  display: flex;
+  margin: 5px;
+}
+.small-news-one{
+  margin: 5px;
+}
+.small-news-one {
+    position: relative;
+    overflow: visible; 
+}
+
+.small-news-one img {
+    width: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.5s ease;
+    z-index: 2;
+}
+
+.overlay-text {
+    color: white;
+}
+
+.small-news-one:hover .overlay {
+    transform: scaleY(1);
+}
+.small-news-one {
+  position: relative;
+}
+
+.small-news-one img {
+  width: 100%;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.overlay-text {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.small-news-one:hover .overlay-text {
+  max-height:50px;
+}
+.main-news-img:hover .overlay-text, .small-news-one:hover .overlay-text {
+  display: block; /* Show the text on hover */
+}
+.main-news {
+  position: relative;
+  overflow: hidden; /* Ensures the overlay stays within the image area */
+}
+
+.info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  transition: .5s ease;
+}
+
+.main-news:hover .info-overlay {
+  height: 100%;
+}
+
+.info-text {
+  color: white;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+/* end of news at bottom of home page */
 /* end chat */
 .microphone{
 

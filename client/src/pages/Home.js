@@ -8,6 +8,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Auth from '../utils/auth';
 import helper from '../styles/images/helper.svg'
 import IconDoubleRight from '../components/Icons/Right-arrow';
+import News from '../components/News';
 import API from '../api/Trending';
 import TrendingAnime from '../components/TrendingAnime';
 import MovieNews from '../components/Movie-tv-news';
@@ -111,12 +112,11 @@ const Movies = () => {
     const style = {
         position: 'relative',
         width: '100%',
-        height: 'auto',
+        height: '100vh',
         minHeight: '35rem',
         backgroundAttachment: 'fixed',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'scroll',
         backgroundSize: 'cover'
     };
     return (
@@ -136,7 +136,7 @@ const Movies = () => {
                 ...style,
                 backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${today.backdrop_path})`,
               }} />
-      <Card.ImgOverlay className='today-trend-name' style={{width:'45%', margin:'30px 130px'}}>
+      <Card.ImgOverlay className='today-trend-name homepage-subtext'>
       <h1 className="font_60"> {today.original_title||today.original_name}</h1>
 	   <h6 className="mt-3">
 	   <Stars vote_average={today.vote_average} />({today.media_type}) Year : {today?.release_date?.split('-')[0] ?? ''}
@@ -380,19 +380,22 @@ const Movies = () => {
                         </div>
                     </div>
                 </div>
-                 
+               
             </div>
+
             </div>
+            
             <div style={{width: '100%'}}>
                  <TrendingAnime />
             <MovieNews />
+           
             </div>
            
             </div>
             
             </div>
             )}
-          
+             <News />
         </main>
     );
 };

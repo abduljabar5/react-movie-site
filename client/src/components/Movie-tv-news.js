@@ -57,7 +57,7 @@ const MovieNews = () => {
             <p>Loading...</p>
           ) : (
             <div className="img-container">
-              {news.slice(0, 10).map((network, index) => {
+              {news.map((network, index) => {
                 return (
                   <div className="container" key={network.author}>
                     <Button variant="primary" onClick={() => handleModalShow(network)}>
@@ -67,7 +67,7 @@ const MovieNews = () => {
                       <div
                         className="product__sidebar__view__item set-bg"
                         style={{
-                          backgroundImage: `url(${network.urlToImage})`,
+                          backgroundImage: `url(${network.image})`,
                         }}
                       >
                         <div className="ep"></div>
@@ -85,7 +85,7 @@ const MovieNews = () => {
                     <Modal show={modalShow} onHide={handleModalClose}>
                       <Modal.Header  className="product__sidebar__view__item set-bg"
                         style={{
-                          backgroundImage: `url(${modalContent.urlToImage})`,
+                          backgroundImage: `url(${modalContent.image})`,
                         }} closeButton>
                         <Modal.Title>{modalContent.title}</Modal.Title>
                       </Modal.Header>
