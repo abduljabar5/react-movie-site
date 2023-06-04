@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 const Footer = () => {
   const location = useLocation();
@@ -13,27 +13,27 @@ const Footer = () => {
         <div class="row text-center d-flex justify-content-center pt-5">
           <div class="col-md-2">
             <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white">About us</a>
+              <Link to="/" class="text-white">Home</Link>
             </h6>
           </div>
           <div class="col-md-2">
             <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white">Products</a>
+            <Link to="/movies#" class="text-white">Movies</Link>
             </h6>
           </div>
           <div class="col-md-2">
             <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white">Awards</a>
+            <Link to="/TV-Shows" class="text-white">TV-Series</Link>
             </h6>
           </div>
           <div class="col-md-2">
             <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white">Help</a>
+            <Link to="/animepage" class="text-white">Anime</Link>
             </h6>
           </div>
           <div class="col-md-2">
             <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white">Contact</a>
+              <a href="https://abduljabar5.github.io/react-portfolio/#contact" class="text-white">Contact</a>
             </h6>
           </div>
         </div>
@@ -47,10 +47,7 @@ const Footer = () => {
         <div class="row d-flex justify-content-center">
           <div class="col-lg-8">
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-              distinctio earum repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti
-              dicta, aliquam sequi voluptate quas.
+            PopcornPeek is a comprehensive MERN stack web application offering real-time updates on trending movies, TV shows, anime, and entertainment news. It serves as a one-stop platform for entertainment enthusiasts seeking a personalized viewing experience.
             </p>
           </div>
         </div>
@@ -80,16 +77,9 @@ const Footer = () => {
  
 
     
-    <div>
-         class="text-center p-3"
-         style="background-color: rgba(0, 0, 0, 0.2)"
-        <div/>
-      © 2020 Copyright:
-      <a class="text-white" href="https://mdbootstrap.com/"
-         >MDBootstrap.com</a>
-     
+    <div class="text-center p-3"> © 2023 Copyright:
+      <a class="text-white">PopcornPeek</a>
     </div>
-    
   </footer>
 </div>
 

@@ -10,7 +10,8 @@ import Naruto from '../styles/images/anime.svg'
 import searchIcon from '../styles/images/search.svg'
 import IconTvSharp from "../components/Icons/Shows";
 import play from '../styles/images/play.svg'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Card, Col, Row } from "react-bootstrap";
 const Search = () => {
     const [searching, setSearching] = useState('');
@@ -82,7 +83,7 @@ const Search = () => {
                         className="me-2"
                         aria-label="Search"
                         onClick={handleShow} />
-                    <Button variant="outline-success">Search</Button>
+                    <Button variant="outline-dark" onClick={handleShow}><FontAwesomeIcon icon={faSearch} className="mx-2 my-auto" /></Button>
                 </Form>
                 <Modal show={show} dialogClassName="modal-xl bg-dark text-light" onHide={handleClose}>
                     <Modal.Header className="bg-dark border-0" closeButton>

@@ -6,7 +6,7 @@ import Auth from '../utils/auth';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import {MyContext, MyProvider} from '../components/MyContext';
+import { MyContext, MyProvider } from '../components/MyContext';
 
 import { ADD_SHOW } from '../utils/mutations';
 
@@ -32,26 +32,26 @@ const MoreDetails = () => {
     const [reviewsAndEpisodeGroups, setReviewsAndEpisodeGroups] = useState(null);
     const [heartFilled, setHeartFilled] = useState(null);
     const [savedShows, setSavedShows] = useState({});
-    const [notification, setNotification] = useState(null);  
+    const [notification, setNotification] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const { incrementMyState } = useContext(MyContext);
     const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
     const { username: userParam } = useParams();
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
         variables: { username: userParam },
-      });
-      useEffect(() => {
+    });
+    useEffect(() => {
         if (!loading && reviewsAndEpisodeGroups) {  // Check that reviewsAndEpisodeGroups is ready
             const user = data?.me || data?.user || {};
             // console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id))
-            console.log("pageid:",reviewsAndEpisodeGroups.themoviedb.id);
+            console.log("pageid:", reviewsAndEpisodeGroups.themoviedb.id);
             // Assuming that `user.shows` is an array of saved shows
             const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id) : false;
             setHeartFilled(isShowSaved)
             setSavedShows({ ...savedShows, [id]: isShowSaved });
         }
     }, [loading, data, id, reviewsAndEpisodeGroups]);
-    
+
     const fetchShows = async () => {
         const res = await axios.get(`https://www.omdbapi.com/?i=${id}&apikey=810b2ac0`);
         console.log('hihihihi', res.data);
@@ -151,16 +151,16 @@ const MoreDetails = () => {
         try {
             if (Auth.loggedIn()) {
                 const userId = Auth.getProfile().data._id;
-                const { themoviedb } = reviewsAndEpisodeGroups; 
+                const { themoviedb } = reviewsAndEpisodeGroups;
                 const showData = {
                     themoviedb
                 };
-      
+
                 console.log(userId);
                 console.log(showData);
-                        
+
                 const { data } = await addShow({
-                  variables: { userId, show: showData },
+                    variables: { userId, show: showData },
                 });
                 const newHeartFilledState = !heartFilled;
                 setHeartFilled(newHeartFilledState);
@@ -183,10 +183,10 @@ const MoreDetails = () => {
                     key: Date.now()
                 });
             }
-          } catch (err) {
+        } catch (err) {
             console.error(err);
-          }
-      };
+        }
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -208,17 +208,17 @@ const MoreDetails = () => {
     return (
         <div>
             {isLoading ? (
-             <  div class="wrapper mx-auto">
-               <div class="circle"></div>
-               <div class="circle"></div>
-               <div class="circle"></div>
-               <div class="shadow"></div>
-               <div class="shadow"></div>
-               <div class="shadow"></div>
-           </div>
+                <  div class="wrapper mx-auto">
+                    <div class="circle"></div>
+                    <div class="circle"></div>
+                    <div class="circle"></div>
+                    <div class="shadow"></div>
+                    <div class="shadow"></div>
+                    <div class="shadow"></div>
+                </div>
             ) : (
                 <div>
-                     <div>
+                    <div>
                         {notification && (
                             <Notification
                                 message={notification.message}
@@ -286,7 +286,10 @@ const MoreDetails = () => {
                                                 </div>
                                             </div>
                                             <div class="anime__details__btn">
-                                            <button
+                                               
+                                           
+                                            
+                                                 <button
                                                     className="follow-btn"
                                                     onClick={() => {
                                                         if (!heartFilled) {
@@ -300,12 +303,9 @@ const MoreDetails = () => {
                                                         }
                                                     }}
                                                 >
-<i className={`fa ${savedShows[id] ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
+                                                    <i className={`fa ${savedShows[id] ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
                                                 </button>
-                                <a href="#" class="watch-btn"><span>Watch Now</span> <i
-                                    class="fa fa-angle-right"></i></a>
-                                </div>
-                                            <div class="anime__details__btn m-4">
+                                                
                                                 <button type="button" class="follow-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                     Watch Trailer
                                                 </button>
@@ -332,10 +332,9 @@ const MoreDetails = () => {
                                                         </Popover>
                                                     }
                                                 >
-                                                    <Button variant="danger" className='watch-btn'>Watch Now</Button>
+                                                    <Button variant="danger" className='follow-btn'>Watch Now</Button>
                                                 </OverlayTrigger>
                                             </div>
-
 
                                             <div class="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl bg-none">
@@ -364,104 +363,104 @@ const MoreDetails = () => {
                         </div>
                     </header>
                     <section>
-                     <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
-                                                <div style={{ display: 'flex' }}>
-                                                    <h1 className='position-absolute'style={{margin:'20px 63px', color:'white'}}>Cast</h1>
-                                                    <div class="cast-container mx-auto" style={{ width: "87vw" }}>
-                                                        {additionalData.actorList.map((item, index) => (
-                                                            <div class="cast-item">
-                                                                <div className=" border-0" key={index}>
-                                                                    <div className=''>
-                                                                        {/* <Link to={`/show?id=${item.id}`}> */}
-                                                                        <Card.Img
-                                                                            className='cardimage'
-                                                                            style={{ minHeight: '250px', maxHeight: '250px', backgroundImage: `url(${item.image})`, backgroundSize: 'cover',borderColor: 'black', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '15px' }}
-                                                                        />
-                                                                        <Card.ImgOverlay className='imageoverlay'>
-                                                                            <Card.Title>{item.title}</Card.Title>
-                                                                            <Card.Text>{item.imDbRating}</Card.Text>
-                                                                        </Card.ImgOverlay>
-                                                                        {/* </Link> */}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    </div>
-                                                    </div>
-                                                    </section>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+                            <div style={{ display: 'flex' }}>
+                                <h1 className='position-absolute' style={{ margin: '20px 63px', color: 'white' }}>Cast</h1>
+                                <div class="cast-container mx-auto" style={{ width: "87vw" }}>
+                                    {additionalData.actorList.map((item, index) => (
+                                        <div class="cast-item">
+                                            <div className=" border-0" key={index}>
+                                                <div className=''>
+                                                    {/* <Link to={`/show?id=${item.id}`}> */}
+                                                    <Card.Img
+                                                        className='cardimage'
+                                                        style={{ minHeight: '250px', maxHeight: '250px', backgroundImage: `url(${item.image})`, backgroundSize: 'cover', borderColor: 'black', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '15px' }}
+                                                    />
+                                                    <Card.ImgOverlay className='imageoverlay'>
+                                                        <Card.Title>{item.title}</Card.Title>
+                                                        <Card.Text>{item.imDbRating}</Card.Text>
+                                                    </Card.ImgOverlay>
+                                                    {/* </Link> */}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <section id='trailers'>
-                    <Carousel>                    
-                        <h1 style={{margin:'20px 63px', color:'white'}}>Trailers</h1>
+                        <Carousel>
+                            <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers</h1>
 
-                       {reviewsAndEpisodeGroups.trailers.map((video) =>
-                     
-      <Carousel.Item interval={16000}>
-          <div key={video.id} className='video-center'>
-                        {video.key && (
-                            <iframe
-                            className='flex'
-                                width="960"
-                                height="555"
-                                src={`https://www.youtube.com/embed/${video.key}`}
-                                title={video.name}
-                                frameBorder="0"
-                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        )}
-                    </div>
-        <Carousel.Caption>
-          <h3>{video.name}</h3>
-        </Carousel.Caption>
-      </Carousel.Item>
-        )}
-    </Carousel>
+                            {reviewsAndEpisodeGroups.trailers.map((video) =>
+
+                                <Carousel.Item interval={16000}>
+                                    <div key={video.id} className='video-center'>
+                                        {video.key && (
+                                            <iframe
+                                                className='flex'
+                                                width="960"
+                                                height="555"
+                                                src={`https://www.youtube.com/embed/${video.key}`}
+                                                title={video.name}
+                                                frameBorder="0"
+                                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        )}
+                                    </div>
+                                    <Carousel.Caption>
+                                        <h3>{video.name}</h3>
+                                    </Carousel.Caption>
+                                </Carousel.Item>
+                            )}
+                        </Carousel>
                     </section>
                     <div>
-            <CarouselCards additionalData={additionalData} />
-        </div>
+                        <CarouselCards additionalData={additionalData} />
+                    </div>
                     <section class="about-section text-light" style={{ marginTop: '20px', backgroundColor: '#e9ebee;' }}>
                         <div class="be-comment-block">
                             <h1 class="comments-title text-light">Comments ({reviewsAndEpisodeGroups.reviews.length})</h1>
                             {
-  reviewsAndEpisodeGroups.reviews.length > 0 ? 
-    reviewsAndEpisodeGroups.reviews.map((review) => {
-      return (
-        <div class="be-comment">
-          <div class="be-img-comment">
-            <img src={`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`} alt="" class="be-ava-comment"></img>
-          </div>
-          <div class="be-comment-content">
-            <span class="be-comment-name">
-              <h5>{review.author}</h5>
-            </span>
-            <span class="be-comment-time">
-              <i class="fa fa-clock-o"></i>
-              {review.created_at}
-            </span>
-            <p class="be-comment-text">
-              {review.content}
-            </p>
-          </div>
-        </div>
-      )
-    })
-    :
-    <div class="be-comment">
-      <div class="be-comment-content">
-        <p class="be-comment-text">
-          Be the first to leave a review!
-        </p>
-      </div>
-    </div>
-}
+                                reviewsAndEpisodeGroups.reviews.length > 0 ?
+                                    reviewsAndEpisodeGroups.reviews.map((review) => {
+                                        return (
+                                            <div class="be-comment">
+                                                <div class="be-img-comment">
+                                                    <img src={`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`} alt="" class="be-ava-comment"></img>
+                                                </div>
+                                                <div class="be-comment-content">
+                                                    <span class="be-comment-name">
+                                                        <h5>{review.author}</h5>
+                                                    </span>
+                                                    <span class="be-comment-time">
+                                                        <i class="fa fa-clock-o"></i>
+                                                        {review.created_at}
+                                                    </span>
+                                                    <p class="be-comment-text">
+                                                        {review.content}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                    :
+                                    <div class="be-comment">
+                                        <div class="be-comment-content">
+                                            <p class="be-comment-text">
+                                                Be the first to leave a review!
+                                            </p>
+                                        </div>
+                                    </div>
+                            }
 
                             <form class="form-block">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6">
                                         <div class="form-group fl_icon">
-                                            
+
                                             <input class="form-input" type="text" placeholder="Your name"></input>
                                         </div>
                                     </div>

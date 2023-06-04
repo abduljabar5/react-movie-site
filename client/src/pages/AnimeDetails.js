@@ -206,7 +206,7 @@ const updatedSavedAnimes = {
                                     <button type="button" class="follow-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         Watch Trailer
                                     </button>
-                                    <a class="watch-btn"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
+                                    <a class="watch-btn" target='blank' href={`https://zoro.to/search?keyword=${anime.data.attributes.titles.en}`}><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
                                 </div>
                             
 

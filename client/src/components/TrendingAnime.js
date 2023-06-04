@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Placeholder from 'react-bootstrap/Placeholder';
 import API from '../api/Kitsu'
+import IconDoubleRight from '../components/Icons/Right-arrow';
 
 const Trendinganime = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -37,10 +38,8 @@ const Trendinganime = () => {
                         <h5>Top Anime</h5>
                     </div>
                     <ul class="filter__controls">
-                        <li class="active" data-filter="*">Day</li>
-                        <li data-filter=".week">Week</li>
-                        <li data-filter=".month">Month</li>
-                        <li data-filter=".years">Years</li>
+                    <Link to='/animepage' className="primary-btn ms-auto" style={{ textDecoration: 'none', color: '#1b9cff' }}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
+
                     </ul>
                     {isLoading ? (
                        <Card.Body>

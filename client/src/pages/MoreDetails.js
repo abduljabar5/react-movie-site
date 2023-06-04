@@ -24,8 +24,6 @@ import axios from 'axios';
 import { openDB } from 'idb';
 
 
-
-// create and open the database
 const setupDB = async () => {
     return openDB('MyDB', 1, {
         upgrade(db) {
@@ -42,10 +40,10 @@ const MoreDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [heartFilled, setHeartFilled] = useState(null);
     const [savedShows, setSavedShows] = useState({});
-    const [notification, setNotification] = useState(null);  // initialize state variable
+    const [notification, setNotification] = useState(null); 
     const { incrementMyState } = useContext(MyContext);
 
-    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
+    const [addShow, { error }] = useMutation(ADD_SHOW); 
     const { username: userParam } = useParams();
 
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
@@ -53,7 +51,7 @@ const MoreDetails = () => {
     });
 
     console.log(data);
-    console.log(err);  // log the error
+    console.log(err); 
 
     useEffect(() => {
         if (!loading) {

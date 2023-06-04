@@ -225,7 +225,7 @@ const Profile = () => {
 
   if (!user?.username) {
     return (
-      <h4>
+      <h4 className='text-center m-5'>
         You need to be logged in to see this. Use the navigation links above to
         sign up or log in!
       </h4>

@@ -54,7 +54,7 @@ const Header = () => {
     
     <Navbar key='lg' expand='lg' className={navbar ? 'fixed-top' : ''} style={{backgroundColor:'#008080'}}>
         <Container fluid>
-          <Navbar.Brand className='brand' href="#">Navbar Offcanvas</Navbar.Brand>
+          <Navbar.Brand className='brand' href="/" style={{fontFamily:'system-ui', fontSize:'30px'}}>PopcornPeek</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-$'lg'`}
@@ -74,7 +74,7 @@ const Header = () => {
                 <Nav.Link href="/animepage">
                   <img className='naruto' src={Naruto}></img>
                    Anime</Nav.Link>
-                <NavDropdown
+                {/* <NavDropdown
                   title="Dropdown"
                   id={`offcanvasNavbarDropdown-expand-$'lg'`}
                 >
@@ -86,7 +86,7 @@ const Header = () => {
                   <NavDropdown.Item href="#action5">
                     Something else here
                   </NavDropdown.Item>
-                </NavDropdown>
+                </NavDropdown> */}
                 <Search />
                 {Auth.loggedIn() ? (
             <>

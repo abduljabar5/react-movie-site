@@ -41,13 +41,12 @@ const Comments = ({ reviewsAndEpisodeGroups }) => {
           <div className="row">
             <div className="col-xs-12 col-sm-6">
               <div className="form-group fl_icon">
-                <div className="icon"><i className="fa fa-user"></i></div>
                 <input className="form-input" type="text" placeholder="Your name"></input>
               </div>
             </div>
             <div className="col-xs-12 col-sm-6 fl_icon">
               <div className="form-group fl_icon">
-                <div className="icon"><i className="fa fa-envelope-o"></i></div>
+                
                 <input className="form-input" type="text" placeholder="Your email"></input>
               </div>
             </div>

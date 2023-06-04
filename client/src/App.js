@@ -26,7 +26,7 @@ import Footer from './components/Footer';
 import AccountNotification from './components/Notification/LoginNotify'
 import 'aos/dist/aos.css';
 import AOS from 'aos';
-
+import NotFound from './pages/404';
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -110,6 +110,10 @@ function App() {
               <Route 
                 path="/me" 
                 element={<Profile />}
+              />
+               <Route 
+                path="*" 
+                element={<NotFound />}
               />
               {/* <Route 
                 path="/profiles/:username" 

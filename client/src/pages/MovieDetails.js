@@ -12,7 +12,7 @@ import { MyContext, MyProvider } from '../components/MyContext';
 import { Card, Carousel } from 'react-bootstrap';
 import Movieapi from '../api/ShowDetail';
 import { ADD_MOVIE } from '../utils/mutations';
-import imdb from '../api/Imdb';
+import Notification from '../components/Notification/Alerts';
 import imdblogo from '../styles/images/imdblogo.svg'
 import CarouselCards from '../components/Similar';
 import ButtonSlideOut from '../components/WatchNow';
@@ -35,6 +35,8 @@ const MoreDetails = () => {
     const [heartFilled, setHeartFilled] = useState(null);
     const [savedMovies, setSavedMovies] = useState({});
     const [addMovie, { error }] = useMutation(ADD_MOVIE);
+    const [notification, setNotification] = useState(null);
+
     const { username: userParam } = useParams();
     console.log("id:", id);
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
@@ -117,9 +119,18 @@ const MoreDetails = () => {
                 const updatedSavedMovies = { ...savedMovies, [id]: newHeartFilledState };
                 setSavedMovies(updatedSavedMovies);
                 incrementMyState();
+                setNotification({
+                message: "Go to profile to view saved content",
+                variant: "success",
+                key: Date.now()
+            });
                 console.log('saved');
             } else {
                 console.log('User is not logged in');
+                setNotification({
+                message: "Login Or Sigh Up",
+                key: Date.now()
+            });
             }
         } catch (err) {
             console.error(err);
@@ -149,6 +160,15 @@ const MoreDetails = () => {
                 <p>Loading...</p>
             ) : (
                 <div>
+                     <div>
+                        {notification && (
+                            <Notification
+                                message={notification.message}
+                                variant={notification.variant}
+                                key={notification.key}
+                            />
+                        )}
+                    </div>
                     <header className="" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${movie.movie.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
@@ -203,7 +223,7 @@ const MoreDetails = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="anime__details__btn">
+                                            <div className="anime__details__btn" style={{display:'flex', justifyContent:'center'}}>
                                                 <a style={{textDecoration:"none", cursor:'pointer'}} className="follow-btn" onClick={handleSaveMovie}>
                                                     {heartFilled ? <i class="fa fa-heart"></i> : <i class="fa fa-heart-o"></i>} save
                                                 </a>
