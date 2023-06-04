@@ -10,8 +10,11 @@ import helper from '../styles/images/helper.svg'
 import IconDoubleRight from '../components/Icons/Right-arrow';
 import News from '../components/News';
 import API from '../api/Trending';
+import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import TrendingAnime from '../components/TrendingAnime';
 import MovieNews from '../components/Movie-tv-news';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import youtube from '../styles/images/youtubetv.png'
 import axios from 'axios'; 
 const Movies = () => {
@@ -247,15 +250,16 @@ const Movies = () => {
                         <div className="row">
                         
                             <div className="row">
-                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
+                                <div className="btn__all" style={{display:'flex', justifyshow:'space-between'}}>
                                     <div className="div-title">
-                                    <h4>Trending Series
+                                    <h4  data-aos="fade-up"
+  data-aos-delay="500">Trending Series
 
                                          <div className='header-underline'></div>
                                     </h4>
                                    
                                 </div>
-                                    <Link  to='/TV-Shows' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
+                                    <Link  to='/TV-Shows' className="primary-btn ms-auto" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
                         </div>
@@ -268,11 +272,18 @@ const Movies = () => {
 
                                         <div className="product__item mx-auto">
                                             <Link to={`/details?id=${id}`}>
-                                                <div className="product__item__pic set-bg" style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w400/${show.poster_path})` }}>
-                                                    <div className="ep">18 / 18</div>
-                                                    <div className="comment"><i className="fa fa-comments"></i> 11</div>
-                                                    <div className="view"><i className="fa fa-eye"></i> {show.vote_average}</div>
-                                                </div></Link>
+                                            <Card className='contentcard product__item__pic set-bg'>
+                                            <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w400/${show.poster_path}`}alt="Card image" />
+                                            <Card.ImgOverlay >
+                                            <FontAwesomeIcon icon={faCirclePlay} size="3x"  className="mx-2 playbtn" />
+                                                <div className='imageoverlay'>
+                                                    <Card.Title>{show.original_name}</Card.Title>
+                                                    <Card.Text>{show.first_air_date}</Card.Text>
+                                                </div>
+                                                {/* <div className={show.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>{show.rankUpDown}</div> */}
+                                                <div className="view" style={{height:'fit-content'}}>{show.vote_average}</div>
+                                            </Card.ImgOverlay>
+                                        </Card></Link>
                                             {/* <div className="product__item__text">
                                                 <ul>
                                                     <li className='text-dark'><h4>{show.name}</h4></li>
@@ -288,19 +299,22 @@ const Movies = () => {
                     </div>
                 </div>
             </div>
-            <div className="product spad">
+            <div className="product spad" style={{marginTop:'70px'}}>
 
                 <div className="">
 
                     <div className="trending__product">
                         <div className="row">
                             <div className="row">
-                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
+                                <div className="btn__all" style={{display:'flex', justifyshow:'space-between'}}>
                                      <div className="div-title">
-                                    <h4>Trending Movies</h4>
-                                    <div className='header-underline'></div>
+                                    <h4  data-aos="fade-up"
+  data-aos-delay="700">Trending Movies
+  <div className='header-underline'></div>
+  </h4>
+                                    
                                 </div>
-                                <Link  to='/movies' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
+                                <Link  to='/movies' className="primary-btn ms-auto" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
                         </div>
@@ -313,20 +327,20 @@ const Movies = () => {
 
                                     <div className="product__item mx-auto">
                                         <Link to={`/moviedetails?id=${id}`}>
-                                            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w400/${show.poster_path})` }}>
-                                                <div className="ep">18 / 18</div>
-                                                <div className="comment"><i className="fa fa-comments"></i> 11</div>
-                                                <div className="view"><i className="fa fa-eye"></i> {show.vote_average}</div>
-                                            </div></Link>
-                                        {/* <div className="product__item__text">
-                                            <ul>
-                                                <li className='text-dark'><h4>{show.name}</h4></li>
-                                                <li className='text-danger'><cite>{show.first_air_date}</cite></li>
-                                            </ul>
-                                        </div> */}
+                                        <Card className='contentcard product__item__pic set-bg'>
+                                            <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w400/${show.poster_path}`}alt="Card image" />
+                                            <Card.ImgOverlay >
+                                            <FontAwesomeIcon icon={faCirclePlay} size="3x"  className="mx-2 playbtn" />
+                                                <div className='imageoverlay'>
+                                                    <Card.Title>{show.original_title}</Card.Title>
+                                                    <Card.Text>{show.release_date}</Card.Text>
+                                                </div>
+                                                {/* <div className={show.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>{show.rankUpDown}</div> */}
+                                                <div className="view" style={{height:'fit-content'}}>{show.vote_average}</div>
+                                            </Card.ImgOverlay>
+                                        </Card></Link>
                                     </div>
                                 )
-                                // }
                             })}
 
                         </div>
@@ -334,54 +348,7 @@ const Movies = () => {
                 </div>
                  
             </div>
-            <div className="product spad">
-
-                <div className="">
-
-                    <div className="trending__product">
-                        <div className="row">
-                        <div className="row">
-                            <div className="row">
-                                <div className="btn__all" style={{display:'flex', justifyContent:'space-between'}}>
-                                     <div className="div-title">
-                                    <h4>Now Playing</h4>
-                                    <div className='header-underline'></div>
-                                </div>
-                                <Link  to='/movies' className="primary-btn" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div className='boobo'>
-                            {nowplaying.map((playing) => {
-                                // if (show.origin_country[0] === "US" ||"JP") {
-                                // console.log(JSON.stringify(show.name));
-                                const id = playing.id
-                                return (
-
-                                    <div className="product__item mx-auto">
-                                        <Link to={`/moviedetails?id=${id}`}>
-                                            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w400/${playing.poster_path})` }}>
-                                                <div className="ep">18 / 18</div>
-                                                <div className="comment"><i className="fa fa-comments"></i> 11</div>
-                                                <div className="view"><i className="fa fa-eye"></i> {playing.vote_average}</div>
-                                            </div></Link>
-                                        {/* <div className="product__item__text">
-                                            <ul>
-                                                <li className='text-dark'><h4>{playing.name}</h4></li>
-                                                <li className='text-danger'><cite>{playing.first_air_date}</cite></li>
-                                            </ul>
-                                        </div> */}
-                                    </div>
-                                )
-                                // }
-                            })}
-
-                        </div>
-                    </div>
-                </div>
-               
-            </div>
+           
 
             </div>
             
@@ -394,7 +361,54 @@ const Movies = () => {
             </div>
             
             </div>
-            )}
+            )} <div className="product spad">
+
+                <div className="">
+
+                    <div className="trending__product">
+                        <div className="row" style={{width:'100%'}}>
+                        <div className="row">
+                            <div className="row">
+                                <div className="btn__all" style={{display:'flex', justifyshow:'space-between'}}>
+                                     <div className="div-title">
+                                    <h4  data-aos="fade-right"
+  data-aos-delay="900">Now Playing</h4>
+                                    <div className='header-underline'></div>
+                                </div>
+                                <Link  to='/movies' className="primary-btn ms-auto" style={{textDecoration:'none', color:'#1b9cff'}}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div className='boobo' style={{width:'95%'}}>
+                            {nowplaying.map((show) => {
+                                // if (show.origin_country[0] === "US" ||"JP") {
+                                // console.log(JSON.stringify(show.name));
+                                const id = show.id
+                                return (
+
+                                    <div className="product__item mx-auto">
+                                        <Link to={`/moviedetails?id=${id}`}>
+                                        <Card className='contentcard product__item__pic set-bg'>
+                                            <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w400/${show.poster_path}`}alt="Card image" />
+                                            <Card.ImgOverlay >
+                                            <FontAwesomeIcon icon={faCirclePlay} size="3x"  className="mx-2 playbtn" />
+                                                <div className='imageoverlay'>
+                                                    <Card.Title>{show.original_title}</Card.Title>
+                                                    <Card.Text>{show.release_date}</Card.Text>
+                                                </div>
+                                                {/* <div className={show.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>{show.rankUpDown}</div> */}
+                                                <div className="view" style={{height:'fit-content'}}>{show.vote_average}</div>
+                                            </Card.ImgOverlay>
+                                        </Card></Link>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
              <News />
         </main>
     );

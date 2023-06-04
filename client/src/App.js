@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -24,6 +24,8 @@ import AnimeDetails from './pages/AnimeDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AccountNotification from './components/Notification/LoginNotify'
+import 'aos/dist/aos.css';
+import AOS from 'aos';
 
 
 // Construct our main GraphQL API endpoint
@@ -55,6 +57,9 @@ function App() {
 
   const incrementMyState = () => setMyState(prev => prev + 1);
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>

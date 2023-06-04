@@ -40,40 +40,27 @@ const MovieNews = () => {
 
   return (
     <aside className="anime-container">
-      <div className="product__sidebar">
+      <div className="product__sidebar" style={{marginTop:'125px'}}>
         <div className="product__sidebar__view">
           <div className="section-title">
-            <h5>Top Views</h5>
+            <h5>News</h5>
           </div>
-          <ul className="filter__controls">
-            <li className="active" data-filter="*">
-              Day
-            </li>
-            <li data-filter=".week">Week</li>
-            <li data-filter=".month">Month</li>
-            <li data-filter=".years">Years</li>
-          </ul>
+         
           {isLoading ? (
             <p>Loading...</p>
           ) : (
             <div className="img-container">
               {news.map((network, index) => {
                 return (
-                  <div className="container" key={network.author}>
-                    <Button variant="primary" onClick={() => handleModalShow(network)}>
-                      Launch demo modal
-                    </Button>
-                    <div className="filter__gallery">
+                  <div className="container my-2" key={network.author}>
+                    <a variant="primary" onClick={() => handleModalShow(network)}>
+                       <div className="filter__gallery">
                       <div
                         className="product__sidebar__view__item set-bg"
                         style={{
                           backgroundImage: `url(${network.image})`,
                         }}
                       >
-                        <div className="ep"></div>
-                        <div className="view">
-                          <i className="fa fa-eye"></i> {network.id}
-                        </div>
                         <h5>
                           <a onClick={() => handleModalShow(network)} style={{ color: 'white' }}>
                             {network.title}
@@ -81,7 +68,7 @@ const MovieNews = () => {
                         </h5>
                       </div>
                     </div>
-
+  </a>
                     <Modal show={modalShow} onHide={handleModalClose}>
                       <Modal.Header  className="product__sidebar__view__item set-bg"
                         style={{

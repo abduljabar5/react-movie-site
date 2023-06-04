@@ -172,7 +172,7 @@ function App() {
         <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
 
       )}</div>
-  ): (<div>Login</div>)
+  ): (<div></div>)
 }
     </main >
   );

@@ -38,6 +38,10 @@ const News = () => {
     // };
     return (
         <section className='news-block-container' id='news-block'>
+             <h1  data-aos="fade-up"
+  data-aos-delay="700" style={{margin:'5px 25px'}}>Trending Movies
+  <div className='header-underline'></div>
+  </h1>
             {isLoading ? (<div></div>) : (
                 <><div className='news-slit'>
                     <div className='main-news'>

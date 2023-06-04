@@ -17,6 +17,18 @@
   -webkit-text-fill-color: transparent;
   animation: gradient 13s alternate infinite;
 }
+.login,
+.image {
+  min-height: 100vh;
+}
+
+.bg-image {
+  background-image:url('./images/guy.png'), url('./images/dddepth-180.jpg');
+  background-size:364px, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+}
+
 
 @keyframes gradient {
   0% {
@@ -1659,17 +1671,19 @@ a {
 }
 /* news block at bottom of home page */
 .news-block-container{
- border-style: groove;
- border-color: #1DE9B6; 
  display: flex;
  justify-content: center;
-}
+ background: 
+    linear-gradient(to bottom, #282828, rgba(40, 40, 40, 0), #282828),
+    url('./images/circle-scatter-haikei.svg') no-repeat center center/cover;
+ }
 .main-news-img{
   margin: 10px;
 }
+.main-news{
+  margin: 10px;
+}
 .news-slit{
-  border-style: groove;
-  border-color: #1DE9B6;
   width: 50%;
   margin: 5px;
 }

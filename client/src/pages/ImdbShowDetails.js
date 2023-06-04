@@ -300,7 +300,7 @@ const MoreDetails = () => {
                                                         }
                                                     }}
                                                 >
-<i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+<i className={`fa ${savedShows[id] ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
                                                 </button>
                                 <a href="#" class="watch-btn"><span>Watch Now</span> <i
                                     class="fa fa-angle-right"></i></a>
