@@ -32,7 +32,7 @@ const Trendinganime = () => {
 
     return (
         <aside className='anime-container'>
-            <div class="product__sidebar">
+            <div class="product__sidebar" style={{margin:'70px 20px'}}>
                 <div class="product__sidebar__view">
                     <div class="section-title">
                         <h5>Top Anime</h5>

@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Card from 'react-bootstrap/Card';
+import { Button } from 'react-bootstrap';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Auth from '../utils/auth';
@@ -14,12 +15,19 @@ import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import TrendingAnime from '../components/TrendingAnime';
 import MovieNews from '../components/Movie-tv-news';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Recommend from '../components/Recommend';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import youtube from '../styles/images/youtubetv.png'
 import axios from 'axios';
 const Movies = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showchat, setShowChat] = useState(false);
+    const [blur, setBlur] = useState(() => {
+        const savedBlurState = localStorage.getItem('blurState');
+        return savedBlurState ? JSON.parse(savedBlurState) : {};
+    });
+    
 
     const { username: userParam } = useParams();
 
@@ -53,6 +61,16 @@ const Movies = () => {
         // Add more genre-color mappings as needed...
         default: '#888' // Grey for other genres
     };
+    const handleBlurToggle = (e, showId) => {
+        e.stopPropagation();
+        const newBlurState = { ...blur, [showId]: !blur[showId] };
+        setBlur(newBlurState);
+    
+        // Save to localStorage
+        localStorage.setItem('blurState', JSON.stringify(newBlurState));
+    };
+    
+
     useEffect(() => {
         const fetchData = async () => {
             const Today = await API.trendingToday();
@@ -117,7 +135,6 @@ const Movies = () => {
         width: '100%',
         height: '100vh',
         minHeight: '35rem',
-        backgroundAttachment: 'fixed',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover'
@@ -135,7 +152,7 @@ const Movies = () => {
                                     return (
                                         <div className={`carousel-item${index === 0 ? " active" : ""}`}>
                                             <Card className="bg-dark text-white image-container">
-                                                <Card.Img style={{
+                                                <Card.Img className ='mainpage-img' style={{
                                                     ...style,
                                                     backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${today.backdrop_path})`,
                                                 }} />
@@ -160,7 +177,7 @@ const Movies = () => {
                                                     </h6>
                                                     <p className="mt-3">{today.overview}</p>
                                                     <Link to={today.media_type === 'tv' ? (`/details?id=${today.id}`) : (`/moviedetails?id=${today.id}`)}>
-                                                        <h6 className="mt-4"><p className="button" ><i className="fa fa-play-circle align-middle me-1"></i> Watch Trailer</p></h6>
+                                                        <h className="mt-4"><p className="button" ><i className="fa fa-play-circle align-middle me-1"></i> Watch Trailer</p></h>
                                                     </Link>
 
                                                 </Card.ImgOverlay>
@@ -239,66 +256,63 @@ const Movies = () => {
                         </div>
 
                     </section>
+                    <div className="product spad" style={{ margin: '30px' }}>
+                        <div className="trending__product">
+                            <div className="row">
+                                <div className="btn__all" style={{ display: 'flex', justifyshow: 'space-between' }}>
+                                    <div className="div-title">
+                                        <h4 data-aos="fade-up"
+                                            data-aos-delay="500">Trending Series
 
-                    <div className='all-container'>
-                        <div className='movie-tv-container'>
-                            <div className="product spad">
+                                            <div className='header-underline'></div>
+                                        </h4>
 
-                                <div className="">
-
-                                    <div className="trending__product">
-                                        <div className="row">
-
-                                            <div className="row">
-                                                <div className="btn__all" style={{ display: 'flex', justifyshow: 'space-between' }}>
-                                                    <div className="div-title">
-                                                        <h4 data-aos="fade-up"
-                                                            data-aos-delay="500">Trending Series
-
-                                                            <div className='header-underline'></div>
-                                                        </h4>
-
-                                                    </div>
-                                                    <Link to='/TV-Shows' className="primary-btn ms-auto" style={{ textDecoration: 'none', color: '#1b9cff' }}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='boobo'>
-                                            {shows.map((show) => {
-                                                if (show.origin_country[0] === "US" || "JP") {
-                                                    // console.log(JSON.stringify(show.name));
-                                                    const id = show.id
-                                                    return (
-
-                                                        <div className="product__item mx-auto">
-                                                            <Link to={`/details?id=${id}`}>
-                                                                <Card className='contentcard product__item__pic set-bg'>
-                                                                    <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w400/${show.poster_path}`} alt="Card image" />
-                                                                    <Card.ImgOverlay >
-                                                                        <FontAwesomeIcon icon={faCirclePlay} size="3x" className="mx-2 playbtn" />
-                                                                        <div className='imageoverlay'>
-                                                                            <Card.Title>{show.original_name}</Card.Title>
-                                                                            <Card.Text>{show.first_air_date}</Card.Text>
-                                                                        </div>
-                                                                        {/* <div className={show.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>{show.rankUpDown}</div> */}
-                                                                        <div className="view" style={{ height: 'fit-content' }}>{show.vote_average}</div>
-                                                                    </Card.ImgOverlay>
-                                                                </Card></Link>
-                                                            {/* <div className="product__item__text">
-                                                <ul>
-                                                    <li className='text-dark'><h4>{show.name}</h4></li>
-                                                    <li className='text-danger'><cite>{show.first_air_date}</cite></li>
-                                                </ul>
-                                            </div> */}
-                                                        </div>
-                                                    )
-                                                }
-                                            })}
-
-                                        </div>
                                     </div>
+                                    <Link to='/TV-Shows' className="primary-btn ms-auto" style={{ textDecoration: 'none', color: '#1b9cff' }}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                 </div>
                             </div>
+                        </div>
+                        <div className='boobo'>
+                        {shows.map((show) => {
+                if (show.origin_country[0] === "US" || show.origin_country[0] === "JP" && JSON.stringify(show.original_name) !== 'The Idol') {
+                    const id = show.id
+                    return (
+                        
+                          <div className="product__item mx-auto" style={{ position: 'relative' }}>
+    <Link to={`/details?id=${id}`}>
+        <Card className='contentcard product__item__pic set-bg'>                                
+            <Card.Img 
+                className='cardimage' 
+                src={`https://image.tmdb.org/t/p/w400/${show.poster_path}`} 
+                alt="Card image" 
+                style={{ filter: blur[show.id] ? 'blur(25px)' : 'none' }}
+            />
+            <Card.ImgOverlay>
+                <FontAwesomeIcon icon={faCirclePlay} size="3x" className="mx-2 playbtn" />
+                <div className='imageoverlay'>
+                    <Card.Title>{show.original_name}</Card.Title>
+                    <Card.Text>{show.first_air_date}</Card.Text>
+                </div>
+                <div className="view" style={{ height: 'fit-content' }}>{show.vote_average}</div>
+            </Card.ImgOverlay>
+        </Card>
+    </Link>
+    <FontAwesomeIcon
+    className='eyes'
+    icon={blur[show.id] ? faEye : faEyeSlash} 
+    style={{ position: 'absolute', top: '25px', left: '35px', zIndex: 22, cursor: 'pointer' }} 
+    onClick={(e) => handleBlurToggle(e, show.id)}
+/></div>
+
+                       
+                    )
+                }
+            })}
+                        </div>
+                    </div>
+                    <div className='all-container'>
+                        <div className='movie-tv-container'>
+
                             <div className="product spad" style={{ marginTop: '70px' }}>
 
                                 <div className="">
@@ -348,7 +362,7 @@ const Movies = () => {
                                 </div>
 
                             </div>
-
+                            <Recommend />
 
                         </div>
 

@@ -69,7 +69,7 @@ const Signup = () => {
         <div className="container-fluid">
           <div className="row no-gutter">
             {/* The image half */}
-            <div className="col-md-6 d-none d-md-flex bg-image"></div>
+            <div className="col-md-6 d-none d-md-flex bg-image2"></div>
   
             {/* The content half */}
             <div className="col-md-6 bg-light">

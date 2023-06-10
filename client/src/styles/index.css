@@ -29,7 +29,12 @@
   background-repeat: no-repeat, no-repeat;
 }
 
-
+.bg-image2 {
+  background-image:url('./images/signupman.PNG'), url('./images/dddepth-180.jpg');
+  background-size:364px, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+}
 @keyframes gradient {
   0% {
    filter: hue-rotate(279deg);
@@ -42,8 +47,8 @@ filter: hue-rotate(12deg);  }
 }
 
 .dark{
-  background-color: #282828;
-  color: #CCCCCC ;
+  background-color: #000000;
+  color: #CCCCCC !important ;
 }
 .transparent{
   background-color: transparent !important;
@@ -106,6 +111,12 @@ filter: hue-rotate(12deg);  }
 .contentcard:hover .view  {
   opacity: 1; /* Show it when card is hovered */
 }
+.eyes{
+  opacity: 0;
+}
+.product__item:hover .eyes{
+  opacity: 1;
+}
 .product__item__pic .comment {
 	font-size: 13px;
 	color: #ffffff;
@@ -126,7 +137,15 @@ filter: hue-rotate(12deg);  }
   width: 45%;
   margin:30px 130px;
 }
+.trending__product h4{
+	font-weight: 600;
+	font-family: "Oswald", sans-serif;
+	line-height: 21px;
+	text-transform: uppercase;
+	padding-left:17px;
+	position: relative;
 
+}
 .imageoverlay {
   position: absolute; /* Position this within .contentcard */
   top: 0; /* Align to the top */
@@ -134,6 +153,7 @@ filter: hue-rotate(12deg);  }
   width: 100%; /* Take up full width */
   height: 100%; /* Take up full height */
   display: flex;
+  z-index: 20;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -146,7 +166,9 @@ filter: hue-rotate(12deg);  }
 .imageoverlay div{
   margin-top: 215px;
 }
-
+.card-img-overlay{
+  z-index: 22;
+}
 .playbtn {
   position: absolute; /* Position this within .contentcard */
   width: 5rem;
@@ -292,7 +314,7 @@ filter: hue-rotate(12deg);  }
 
  .logo-slider::after
  {
-  background: linear-gradient(to right, #282828 0%,rgba(255,255,255,0) 100%);
+  background: linear-gradient(to right, #000000 0%,rgba(255,255,255,0) 100%);
   content: "";
   height: 100px;
   position: absolute;
@@ -452,7 +474,6 @@ filter: hue-rotate(12deg);  }
 }
 .movie-tv-container{
   width: 67%;
-  margin-top: 80px;
 }
 .product {
   margin-left: 30px;
@@ -566,7 +587,7 @@ filter: hue-rotate(12deg);  }
 	height: 400px;
 	position: relative;
 	border-radius: 10px;
-  margin-left: 20px;
+  margin: 0 15px;
   width: 285px;
   background-position: center center;
   background-size: cover;
@@ -809,7 +830,9 @@ h2 {
   }
   
 }
-
+.mainpage-img{
+  background-attachment: fixed;
+}
 @media (max-width: 500px) {
   .card {
     flex-basis: calc(50% - 10px);
@@ -817,6 +840,9 @@ h2 {
 
   .card:not(:last-child) {
     margin-right: 20px;
+  }
+   .mainpage-img{
+    background-attachment: inherit !important;
   }
 }
 
@@ -828,6 +854,7 @@ h2 {
   .card:not(:last-child) {
     margin-right: 30px;
   }
+ 
 }
 
 @media (min-width: 1100px) {
@@ -1233,14 +1260,12 @@ a {
 
 }
 .product__sidebar .section-title h5 {
-	color: #000000;
 	font-weight: 600;
 	font-family: "Oswald", sans-serif;
 	line-height: 21px;
 	text-transform: uppercase;
 	padding-left: 20px;
 	position: relative;
-  margin-top: 100px;
 }
 
 .product__sidebar .section-title h5:after {
@@ -1261,9 +1286,9 @@ a {
 }
 .img-container{
    margin-bottom: 80px;
-    height: 420px;
+    height: 426px;
     overflow: scroll;
-    margin: 47px 10px;
+    margin: 75px 10px;
     scroll-snap-type: y mandatory;
 
 }
@@ -1358,6 +1383,7 @@ a {
   bottom: 2px;
   width: 500px;
   right: 15px;
+  z-index: 200;
 }
 @media (max-width: 525px) {
   .chat-container{
@@ -2186,7 +2212,12 @@ border-left: 0 !important;
     left:15%;
 }
 
-
+.recommendation-box{
+  padding: 11rem 6rem;
+    background-color: #151515;
+    border-radius: 20px;
+    margin: 70px 50px;
+}
 /* end of anime laod more */
 .image-container::after {
   content: "";
@@ -2195,6 +2226,9 @@ border-left: 0 !important;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7));
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1));
   pointer-events: none;  /* so the image remains interactive */
+}
+.image-container{
+  border-style: none !important;
 }

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { openDB } from 'idb';
 
 const MovieNews = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,12 +13,27 @@ const MovieNews = () => {
   const [modalShow, setModalShow] = useState(false);
   const [modalContent, setModalContent] = useState({});
 
+  const getDataFromDB = async (storeName) => {
+    const db = await openDB('NewsDB', 2, {
+      upgrade(db) {
+        db.createObjectStore(storeName);
+      },
+    });
+
+    return await db.get(storeName, 'latest');
+  };
+
   const getNews = async () => {
     try {
       console.log('trying to run news');
-      const res = await API.news();
-      setNews(res.data.articles);
-      setIsLoading(false);
+      const newsData = await getDataFromDB('news');
+      if (newsData) {
+        setNews(newsData.articles);
+        setIsLoading(false);
+      }
+      else {
+        console.log('No data in IndexedDB');
+      }
     } catch (err) {
       // handle errors
     }
@@ -26,11 +42,7 @@ const MovieNews = () => {
   useEffect(() => {
     getNews();
   }, []);
-
-  useEffect(() => {
-    console.log('hi news', news);
-  }, [news]);
-
+ 
   const handleModalClose = () => setModalShow(false);
 
   const handleModalShow = (newsItem) => {

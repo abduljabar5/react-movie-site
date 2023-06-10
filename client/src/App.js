@@ -27,7 +27,7 @@ import AccountNotification from './components/Notification/LoginNotify'
 import 'aos/dist/aos.css';
 import AOS from 'aos';
 import NotFound from './pages/404';
-
+import ScrollToTopButton from './components/ScrollToTopButton';
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -125,6 +125,7 @@ function App() {
               /> */}
             </Routes>
             <Chat />
+            <ScrollToTopButton />
           <Footer />
           </MyProvider>
           </div>
