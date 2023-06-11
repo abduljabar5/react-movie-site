@@ -19,9 +19,10 @@ const ButtonSlideOut = ({prompt}) => {
         id={`dropdown-button-drop-end`}
         drop={'end'}
         variant="danger"
-        title={ isActive ? "Close Now" : "Watch Now" }
+        // title={ isActive ? "Close Now" : "Watch Now" }
+        title='Watch Now'
         onClick={handleClick}
-        className="watch-btn"
+        className=" watch-btn"
       >
         <Dropdown.Item eventKey="1" href={'https://www.movieboxpro.app/index/search?word=' + prompt.title} target="_blank" style={{display:'flex', width:'50%', backgroundColor:'black', margin:'auto', borderRadius:'5px'}}>
         <img className="mx-auto" src={moviebox} width="60" alt=""/>

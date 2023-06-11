@@ -14,7 +14,7 @@ function CarouselCards({ additionalData }) {
                     <div className="col-lg-3 col-md-4 col-sm-6 mb-3"  key={index}>
                     <Card className='contentcard'>
                     <Link to={`/show?id=${item.id}`}>
-                        <Card.Img className='cardimage' style={{minHeight:'433px', maxHeight:'433px'}}  src={item.image} alt="Card image" />
+                        <Card.Img className='cardimage' style={{minHeight:'500px', maxHeight:'500px'}}  src={item.image} alt="Card image" />
                        
                         <Card.ImgOverlay className='imageoverlay' style={{display:'flex', justifyContent:'space-between'}}>
                             <Card.Title>{item.title}</Card.Title>
