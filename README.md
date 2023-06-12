@@ -1,4 +1,6 @@
-# react-movie-site
+# React Movie Site ![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103) ![GitHub top language](https://img.shields.io/github/languages/top/abduljabar5/react-movie-site) ![GitHub last commit](https://img.shields.io/github/last-commit/abduljabar5/react-movie-site) ![GitHub stars](https://img.shields.io/github/stars/abduljabar5/react-movie-site) ![GitHub repo size](https://img.shields.io/github/repo-size/abduljabar5/react-movie-site) 
+
+
 
 ## Table of Contents
 
