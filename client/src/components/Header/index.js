@@ -15,6 +15,7 @@ import IconHome from '../Icons/Home';
 import IconMovieOpenPlayOutline from '../Icons/Movie';
 import Shows from '../Icons/Shows'
 import Naruto from '../../styles/images/anime.svg'
+import pop from '../../styles/images/pop.png'
 const Header = () => {
   const { myState } = useContext(MyContext);
   const [navbar, setNavbar] = useState(false);
@@ -54,7 +55,9 @@ const Header = () => {
     
     <Navbar key='lg' expand='lg' className={navbar ? 'fixed-top' : ''} style={{backgroundColor:'#008080'}}>
         <Container fluid>
-          <Navbar.Brand className='brand' href="/" style={{fontFamily:'system-ui', fontSize:'30px'}}>PopcornPeek</Navbar.Brand>
+          <Navbar.Brand className='brand' href="/" style={{ fontSize:'30px'}}>
+            <img src={pop} style={{width: '100px', height:'57px', backgroundColor:'transparent'}}></img>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-$'lg'`}

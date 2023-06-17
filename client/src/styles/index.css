@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2&family=Cinzel+Decorative&display=swap");
 
  .technology{
   margin-bottom: 150px;
@@ -9,14 +10,24 @@
   display: none;
 }
 .brand {
-  font-size: 6em;  /* Change as needed */
-  background: linear-gradient(90deg, rgb(247, 0, 255), rgb(60, 0, 255), rgb(255, 30, 0), gold);
-  background-size: 200% auto;
+  font-size: 6em;  
+  font-family: 'Cinzel Decorative', cursive;
+  /* background: linear-gradient(90deg, rgb(247, 0, 255), rgb(60, 0, 255), rgb(255, 30, 0), gold);
+  background-size: 200% auto; */
   color: white;
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient 13s alternate infinite;
+  animation: gradient 13s alternate infinite; */
 }
+.dropdown-item-custom {
+  display: flex; 
+  width: 50%; 
+  background-color: black; 
+  margin: auto; 
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
 .login,
 .image {
   min-height: 100vh;
@@ -182,7 +193,12 @@ filter: hue-rotate(12deg);  }
 .contentcard:hover .playbtn {
   opacity: 1; /* Show it when card is hovered */
 }
-
+.title{
+  margin: 0 40px;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
 .movie-detail-page{
   display: flex;
   justify-content: center;
@@ -217,7 +233,7 @@ filter: hue-rotate(12deg);  }
 .cast-container {
   display: flex;
   /* border: 1px solid; */
-  width: 762px;
+  width: 98vw;
   height: 424px;
   scroll-snap-type: x mandatory;
   overflow-x: auto;
@@ -518,8 +534,23 @@ filter: hue-rotate(12deg);  }
   scroll-snap-type: x mandatory !important;
 }
 .img-container a{
-  width: 100vw;
+  width: 94vw;
   margin: 0 10px;
+}
+.size-fix{
+  max-width: 100%;
+}
+.filter__gallery{
+  width: 89%;
+}
+.img-container2{
+  display: flex;
+    flex-wrap: wrap;
+    overflow: scroll;
+    margin: 46px 25px;
+    flex-direction: column;
+    scroll-snap-type: x mandatory !important;
+    height: 226px;
 }
 }
 /* .trending__product {
@@ -757,10 +788,7 @@ filter: hue-rotate(12deg);  }
   margin: 50px auto;
 }
 
-h2 {
-  font-size: 32px;
-  margin-bottom: 1em;
-}
+
 
 .cards {
   display: flex;
@@ -844,6 +872,7 @@ h2 {
    .mainpage-img{
     background-attachment: inherit !important;
   }
+ 
 }
 
 @media (min-width: 700px) {
@@ -984,6 +1013,12 @@ a {
     font-size: 1.25rem;
   }
 }
+@media (max-width: 991px) {
+  .small-news-one img{
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+}
 .ratingcontainer{
   display: flex;
   width: 0px;
@@ -1062,7 +1097,19 @@ a {
   border-style: none;
 	margin: 5px;
 }
-
+.watch-btn .btn{
+  font-size: 13px;
+	color: #ffffff;
+	background: #e53637;
+	display: inline-block;
+	/* font-weight: 700; */
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 14px 20px;
+	margin-right: 1px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
 .anime__details__btn .watch-btn span {
 	font-size: 13px;
 	color: #ffffff;
@@ -1291,6 +1338,13 @@ a {
     margin: 75px 10px;
     scroll-snap-type: y mandatory;
 
+}
+.img-container2{
+  margin-bottom: 80px;
+  height: 483px;
+  overflow: scroll;
+  margin: 40px 0px;
+  scroll-snap-type: y mandatory;
 }
 
 .product__sidebar__view .filter__controls {
@@ -1708,7 +1762,9 @@ a {
 }
 .main-news{
   margin: 10px;
+  border-radius: 15px;
 }
+
 .news-slit{
   width: 50%;
   margin: 5px;
@@ -1726,7 +1782,12 @@ a {
 }
 
 .small-news-one img {
-    width: 100%;
+    min-width: 19vw;
+    max-width: 19vw;
+    min-height: 200px;
+    max-height: 200px;
+    border-radius: 15px;
+    object-fit: cover;
 }
 
 .overlay {
@@ -1845,7 +1906,7 @@ border-right: 0 !important;
 border-left: 0 !important;
 }
 /* profile card */
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2&family=Cinzel+Decorative&display=swap");
 /* This pen */
 
  /* .dark {

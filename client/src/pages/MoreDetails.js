@@ -49,10 +49,6 @@ const MoreDetails = () => {
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
         variables: { username: userParam },
     });
-
-    console.log(data);
-    console.log(err); 
-
     useEffect(() => {
         if (!loading) {
             const user = data?.me || data?.user || {};
@@ -110,43 +106,30 @@ const MoreDetails = () => {
     }, [id]);
     useEffect(() => {
         console.log("show:", show);
-
     }, [show])
     const handleSaveShow = async () => {
-
-        // if (heartFilled && !window.confirm('Are you sure you want to unsave this show? You can always find it in your profile.')) {
-        //     return;
-        // }
-        console.log('handleSaveShow is called'); // add this line
-
         if (heartFilled) {
             setNotification({
                 message: "This show is already saved",
                 variant: "danger",
                 key: Date.now()
             });
-            console.log(notification);
             return;
         }
         try {
-            console.log('trying');
             if (Auth.loggedIn()) {
                 const userId = Auth.getProfile().data._id;
                 const { themoviedb } = show;
                 const showData = {
                     themoviedb
                 };
-
-                console.log("user:", userId);
-                console.log("show", showData);
-
+                // console.log("user:", userId);
+                // console.log("show", showData);
                 const { data } = await addShow({
                     variables: { userId, show: showData },
                 });
-                // You can handle the response here...
                 const newHeartFilledState = !heartFilled;
                 setHeartFilled(newHeartFilledState);
-
                 const updatedSavedShows = { ...savedShows, [id]: newHeartFilledState };
                 setSavedShows(updatedSavedShows);
                 incrementMyState();
@@ -155,9 +138,7 @@ const MoreDetails = () => {
                     variant: "success",
                     key: Date.now()
                 });
-
             } else {
-                console.log('User is not logged in');
                 setNotification({
                     message: "Login Or Sigh Up",
                     key: Date.now()
@@ -168,12 +149,9 @@ const MoreDetails = () => {
         }
 
     };
-    useEffect(() => {
-        console.log(notification);
-    }, [notification]);
-
-
-    console.log("hearttttt", heartFilled);
+    // useEffect(() => {
+    //     console.log(notification);
+    // }, [notification]);
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -234,13 +212,13 @@ const MoreDetails = () => {
                                             <div className='w-25 ratingcontainer'>
                                                 <img src={imdblogo}></img>
                                                 <h5 style={{ alignSelf: 'center', margin: '10px', fontSize: '30px' }}>{show.imdb.imDbRating}</h5>
-                                                <div>
+                                                <div style={{marginLeft:'20px'}}>
                                                     <CircularProgressbar value={percentage} maxValue={10} text={`${percentage}%`} />
                                                 </div>
                                             </div>
                                             <h4 className='text-light'>overview:</h4>
                                             <p className='mx-auto'>{show.show.overview}</p>
-                                            <div class="anime__details__widget text-light">
+                                            <div className="anime__details__widget text-light">
                                                 <div className="row">
                                                     <div className="col-lg-6 col-md-6 mx-auto">
                                                         <ul>
@@ -248,11 +226,12 @@ const MoreDetails = () => {
                                                             <li><span>Studios:</span>{show.show.networks[0].name}</li>
                                                             <li><span>Date aired:</span>{show.show.first_air_date}</li>
                                                             <li><span>Status:</span>{show.show.status}</li>
-                                                            <li><span>Genre:</span>{show.show.genres.map((genre) => { return <span className='tv-genre-headings'>{genre.name}, </span> })}</li>
+                                                            <li><span>Genre:</span>{show.show.genres.map((genre) => { return <span key={genre.id} className='tv-genre-headings'>{genre.name}, </span> })}</li>
                                                         </ul>
                                                     </div>
                                                     <div className="col-lg-5 col-md-6">
                                                         <ul>
+                                                            <li><span>Age Rating:</span>{show.imdb.contentRating}</li>
                                                             <li><span>Last aired:</span>{show.show.last_air_date}</li>
                                                             <li><span>Rating:</span>{show.show.vote_average} / {show.show.vote_count} times</li>
                                                             <li><span>Duration:</span>{show.show.episode_run_time[0]} min/ep</li>
@@ -262,7 +241,7 @@ const MoreDetails = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="anime__details__btn" style={{display:'flex', justifyContent:'center'}}>
+                                            <div className="anime__details__btn" style={{display:'flex', justifyContent:'center'}}>
                                                 <button
                                                     className="follow-btn"
                                                     onClick={() => {
@@ -280,31 +259,43 @@ const MoreDetails = () => {
                                                     <i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
                                                 </button>
 
-                                                {/* <button href="#" class="watch-btn" style={{borderStyle:'none',backgroundColor:'transparent'}}><span>Watch Now</span> <i
-                                                    class="fa fa-angle-right"></i></button> */}
+                                                {/* <button href="#" className="watch-btn" style={{borderStyle:'none',backgroundColor:'transparent'}}><span>Watch Now</span> <i
+                                                    className="fa fa-angle-right"></i></button> */}
                                                     <ButtonSlideOut prompt={show.imdb} />
                                             </div>
-                                            <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
-                                                <div style={{ display: 'flex' }}>
-                                                    <h1 className='position-absolute'>Cast:</h1>
-                                                    <div class="cast-container">
-                                                        {show.imdb.actorList.map((item, index) => (
-                                                            <div class="cast-item">
-                                                                <div className=" border-0" key={index}>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header><div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+                                                <div style={{ display: 'flex' , width:'100vw' }}>
+                                                    <h1 className='position-absolute title'>Cast:</h1>
+                                                    <div className="cast-container">
+                                                        {show.imdb.actorList.map((item) => (
+                                                          
+                                                                <div className="cast-item" key={item.id}>
+                                                                     
+                                                                <div className=" border-0" >
+                                                                     <a href={`https://www.google.com/search?q=${item.name}`} target='blank'>
                                                                     <div className=''>
-                                                                        {/* <Link to={`/show?id=${item.id}`}> */}
+                                                                       
                                                                         <Card.Img
                                                                             className='cardimage'
                                                                             style={{ minHeight: '250px', maxHeight: '250px', backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '15px' }}
                                                                         />
                                                                         <Card.ImgOverlay className='imageoverlay'>
-                                                                            <Card.Title>{item.title}</Card.Title>
+                                                                            <Card.Title>{item.name}</Card.Title>
                                                                             <Card.Text>{item.imDbRating}</Card.Text>
                                                                         </Card.ImgOverlay>
-                                                                        {/* </Link> */}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                      
+                                                                    </div> </a>
+                                                                </div> 
+                                                                
+                                                            </div> 
+                                                         
+                                                           
                                                         ))}
                                                     </div></div>
                                                 {/* <div className="d-flex flex-column mx-auto m-auto gap-4">
@@ -320,14 +311,8 @@ const MoreDetails = () => {
 
                                                 </div> */}
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
                     <section id='trailers'>
-                        <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers</h1>
+                        <h1 className='title' style={{marginBottom:'30px'}}>Trailers</h1>
                         <Carousel className='carousel-btn'>
                             {show.videos.map((video) =>
                                 <Carousel.Item interval={16000}>

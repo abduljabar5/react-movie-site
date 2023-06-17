@@ -98,7 +98,7 @@ const News = () => {
                         </div>
                     </div>
 
-                    <div className='smaller-new'>
+                    <div className='smaller-news-container'>
                         <div className='smaller-new'>
                             <div className='small-news-one'>
                                 <img src={news[2].image} style={{ width: '100%', minHeight: '204px' }} />

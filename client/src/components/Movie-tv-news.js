@@ -33,6 +33,7 @@ const MovieNews = () => {
       }
       else {
         console.log('No data in IndexedDB');
+        getNews();
       }
     } catch (err) {
       // handle errors
@@ -52,7 +53,7 @@ const MovieNews = () => {
 
   return (
     <aside className="anime-container">
-      <div className="product__sidebar" style={{marginTop:'125px'}}>
+      <div className="product__sidebar" style={{marginTop:'125px',marginLeft:'20px'}}>
         <div className="product__sidebar__view">
           <div className="section-title">
             <h5>News</h5>
@@ -61,12 +62,12 @@ const MovieNews = () => {
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className="img-container">
+            <div className="img-container2">
               {news.map((network, index) => {
                 return (
                   <div className="container my-2" key={network.author}>
                     <a variant="primary" onClick={() => handleModalShow(network)}>
-                       <div className="filter__gallery">
+                       <div className="filter__gallery2">
                       <div
                         className="product__sidebar__view__item set-bg"
                         style={{

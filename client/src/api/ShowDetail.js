@@ -17,5 +17,4 @@ const searchTv = async (query) =>
     });
     return response.choices[0].text;
   };
-console.log('ran');
 export default { searchTv, tvVideos, searchMovies, movieVideos, generateText };

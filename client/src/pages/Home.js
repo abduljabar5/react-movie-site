@@ -318,8 +318,8 @@ const Movies = () => {
                                 <div className="">
 
                                     <div className="trending__product">
-                                        <div className="row">
-                                            <div className="row">
+                                       
+                                            <div className="row size-fix">
                                                 <div className="btn__all" style={{ display: 'flex', justifyshow: 'space-between' }}>
                                                     <div className="div-title">
                                                         <h4 data-aos="fade-up"
@@ -330,7 +330,7 @@ const Movies = () => {
                                                     </div>
                                                     <Link to='/movies' className="primary-btn ms-auto" style={{ textDecoration: 'none', color: '#1b9cff' }}>View All <span className="arrow_right" ><IconDoubleRight /></span></Link>
                                                 </div>
-                                            </div>
+                                          
                                         </div>
                                         <div className='boobo'>
                                             {movies.map((show) => {

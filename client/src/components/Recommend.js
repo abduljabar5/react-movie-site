@@ -87,14 +87,14 @@ const Recommend = () => {
         console.log("bcdshcjusbckjsdbcjkds:", content);
     }, [content])
     return (
-        <div className='trending__product' style={{ margin: '70px 0px 70px 40px' }}>
+        <div className='trending__product' style={{ margin: '70px 0px 70px 0px' }}>
             <h4 data-aos="fade-up"
-                data-aos-delay="700" style={{padding:'0px'}} >Recommendations
+                data-aos-delay="700" style={{padding:'0px',marginLeft:'40px'}} >Recommendations
                 <div className='header-underline'></div>
             </h4>
             {isLoading ? <div>Loading...</div> :
-            needsSignIn ? <div className='text-center recommendation-box'>Please sign in</div> : 
-            <div style={{ display: 'flex', overflowX: 'auto', padding: '1rem', scrollSnapType:'x mandatory' }}>
+            needsSignIn ? <div className='text-center recommendation-box mx-auto' style={{width:'90%'}}>Please sign in</div> : 
+            <div style={{ display: 'flex', overflowX: 'auto', padding: '1rem', scrollSnapType:'x mandatory' , margin:' 0 18px'}}>
                 {content && content.map((show, index) => (
                     <div className="product__item mx-auto" style={{scrollSnapAlign:'strat'}} >
                         <Card className='contentcard product__item__pic set-bg' key={index} style={{width:'285px'}} >
