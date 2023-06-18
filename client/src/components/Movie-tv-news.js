@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import API from '../api/News';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
@@ -13,20 +12,22 @@ const MovieNews = () => {
   const [modalShow, setModalShow] = useState(false);
   const [modalContent, setModalContent] = useState({});
 
-  const getDataFromDB = async (storeName) => {
-    const db = await openDB('NewsDB', 2, {
-      upgrade(db) {
-        db.createObjectStore(storeName);
+  const openAndUpgradeDB = async () => {
+    const db = await openDB('NewsDB', 1, {
+      upgrade(db, oldVersion, newVersion, transaction) {
+        if (!db.objectStoreNames.contains('news')) {
+          db.createObjectStore('news');
+        }
       },
     });
 
-    return await db.get(storeName, 'latest');
+    return db;
   };
 
   const getNews = async () => {
     try {
-      console.log('trying to run news');
-      const newsData = await getDataFromDB('news');
+      const db = await openAndUpgradeDB();
+      const newsData = await db.get('news', 'latest');
       if (newsData) {
         setNews(newsData.articles);
         setIsLoading(false);
@@ -36,14 +37,14 @@ const MovieNews = () => {
         getNews();
       }
     } catch (err) {
-      // handle errors
+      console.log("🚀 ~ file: Movie-tv-news.js:40 ~ getNews ~ err:", err)
     }
   };
 
   useEffect(() => {
     getNews();
   }, []);
- 
+
   const handleModalClose = () => setModalShow(false);
 
   const handleModalShow = (newsItem) => {
@@ -53,12 +54,12 @@ const MovieNews = () => {
 
   return (
     <aside className="anime-container">
-      <div className="product__sidebar" style={{marginTop:'125px',marginLeft:'20px'}}>
+      <div className="product__sidebar" style={{ marginTop: '125px', marginLeft: '20px' }}>
         <div className="product__sidebar__view">
           <div className="section-title">
             <h5>News</h5>
           </div>
-         
+
           {isLoading ? (
             <p>Loading...</p>
           ) : (
@@ -67,23 +68,23 @@ const MovieNews = () => {
                 return (
                   <div className="container my-2" key={network.author}>
                     <a variant="primary" onClick={() => handleModalShow(network)}>
-                       <div className="filter__gallery2">
-                      <div
-                        className="product__sidebar__view__item set-bg"
-                        style={{
-                          backgroundImage: `url(${network.image})`,
-                        }}
-                      >
-                        <h5>
-                          <a onClick={() => handleModalShow(network)} style={{ color: 'white' }}>
-                            {network.title}
-                          </a>
-                        </h5>
+                      <div className="filter__gallery2">
+                        <div
+                          className="product__sidebar__view__item set-bg"
+                          style={{
+                            backgroundImage: `url(${network.image})`,
+                          }}
+                        >
+                          <h5>
+                            <a onClick={() => handleModalShow(network)} style={{ color: 'white' }}>
+                              {network.title}
+                            </a>
+                          </h5>
+                        </div>
                       </div>
-                    </div>
-  </a>
+                    </a>
                     <Modal show={modalShow} onHide={handleModalClose}>
-                      <Modal.Header  className="product__sidebar__view__item set-bg"
+                      <Modal.Header className="product__sidebar__view__item set-bg"
                         style={{
                           backgroundImage: `url(${modalContent.image})`,
                         }} closeButton>
@@ -94,9 +95,9 @@ const MovieNews = () => {
                         <Button variant="secondary" onClick={handleModalClose}>
                           Close
                         </Button>
-                        
+
                         <Button variant="primary" href={modalContent.url} onClick={handleModalClose}>
-                         Read More 
+                          Read More
                         </Button>
                       </Modal.Footer>
                     </Modal>

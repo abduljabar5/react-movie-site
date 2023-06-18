@@ -61,7 +61,6 @@ const Series = () => {
         setContent([]);
         setPage(1);
     };
-    console.log(contents);
     return (
         <div>
             {isLoading ? (
@@ -81,7 +80,7 @@ const Series = () => {
             ) : (
                 <>
                     <Form.Control
-                        className='sort'
+                        className='sort ms-auto m-4'
                         as="select"
                         value={filter}
                         onChange={handleFilterChange}

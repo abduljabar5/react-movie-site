@@ -52,17 +52,13 @@ const MoreDetails = () => {
     useEffect(() => {
         if (!loading) {
             const user = data?.me || data?.user || {};
-            // console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === id))
             console.log("pageid:", Number(id));
-            // Assuming that `user.shows` is an array of saved shows
             const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === Number(id)) : false;
             setHeartFilled(isShowSaved)
             setSavedShows({ ...savedShows, [id]: isShowSaved });
 
         }
     }, [loading, data, id]);
-
-    // fetches data from themoviedb API and IMDB API, then save them into IndexedDB
     useEffect(() => {
         const fetchData = async () => {
             const db = await setupDB();
@@ -70,7 +66,6 @@ const MoreDetails = () => {
             const cache = await db.get('tmdbshows', id);
 
             if (!cache || Date.now() - cache.timestamp > 86400000) {
-                // if no cached data or the data is older than a day, fetch the data again
                 try {
                     const themoviedbRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/external_ids?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
                     const imdbRes = await axios.get(`https://imdb-api.com/en/API/Title/k_mmsg1u7d/${themoviedbRes.data.imdb_id}/Trailer,WikipediaFullActor,FullCast`);
@@ -104,9 +99,9 @@ const MoreDetails = () => {
 
         fetchData();
     }, [id]);
-    useEffect(() => {
-        console.log("show:", show);
-    }, [show])
+    // useEffect(() => {
+    //     console.log("show:", show);
+    // }, [show])
     const handleSaveShow = async () => {
         if (heartFilled) {
             setNotification({
@@ -123,8 +118,6 @@ const MoreDetails = () => {
                 const showData = {
                     themoviedb
                 };
-                // console.log("user:", userId);
-                // console.log("show", showData);
                 const { data } = await addShow({
                     variables: { userId, show: showData },
                 });
@@ -149,9 +142,6 @@ const MoreDetails = () => {
         }
 
     };
-    // useEffect(() => {
-    //     console.log(notification);
-    // }, [notification]);
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -201,7 +191,7 @@ const MoreDetails = () => {
                                                             : `https://www.${show.show.networks[0].name}.com`}
                                                         className='btn btn-outline-danger w-100 ms-4'
                                                         target='_blank'
-                                                        rel='noreferrer'  // It's a good practice to add rel='noreferrer' whenever target='_blank' is used
+                                                        rel='noreferrer'
                                                     >
                                                         Watch Now
                                                     </a>
@@ -256,7 +246,7 @@ const MoreDetails = () => {
                                                         }
                                                     }}
                                                 >
-                                                    <i className={`fa ${savedShows[id] ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+                                                    <i className={`fa ${savedShows[id] ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
                                                 </button>
 
                                                 {/* <button href="#" className="watch-btn" style={{borderStyle:'none',backgroundColor:'transparent'}}><span>Watch Now</span> <i

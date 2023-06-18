@@ -2,13 +2,13 @@ import React from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleRight, faContactBook } from '@fortawesome/free-solid-svg-icons';
-import { faFacebookF, faGoogle, faInstagram, faLinkedinIn, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGoogle, faLinkedinIn, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   return (
-<div className="container my-5">
+<div>
   <footer className="text-center text-white">
     <div className="container">
       <section className="mt-5">

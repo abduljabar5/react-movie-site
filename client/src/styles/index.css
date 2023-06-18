@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2&family=Cinzel+Decorative&display=swap");
-
+body{
+  background-color: #030303 !important;
+}
  .technology{
   margin-bottom: 150px;
 }
@@ -88,7 +90,7 @@ filter: hue-rotate(12deg);  }
   background-color: #1b9cff;
 }
 .contentcard {
-  position: relative; /* Make this the bounding box for absolute positioning */
+  position: relative; 
   border-color: black !important;
   transition: .5s;
 }
@@ -117,10 +119,10 @@ filter: hue-rotate(12deg);  }
 	bottom: 10px;
 }
 .contentcard:hover .comment  {
-  opacity: 1; /* Show it when card is hovered */
+  opacity: 1;
 }
 .contentcard:hover .view  {
-  opacity: 1; /* Show it when card is hovered */
+  opacity: 1;
 }
 .eyes{
   opacity: 0;
@@ -158,11 +160,11 @@ filter: hue-rotate(12deg);  }
 
 }
 .imageoverlay {
-  position: absolute; /* Position this within .contentcard */
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left */
-  width: 100%; /* Take up full width */
-  height: 100%; /* Take up full height */
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   z-index: 20;
   flex-direction: column;
@@ -171,8 +173,8 @@ filter: hue-rotate(12deg);  }
   text-align: center;
   opacity: 0;
   transition: .4s;
-  background: rgba(0,0,0,0.5); /* You might want to add some background to make the text visible */
-  color: white; /* Change color as necessary */
+  background: rgba(0,0,0,0.5); 
+  color: white;
 }
 .imageoverlay div{
   margin-top: 215px;
@@ -181,17 +183,17 @@ filter: hue-rotate(12deg);  }
   z-index: 22;
 }
 .playbtn {
-  position: absolute; /* Position this within .contentcard */
+  position: absolute; 
   width: 5rem;
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Necessary for true centering */
-  opacity: 0; /* Hide it initially */
-  transition: .4s; /* Optional: add transition for smoother visual effect */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: .4s;
 
 }
 .contentcard:hover .playbtn {
-  opacity: 1; /* Show it when card is hovered */
+  opacity: 1;
 }
 .title{
   margin: 0 40px;
@@ -351,8 +353,8 @@ filter: hue-rotate(12deg);  }
 
 .logo-slider .slide-track {
   display: flex;
-  width: calc(250px * 14 * 2); /* Duplicate content */
-  animation: scroll 80s linear infinite; /* Double duration to account for duplicate content */
+  width: calc(250px * 14 * 2);
+  animation: scroll 80s linear infinite; 
 }
 .logo-slider .slide-track:after {
   content: "";
@@ -759,12 +761,12 @@ filter: hue-rotate(12deg);  }
   height: 50%;
   background-color: rgba(0, 0, 0, 0);
   opacity: 0;
-  transition: opacity 0.5s ease-out; /* Add a smooth transition */
+  transition: opacity 0.5s ease-out; 
   z-index: 2;
 }
 
 .video-container:hover::after {
-  opacity: 0.5; /* Change the opac ity value to adjust the darkness */
+  opacity: 0.5;
 }
 /*  */
 :root {
@@ -775,12 +777,6 @@ filter: hue-rotate(12deg);  }
   --white: #fff;
   --thumb: #edf2f4;
 }
-/* body {
-  font: 16px / 24px "Rubik", sans-serif;
-  color: var(--black);
-  background: var(--platinum);
-  margin: 50px 0;
-} */
 
 .container {
   max-width: 1400px;
@@ -903,8 +899,8 @@ filter: hue-rotate(12deg);  }
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  color: white; /* Set the text color to white */
-  text-align: center; /* Center the text */
+  color: white; 
+  text-align: center;
   z-index: 3;
 }
 
@@ -962,17 +958,7 @@ a {
   border-radius: 10px;
   width: 23rem;
 }
-/* .masthead {
-  position: relative;
-  width: 100%;
-  height: auto;
-  min-height: 35rem;
-  padding: 15rem 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-size: cover;
-} */
+
 .masthead h1, .masthead .h1 {
   font-family: "Varela Round", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* font-size: 2.5rem; */
@@ -1037,9 +1023,7 @@ a {
   vertical-align: middle;
 }
 /* end of tv show detail page */
-/*---------------------
-  Anime Details
------------------------*/
+
 
 .anime-details {
 	padding-top: 60px;
@@ -1422,11 +1406,6 @@ a {
   width: 100%;
   min-width: 100%
 }
-
-/* body {
-  background-color: #f9f9fa
-} */
-
 .flex {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
@@ -1829,11 +1808,11 @@ a {
   max-height:50px;
 }
 .main-news-img:hover .overlay-text, .small-news-one:hover .overlay-text {
-  display: block; /* Show the text on hover */
+  display: block; 
 }
 .main-news {
   position: relative;
-  overflow: hidden; /* Ensures the overlay stays within the image area */
+  overflow: hidden;
 }
 
 .info-overlay {

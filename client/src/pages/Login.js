@@ -10,10 +10,8 @@ import Auth from '../utils/auth';
 const Login = (props) => {
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error, data }] = useMutation(LOGIN_USER);
-  const [notification, setNotification] = useState(null);  // initialize state variable
+  const [notification, setNotification] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
-
-  // update state based on form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -23,7 +21,6 @@ const Login = (props) => {
     });
   };
 
-  // submit form
   useEffect(() => {
     const savedEmail = localStorage.getItem('email');
     const savedPassword = localStorage.getItem('password');
@@ -34,10 +31,8 @@ const Login = (props) => {
     }
   }, []);
   
-// submit form
 const handleFormSubmit = async (event) => {
   event.preventDefault();
-  console.log(formState);
   try {
     const { data } = await login({
       variables: { ...formState },
@@ -63,7 +58,6 @@ const handleFormSubmit = async (event) => {
     });
   }
 
-  // clear form values
   setFormState({
     email: '',
     password: '',
@@ -97,13 +91,9 @@ const handleRememberMeChange = (event) => {
                         )}
       <div className="container-fluid">
         <div className="row no-gutter">
-          {/* The image half */}
           <div className="col-md-6 d-none d-md-flex bg-image"></div>
-
-          {/* The content half */}
           <div className="col-md-6 bg-light">
             <div className="login d-flex align-items-center py-5">
-              {/* Demo content */}
               <div className="container">
                 <div className="row">
                   <div className="col-lg-10 col-xl-7 mx-auto">

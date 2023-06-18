@@ -12,7 +12,7 @@ const Comments = ({ reviewsAndEpisodeGroups }) => {
               return (
                 <div key={index} className="be-comment">
                   <div className="be-img-comment">
-                    <img src={`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`} alt="" className="be-ava-comment"></img>
+                  <img src={review.author_details.avatar_path ? (`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`) : ('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')} alt="" class="be-ava-comment"></img>
                   </div>
                   <div className="be-comment-content">
                     <span className="be-comment-name">

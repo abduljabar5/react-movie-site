@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
@@ -22,11 +22,6 @@ function App() {
   });
 
   const user = data?.me || data?.user || {};
-  // // navigate to personal profile page if username is yours
-
-  // if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
-  //   return setShowChat(false);
-  // }
 
   if (Auth.loggedIn()) {
     console.log(Auth.getProfile().data.username);
@@ -72,7 +67,7 @@ function App() {
     setShowName('');
     scrollToBottom();
   }, [isLoading])
-  
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -145,39 +140,39 @@ function App() {
                         <div></div>
                       )}
                       <div ref={messagesEndRef} />
-                  
-
-                  </div>
-                  <div className="box-footer">
-                  <form action="#" method="post" onSubmit={(e) => {
-  e.preventDefault();  // Prevents form from being submitted normally
-  generateText();
-}}>
-  <div className="input-group">
-    <input className='form-control' type="text" value={showName} onChange={(e) => setShowName(e.target.value)} />
-    <span className="input-group-btn">
-      <button type="submit" className="btn btn-primary">Send</button>
-    </span>
-  </div>
-</form>
 
 
+                    </div>
+                    <div className="box-footer">
+                      <form action="#" method="post" onSubmit={(e) => {
+                        e.preventDefault();
+                        generateText();
+                      }}>
+                        <div className="input-group">
+                          <input className='form-control' type="text" value={showName} onChange={(e) => setShowName(e.target.value)} />
+                          <span className="input-group-btn">
+                            <button type="submit" className="btn btn-primary">Send</button>
+                          </span>
+                        </div>
+                      </form>
+
+
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-        </div>
-      )}
-      {!showChat && (
-        <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
+          )}
+          {!showChat && (
+            <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
 
-      )}</div>
-  ): (<div></div>)
-}
+          )}</div>
+      ) : (<div></div>)
+      }
     </main >
   );
-  
-  }
+
+}
 export default App;
 
 

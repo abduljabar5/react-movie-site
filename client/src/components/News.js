@@ -10,55 +10,49 @@ const News = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [news, setNews] = useState([]);
     
-    const saveNewsToDB = async (news) => {
-        const db = await openDB('NewsDB', 2, {   // increment the version number
-            upgrade(db) {
-               
+    const openAndUpgradeDB = async () => {
+        const db = await openDB('NewsDB', 1, { // Downgrade to version 1
+            upgrade(db, oldVersion, newVersion, transaction) {
+                if (!db.objectStoreNames.contains('news')) {
                     db.createObjectStore('news');
-                
+                }
             },
         });
-    
+
+        return db;
+    };
+
+    const saveNewsToDB = async (news) => {
+        const db = await openAndUpgradeDB();
         await db.put('news', news, 'latest');
     };
-    
-    
+
     const getNewsFromDB = async () => {
         console.log("getNewsFromDB");
         try {
-            const db = await openDB('NewsDB', 2);
+            const db = await openAndUpgradeDB();
             return await db.get('news', 'latest');
         } catch (err) {
             console.error("Error reading 'news' from IndexedDB:", err);
             return null;
         }
     };
-    
-    
     const getNews = async () => {
-        console.log('first');
-    
         try {
-            console.log('trying to run news block');
             let newsData = await getNewsFromDB();
             console.log("🚀 ~ file: News.js:35 ~ getNews ~ newsData:", newsData)
-    
-            // If no data in DB or data is more than an hour old, fetch new data
+
             if (!newsData || new Date() - new Date(newsData.fetchTime) > 3600000) {
-                console.log("hghjfdrtsdhfjgkhjxfggfhgjk");
                 const res = await API.news();
                 newsData = {
                     fetchTime: new Date(),
                     articles: res.data.articles,
                 };
-                console.log("🚀 ~ file: News.js:34 ~ getNews ~ newsData:", newsData)
-
                 saveNewsToDB(newsData);
             }
     
             setNews(newsData.articles);
             setIsLoading(false);
-            console.log('returned');
         } catch (err) {
            console.log(err);
         }
@@ -69,9 +63,9 @@ const News = () => {
         getNews();
     }, []);
 
-    useEffect(() => {
-        console.log('hi news', news);
-    }, [news]);
+    // useEffect(() => {
+    //     console.log('hi news', news);
+    // }, [news]);
 
     // const handleModalClose = () => setModalShow(false);
 
@@ -102,11 +96,19 @@ const News = () => {
                         <div className='smaller-new'>
                             <div className='small-news-one'>
                                 <img src={news[2].image} style={{ width: '100%', minHeight: '204px' }} />
-                                <div className='overlay-text'>{news[2].title}</div>
+                                <a href={news[2].url} style={{textDecoration:'none'}}  target='blank'>
+                                <div className='overlay-text'>{news[2].title}
+                                </div>
+                                    {/* <FontAwesomeIcon icon={faInfo} className="mx-2" style={{ }} /> */}
+                                </a>
                             </div>
                             <div className='small-news-one'>
                                 <img src={news[3].image} style={{ width: '100%', minHeight: '204px' }} />
-                                <div className='overlay-text'>{news[3].title}</div>
+                                <a href={news[3].url} style={{textDecoration:'none'}}  target='blank'>
+                                <div className='overlay-text'>{news[3].title}
+                                </div>
+                                    {/* <FontAwesomeIcon icon={faInfo} className="mx-2" style={{ }} /> */}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -118,11 +120,19 @@ const News = () => {
                             <div className='smaller-new'>
                                 <div className='small-news-one'>
                                     <img src={news[4].image} style={{ width: '100%', minHeight: '204px' }} />
-                                    <div className='overlay-text'>{news[4].title}</div>
+                                    <a href={news[4].url} style={{textDecoration:'none'}}  target='blank'>
+                                <div className='overlay-text'>{news[4].title}
+                                </div>
+                                    {/* <FontAwesomeIcon icon={faInfo} className="mx-2" style={{ }} /> */}
+                                </a>
                                 </div>
                                 <div className='small-news-one'>
                                     <img src={news[5].image} style={{ width: '100%', minHeight: '204px' }} />
-                                    <div className='overlay-text'>{news[5].title}</div>
+                                    <a href={news[5].url} style={{textDecoration:'none'}}  target='blank'>
+                                <div className='overlay-text'>{news[5].title}
+                                </div>
+                                    {/* <FontAwesomeIcon icon={faInfo} className="mx-2" style={{ }} /> */}
+                                </a>
                                 </div>
                             </div>
                             {/* <div className='smaller-new'></div> */}

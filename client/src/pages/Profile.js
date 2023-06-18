@@ -38,8 +38,6 @@ const Profile = () => {
           // If the show is saved, remove it from local storage
           if (savedShowsData.hasOwnProperty(id)) {
               delete savedShowsData[id];
-
-              // Save the updated data back to local storage
               localStorage.setItem('savedShows', JSON.stringify(savedShowsData));
           }
       }
@@ -55,8 +53,6 @@ const Profile = () => {
         // If the movie is saved, remove it from local storage
         if (savedMoviesData.hasOwnProperty(id)) {
           delete savedMoviesData[id];
-  
-          // Save the updated data back to local storage
           localStorage.setItem('savedMovies', JSON.stringify(savedMoviesData));
         }
       }
@@ -113,8 +109,6 @@ const Profile = () => {
   useEffect(() => {
     setMyState(0);
     const fetchShows = async () => {
-      console.log("just edit", user.shows);
-      console.log('just user', user);
       if (!user.shows || !db) {
         return;
       }
@@ -143,14 +137,12 @@ const Profile = () => {
       }
 
       setCachedShows(showsCache);
-      console.log("hi besty", showsCache);
     };
 
     fetchShows();
   }, [user.shows, db]);
   useEffect(() => {
     const fetchMovies = async () => {
-      console.log("fetching movies", user.movies);
       if (!user.movies) {
         return;
       }
@@ -169,7 +161,6 @@ const Profile = () => {
       }
   
       setCachedMovies(moviesCache);
-      console.log("fetched movies", moviesCache);
     };
   
     fetchMovies();
@@ -188,7 +179,6 @@ const Profile = () => {
       const animeCache = [];
       for (let anime of user.animes) {
         const cache = await dbanime.get('myAnimes', anime.animeName.toString());
-      console.log("cache:", cache)
 
         if (cache) {
           animeCache.push({ ...cache, animeId: anime._id });
@@ -231,13 +221,10 @@ const Profile = () => {
       </h4>
     );
   }
-  console.log("fetched movies", cachedMovies);
-  // The rest of your component...
   const renderView = () => {
     switch (view) {
       case 'movies':
         return cachedMovies.map(card => (
-          // Replace this with your Card component for movies
           <section className="dark text-dark">
             <div className="container py-4">
             <article className={`postcard ${cards.theme} ${getRatingColor(card.imdb ? card.imdb.imDbRating : card.additionalData.imDbRating)}`}>
@@ -404,10 +391,7 @@ const Profile = () => {
       preview: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
       tags: ["Podcast", "55 mins.", "Play Episode"]
     },
-    // More card data...
   ]
-
-  console.log('jojojoj', cachedShows);
 
   return (
     <Container>

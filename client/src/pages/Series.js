@@ -17,7 +17,7 @@ const Series = () => {
     const [searchUs, setSearchUS] = useState(true);
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState('popular');
-    const [displayLimit, setDisplayLimit] = useState(20); // Add this state
+    const [displayLimit, setDisplayLimit] = useState(20);
 
     const getContent = async () => {
         try {
@@ -68,8 +68,8 @@ const Series = () => {
 
     useEffect(() => {
         if (page === 1) {
-            setContent([]); // Clear the contents when first page is loaded
-            setDisplayLimit(20); // Reset the display limit when first page is loaded
+            setContent([]);
+            setDisplayLimit(20);
         }
         getContent();
     }, [page, filter, searchUs]);
@@ -77,11 +77,11 @@ const Series = () => {
     const handleLoadMore = () => {
         setIsLoading(true)
         if (searchUs) {
-            setDisplayLimit((prevDisplayLimit) => prevDisplayLimit + 20); // Add 20 more to the display limit
+            setDisplayLimit((prevDisplayLimit) => prevDisplayLimit + 20);
             setIsLoading(false)
 
         } else {
-            setPage((prevPage) => prevPage + 1); // Load next page for TMDB
+            setPage((prevPage) => prevPage + 1);
             setIsLoading(false)
 
         }
@@ -111,7 +111,7 @@ const Series = () => {
                         {!searchUs ? (
                             <><p>
                                 <img className='' src={filterlist}></img>
-                            </p><Form.Control className='sort' as="select" value={filter} onChange={handleFilterChange}>
+                            </p><Form.Control className='sort mt-5' as="select" value={filter} onChange={handleFilterChange}>
                                     <option value="popular">popular</option>
                                     <option value="top_rated">Top Rated</option>
                                     <option value="airing_today">Airing Today</option>
@@ -119,7 +119,7 @@ const Series = () => {
                                 </Form.Control></>
                         ) : (<div></div>)}
 
-                        <label class="switch"> Search US only
+                        <label class="switch mx-5 mt-5"> Search All
                             <input type="checkbox" class="checkbox" onClick={() => setSearchUS(searchUs === false ? true : false)}></input>
                             <div class="slider"></div>
                         </label>

@@ -13,8 +13,6 @@ import 'react-circular-progressbar/dist/styles.css';
 import API from '../api/AnimeDetails';
 import axios from 'axios';
 import { openDB } from 'idb';
-
-// create and open the database
 const setupDB = async () => {
     return openDB('MyDBAnime', 1, {
         upgrade(db) {
@@ -28,7 +26,7 @@ const AnimeDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [savedAnimes, setSavedAnimes] = useState({});
     const [heartFilled, setHeartFilled] = useState(null);
-    const [notification, setNotification] = useState(null);  // initialize state variable
+    const [notification, setNotification] = useState(null); 
     const { incrementMyState } = useContext(MyContext);
 
     const [addAnime] = useMutation(ADD_ANIME);
@@ -41,14 +39,11 @@ const AnimeDetails = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const name = searchParams.get('name');
-console.log('name:',name);
 
 useEffect(() => {
     if (!loading) {
         const user = data?.me || data?.user || {};
-        console.log('user:', user);
         const isAnimeSaved = user.animes ? user.animes.some(savedAnime => savedAnime.animeName === name) : false;
-        console.log('anime:',isAnimeSaved);
         setHeartFilled(isAnimeSaved);
         setSavedAnimes({ ...savedAnimes, [name]: isAnimeSaved });
     }
@@ -86,21 +81,20 @@ useEffect(() => {
         }
         try {
             if (Auth.loggedIn()) {
-                let animeTitle =  anime.data.attributes.titles.en; // Use a default value
+                let animeTitle =  anime.data.attributes.titles.en; 
                 if ( !anime.data.attributes.titles.en) {
                     animeTitle = anime.data.attributes.titles.en_us;
                 }
-                console.log("datatype:", animeTitle);
                 const userId = Auth.getProfile().data._id;
                 const animeData = {
-                    animeId: anime.data.id, // Here we use the id from the anime.data object
-                    animeName: animeTitle, // Here we use the English name from the anime.data object
+                    animeId: anime.data.id,
+                    animeName: animeTitle,
                 };
                 const { data } = await addAnime({
                     variables: { userId, anime: animeData },
                 });
             
-                setHeartFilled(true); // If the anime is successfully saved, fill the heart.
+                setHeartFilled(true);
                
 const updatedSavedAnimes = { 
     ...savedAnimes, 
@@ -116,13 +110,9 @@ const updatedSavedAnimes = {
             console.error(err);
         }
     };
-    
-    console.log(anime);
     if (isLoading) {
         return <div>Loading...</div>;
     }
-
-    // Here is where you render your anime details page
 
 
     return (
@@ -201,7 +191,7 @@ const updatedSavedAnimes = {
                                             }
                                         }}
                                     >
-                                        <i className={`fa ${heartFilled ? 'fa-heart' : 'fa-heart-o'}`}></i> Save
+                                        <i className={`fa ${heartFilled ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
                                     </button>
                                     <button type="button" class="follow-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         Watch Trailer

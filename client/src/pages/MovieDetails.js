@@ -16,7 +16,6 @@ import Notification from '../components/Notification/Alerts';
 import imdblogo from '../styles/images/imdblogo.svg'
 import CarouselCards from '../components/Similar';
 import ButtonSlideOut from '../components/WatchNow';
-// create and open the database
 const setupDB = async () => {
     return openDB('MyDBMovies', 1, {
         upgrade(db) {
@@ -38,7 +37,6 @@ const MoreDetails = () => {
     const [notification, setNotification] = useState(null);
 
     const { username: userParam } = useParams();
-    console.log("id:", id);
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
         variables: { username: userParam },
     });
@@ -46,7 +44,6 @@ const MoreDetails = () => {
     useEffect(() => {
         if (!loading) {
             const user = data?.me || data?.user || {};
-            console.log(user);
             const isMovieSaved = user.movies ? user.movies.some(savedMovie => savedMovie.tmdbId === id) : false;
             setHeartFilled(isMovieSaved)
             setSavedMovies({ ...savedMovies, [id]: isMovieSaved });
@@ -59,7 +56,6 @@ const MoreDetails = () => {
 
             const cache = await db.get('tmdbmovies', id);
             if (!cache || Date.now() - cache.timestamp > 86400000) {
-                console.log('fetcjingnew');
                 try {
                     const themoviedbRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
                     const imdbRes = await axios.get(`https://imdb-api.com/en/API/Title/k_mmsg1u7d/${themoviedbRes.data.imdb_id}/Trailer,WikipediaFullActor,FullCast`);
@@ -90,14 +86,11 @@ const MoreDetails = () => {
 
         fetchData();
     }, [id]);
-    useEffect(() => {
-        console.log('movie:', movie);
-    }, [movie]);
-
-    // console.log("movie:",movie);
+    // useEffect(() => {
+    //     console.log('movie:', movie);
+    // }, [movie]);
     const handleSaveMovie = async () => {
         if (heartFilled) {
-            console.log('This movie is already saved');
             return;
         }
 
@@ -120,17 +113,16 @@ const MoreDetails = () => {
                 setSavedMovies(updatedSavedMovies);
                 incrementMyState();
                 setNotification({
-                message: "Go to profile to view saved content",
-                variant: "success",
-                key: Date.now()
-            });
-                console.log('saved');
+                    message: "Go to profile to view saved content",
+                    variant: "success",
+                    key: Date.now()
+                });
             } else {
                 console.log('User is not logged in');
                 setNotification({
-                message: "Login Or Sigh Up",
-                key: Date.now()
-            });
+                    message: "Login Or Sigh Up",
+                    key: Date.now()
+                });
             }
         } catch (err) {
             console.error(err);
@@ -141,7 +133,6 @@ const MoreDetails = () => {
     }
 
     const percentage = movie.movie.vote_average;
-    // remaining part of your code...
     const style = {
         position: 'relative',
         width: '100%',
@@ -160,7 +151,7 @@ const MoreDetails = () => {
                 <p>Loading...</p>
             ) : (
                 <div>
-                     <div>
+                    <div>
                         {notification && (
                             <Notification
                                 message={notification.message}
@@ -184,15 +175,15 @@ const MoreDetails = () => {
                                                     href={movie.movie.homepage}
                                                     className='btn btn-outline-danger w-100 ms-4'
                                                     target='_blank'
-                                                    rel='noreferrer'  // It's a good practice to add rel='noreferrer' whenever target='_blank' is used
+                                                    rel='noreferrer'
                                                 >
                                                     Watch Now
                                                 </a>
                                             </div>
                                         </div>
                                         <div className='mx-auto'>
-                                            <h1 className="text-white mx-auto mt-5 mb-5">{movie.movie.name}</h1>
-                                            <div className='w-25 ratingcontainer'>
+                                            <h1 className="text-white mx-auto mt-5 mb-5">{movie.imdb.fullTitle}</h1>
+                                            <div className='w-25 ratingcontainer m-4 g-2'>
                                                 <img src={imdblogo}></img>
                                                 <h5 style={{ alignSelf: 'center', margin: '10px', fontSize: '30px' }}>{movie.imdb.imDbRating}</h5>
                                                 <div>
@@ -205,27 +196,27 @@ const MoreDetails = () => {
                                                 <div className="row">
                                                     <div className="col-lg-6 col-md-6 mx-auto">
                                                         <ul>
-                                                            <li><span>Type:</span>TV Series</li>
-                                                            {/* <li><span>Studios:</span>{movie.movie.networks[0].name}</li> */}
-                                                            {/* <li><span>Date aired:</span>{movie.movie.first_air_date}</li> */}
+                                                            <li><span>Type:</span>Movie</li>
+                                                            <li><span>Contry:</span>{movie.imdb.countries}</li>
+                                                            <li><span>Date aired:</span>{movie.imdb.releaseDate}</li>
                                                             <li><span>Status:</span>{movie.movie.status}</li>
                                                             <li><span>Genre:</span>{movie.movie.genres.map((genre) => { return <span className='tv-genre-headings'>{genre.name}, </span> })}</li>
                                                         </ul>
                                                     </div>
                                                     <div className="col-lg-5 col-md-6">
                                                         <ul>
-                                                            {/* <li><span>Last aired:</span>{movie.movie.last_air_date}</li> */}
-                                                            {/* <li><span>Rating:</span>{movie.movie.vote_average} / {movie.movie.vote_count} times</li> */}
-                                                            {/* <li><span>Duration:</span>{movie.movie.episode_run_time[0]} min/ep</li> */}
-                                                            <li><span>Seasons:</span>{movie.movie.number_of_seasons} Seasons/ {movie.movie.number_of_episodes} Episode</li>
-                                                            {/* <li><span>Last episode:</span>{movie.movie.last_episode_to_air.air_date||'hi'}</li> */}
+                                                            <li><span>Content Rating:</span>{movie.imdb.contentRating}</li>
+                                                            <li><span>TMDB Rating:</span>{movie.movie.vote_average}</li>
+                                                            <li><span>Duration:</span>{movie.imdb.runtimeStr}</li>
+                                                            <li><span>Budget:</span>{movie.imdb.boxOffice.budget ? (movie.imdb.boxOffice.budget) : ('Unknown')}</li>
+                                                            <li><span>Companies:</span>{movie.imdb.companies}</li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="anime__details__btn" style={{display:'flex', justifyContent:'center'}}>
-                                                <a style={{textDecoration:"none", cursor:'pointer'}} className="follow-btn" onClick={handleSaveMovie}>
-                                                    {heartFilled ? <i class="fa fa-heart"></i> : <i class="fa fa-heart-o"></i>} save
+                                            <div className="anime__details__btn" style={{ display: 'flex', justifyContent: 'center' }}>
+                                                <a style={{ textDecoration: "none", cursor: 'pointer' }} className="follow-btn" onClick={handleSaveMovie}>
+                                                    {heartFilled ? <i class="fa fa-heart animate__animated animate__heartBeat"></i> : <i class="fa fa-heart-o"></i>} save
                                                 </a>
                                                 <ButtonSlideOut prompt={movie.imdb} />
                                             </div>
@@ -236,12 +227,14 @@ const MoreDetails = () => {
                             </div>
                         </div>
                         <div className='mx-auto' style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+                             <h1 className='title'>Cast:</h1>
                             <div style={{ display: 'flex' }}>
-                                <h1 className='position-absolute'>Cast:</h1>
+                               
                                 <div class="cast-container mx-auto" style={{ width: "87vw" }}>
                                     {movie.imdb.actorList.map((item, index) => (
                                         <div class="cast-item">
                                             <div className=" border-0" key={index}>
+                                            <a href={`https://www.google.com/search?q=${item.name}`} target='blank'>
                                                 <div className=''>
                                                     {/* <Link to={`/movie?id=${item.id}`}> */}
                                                     <Card.Img
@@ -254,6 +247,7 @@ const MoreDetails = () => {
                                                     </Card.ImgOverlay>
                                                     {/* </Link> */}
                                                 </div>
+                                                </a>
                                             </div>
                                         </div>
                                     ))}
@@ -273,7 +267,7 @@ const MoreDetails = () => {
                         </div>
                     </header>
                     <section id='trailers'>
-                        <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers</h1>
+                        <h1 className='title my-4'>Trailers</h1>
                         <Carousel className='carousel-btn'>
                             {movie.videos.map((video) =>
                                 <Carousel.Item interval={16000}>

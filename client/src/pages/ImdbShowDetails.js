@@ -35,17 +35,15 @@ const MoreDetails = () => {
     const [notification, setNotification] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const { incrementMyState } = useContext(MyContext);
-    const [addShow, { error }] = useMutation(ADD_SHOW); // Use the mutation
+    const [addShow, { error }] = useMutation(ADD_SHOW);
     const { username: userParam } = useParams();
     const { loading, data, err } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
         variables: { username: userParam },
     });
     useEffect(() => {
-        if (!loading && reviewsAndEpisodeGroups) {  // Check that reviewsAndEpisodeGroups is ready
+        if (!loading && reviewsAndEpisodeGroups) {
             const user = data?.me || data?.user || {};
-            // console.log("showid:", user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id))
-            console.log("pageid:", reviewsAndEpisodeGroups.themoviedb.id);
-            // Assuming that `user.shows` is an array of saved shows
+
             const isShowSaved = user.shows ? user.shows.some(savedShow => savedShow.themoviedb.id === reviewsAndEpisodeGroups.themoviedb.id) : false;
             setHeartFilled(isShowSaved)
             setSavedShows({ ...savedShows, [id]: isShowSaved });
@@ -54,7 +52,6 @@ const MoreDetails = () => {
 
     const fetchShows = async () => {
         const res = await axios.get(`https://www.omdbapi.com/?i=${id}&apikey=810b2ac0`);
-        console.log('hihihihi', res.data);
         return res.data;
     };
 
@@ -99,24 +96,20 @@ const MoreDetails = () => {
             const currentTime = new Date().getTime();
             const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
             const savedData = await db.get('shows', storageKey);
-
-            // if there's saved data and it's less than a day old
             if (savedData && currentTime - savedData.time < oneDayInMilliseconds) {
                 setShows(savedData.shows);
                 setAdditionalData(savedData.additionalData);
                 setReviewsAndEpisodeGroups(savedData.reviewsAndEpisodeGroups);
 
             } else {
-                // fetch data from the API
                 const fetchedShows = await fetchShows();
+
                 const fetchedAdditionalData = await fetchAdditionalData(fetchedShows.imdbID);
-                console.log(fetchedShows.imdbID);
 
                 const tmdbShowId = await fetchTmdbShowId(fetchedShows.Title);
 
                 const fetchreviewsAndEpisodeGroups = await fetchReviewsAndEpisodeGroups(tmdbShowId);
 
-                // save data in IndexedDB with the current time
                 const newData = {
                     time: currentTime,
                     shows: fetchedShows,
@@ -126,7 +119,6 @@ const MoreDetails = () => {
 
                 try {
                     await db.put('shows', newData, storageKey);
-                    console.log(`Data saved in IndexedDB with key ${storageKey}`);
                 } catch (error) {
                     console.error('Error saving data in IndexedDB:', error);
                 }
@@ -142,11 +134,10 @@ const MoreDetails = () => {
         fetchData();
     }, [id]);
 
-    useEffect(() => {
-        console.log(additionalData);
+    // useEffect(() => {
+    //     console.log(additionalData);
 
-    }, [additionalData])
-    console.log(reviewsAndEpisodeGroups);
+    // }, [additionalData])
     const handleSaveShow = async () => {
         try {
             if (Auth.loggedIn()) {
@@ -155,10 +146,6 @@ const MoreDetails = () => {
                 const showData = {
                     themoviedb
                 };
-
-                console.log(userId);
-                console.log(showData);
-
                 const { data } = await addShow({
                     variables: { userId, show: showData },
                 });
@@ -167,7 +154,6 @@ const MoreDetails = () => {
 
                 const updatedSavedShows = { ...savedShows, [id]: newHeartFilledState };
                 setSavedShows(updatedSavedShows);
-                // You can handle the response here...
                 setNotification({
                     message: "Go to profile to view saved content",
                     variant: "success",
@@ -244,7 +230,7 @@ const MoreDetails = () => {
                                                             : `https://www.${reviewsAndEpisodeGroups.episodeGroups.networks[0].name}.com`}
                                                         className='btn btn-outline-danger w-100 ms-4'
                                                         target='_blank'
-                                                        rel='noreferrer'  // It's a good practice to add rel='noreferrer' whenever target='_blank' is used
+                                                        rel='noreferrer'
                                                     >
                                                         Watch Now
                                                     </a>
@@ -286,10 +272,10 @@ const MoreDetails = () => {
                                                 </div>
                                             </div>
                                             <div class="anime__details__btn">
-                                               
-                                           
-                                            
-                                                 <button
+
+
+
+                                                <button
                                                     className="follow-btn"
                                                     onClick={() => {
                                                         if (!heartFilled) {
@@ -305,7 +291,7 @@ const MoreDetails = () => {
                                                 >
                                                     <i className={`fa ${savedShows[id] ? 'fa-heart animate__animated animate__heartBeat' : 'fa-heart-o'}`}></i> Save
                                                 </button>
-                                                
+
                                                 <button type="button" class="follow-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                     Watch Trailer
                                                 </button>
@@ -370,6 +356,7 @@ const MoreDetails = () => {
                                     {additionalData.actorList.map((item, index) => (
                                         <div class="cast-item">
                                             <div className=" border-0" key={index}>
+                                            <a href={`https://www.google.com/search?q=${item.name}`} target='blank'>
                                                 <div className=''>
                                                     {/* <Link to={`/show?id=${item.id}`}> */}
                                                     <Card.Img
@@ -382,6 +369,7 @@ const MoreDetails = () => {
                                                     </Card.ImgOverlay>
                                                     {/* </Link> */}
                                                 </div>
+                                                </a>
                                             </div>
                                         </div>
                                     ))}
@@ -429,7 +417,7 @@ const MoreDetails = () => {
                                         return (
                                             <div class="be-comment">
                                                 <div class="be-img-comment">
-                                                    <img src={`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`} alt="" class="be-ava-comment"></img>
+                                                    <img src={review.author_details.avatar_path ? (`https://image.tmdb.org/t/p/original/${review.author_details.avatar_path}`) : ('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')} alt="" class="be-ava-comment"></img>
                                                 </div>
                                                 <div class="be-comment-content">
                                                     <span class="be-comment-name">
@@ -455,7 +443,7 @@ const MoreDetails = () => {
                                         </div>
                                     </div>
                             }
-
+{/* 
                             <form class="form-block">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6">
@@ -476,7 +464,7 @@ const MoreDetails = () => {
                                     </div>
                                     <a class="btn btn-primary pull-right">submit</a>
                                 </div>
-                            </form>
+                            </form> */}
                         </div>
                     </section>
                 </div>

@@ -13,12 +13,11 @@ const Trendinganime = () => {
 
     const trending = async () => {
         try {
-            console.log('tring');
             const res = await API.TrendingAnime();
             setAnime(res.data.data);
             setIsLoading(false)
         } catch (err) {
-            // handle errors
+        console.log("🚀 ~ file: TrendingAnime.js:20 ~ trending ~ err:", err)
         }
     };
 
@@ -26,9 +25,9 @@ const Trendinganime = () => {
         trending();
     }, []);
 
-    useEffect(() => {
-        console.log('hi', animes);
-    }, [animes]);
+    // useEffect(() => {
+    //     console.log('hi', animes);
+    // }, [animes]);
 
     return (
         <aside className='anime-container'>

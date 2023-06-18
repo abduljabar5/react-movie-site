@@ -55,11 +55,10 @@ const Movies = () => {
     const [nowplaying, seNowplaying] = useState([]);
     const [trendingToday, setTrendingToday] = useState([]);
     const genreColors = {
-        Action: '#FF0000', // Red for Action
-        Comedy: '#FFFF00', // Yellow for Comedy
-        Drama: '#0000FF', // Blue for Drama
-        // Add more genre-color mappings as needed...
-        default: '#888' // Grey for other genres
+        Action: '#FF0000',
+        Comedy: '#FFFF00',
+        Drama: '#0000FF',
+        default: '#888'
     };
     const handleBlurToggle = (e, showId) => {
         e.stopPropagation();
@@ -87,16 +86,15 @@ const Movies = () => {
             seNowplaying(nowPlayingResults.data.results);
 
             setIsLoading(false);
-            console.log('today', Today.data.results);
-            console.log(showResults.data.results);
-            console.log(movieResults.data.results);
-            console.log(nowPlayingResults.data.results);
+            // console.log('today', Today.data.results);
+            // console.log(showResults.data.results);
+            // console.log(movieResults.data.results);
+            // console.log(nowPlayingResults.data.results);
         };
-
         fetchData();
     }, []);
     const Stars = ({ vote_average }) => {
-        const starRating = Math.round(vote_average / 2); // assuming vote_average is 1 to 10
+        const starRating = Math.round(vote_average / 2);
         let stars = [];
 
         for (let i = 1; i <= 5; i++) {
@@ -334,8 +332,6 @@ const Movies = () => {
                                         </div>
                                         <div className='boobo'>
                                             {movies.map((show) => {
-                                                // if (show.origin_country[0] === "US" ||"JP") {
-                                                // console.log(JSON.stringify(show.name));
                                                 const id = show.id
                                                 return (
 
@@ -396,8 +392,7 @@ const Movies = () => {
                         </div>
                         <div className='boobo' style={{ width: '95%' }}>
                             {nowplaying.map((show) => {
-                                // if (show.origin_country[0] === "US" ||"JP") {
-                                // console.log(JSON.stringify(show.name));
+                              
                                 const id = show.id
                                 return (
 

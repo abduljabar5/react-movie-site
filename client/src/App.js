@@ -28,7 +28,6 @@ import 'aos/dist/aos.css';
 import AOS from 'aos';
 import NotFound from './pages/404';
 import ScrollToTopButton from './components/ScrollToTopButton';
-// Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
@@ -66,7 +65,6 @@ function App() {
          <div className='dark'>
          <MyProvider>
           <Header />
-          <AccountNotification />
             <Routes>
               <Route 
                 path="/" 
@@ -115,14 +113,6 @@ function App() {
                 path="*" 
                 element={<NotFound />}
               />
-              {/* <Route 
-                path="/profiles/:username" 
-                element={<Profile />}
-              />
-              <Route 
-                path="/thoughts/:thoughtId"
-                element={<SingleThought />}
-              /> */}
             </Routes>
             <Chat />
             <ScrollToTopButton />

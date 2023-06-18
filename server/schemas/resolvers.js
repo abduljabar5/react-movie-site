@@ -10,7 +10,6 @@ const resolvers = {
       return User.find().populate('thoughts').populate('shows');
     },
     user: async (parent, { username }) => {
-      console.log("user ran")
       const user = await User.findOne({ username }).populate('thoughts').populate('shows');
       return user;
     },
@@ -22,8 +21,6 @@ const resolvers = {
       return Thought.findOne({ _id: thoughtId });
     },
     me: async (parent, args, context) => {
-      console.log(args);
-      console.log(context)
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate('shows').populate('movies').populate('thoughts').populate('animes'); 
       }
@@ -55,15 +52,14 @@ const resolvers = {
       return { token, user };
     },
     addShow: async (parent, { show }, context) => {
-      console.log(context)
 
       if (context.user) {
-        const newShow = await Show.create(show);  // Create the new show
+        const newShow = await Show.create(show);
         return User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { shows: newShow } }, // push the _id of the new show
-          { new: true } // return the updated document
-        ).populate('shows'); // populate the shows field before returning
+          { $addToSet: { shows: newShow } },
+          { new: true }
+        ).populate('shows');
     
       }
     
@@ -71,17 +67,16 @@ const resolvers = {
     },
     
     addMovie: async (parent, { movie }, context) => {
-      console.log(context)
     
       if (context.user) {
-        let movieExists = await Movie.findOne(movie); // Check if the movie already exists
+        let movieExists = await Movie.findOne(movie); 
     
-        // If the movie does not exist in the database, create a new one
+        
         if (!movieExists) {
           movieExists = await Movie.create(movie);
         }
     
-        // Add the movie to the user's list
+       
         return User.findByIdAndUpdate(
           { _id: context.user._id },
           { $addToSet: { movies: movieExists._id } },
@@ -165,13 +160,13 @@ const resolvers = {
             $pull: { shows: showId }
           },
           { new: true }
-        ).populate('shows'); // populate the shows field before returning
+        ).populate('shows'); 
       }
       throw new AuthenticationError('You need to be logged in!');
     }, 
     removeMovie: async (parent, { movieId }, context) => {
       if (context.user) {
-        // Just pull the movie from the user's list, do not delete the movie from the database
+       
         return User.findByIdAndUpdate(
           { _id: context.user._id },
           { $pull: { movies: movieId } },
@@ -181,22 +176,21 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
     addAnime: async (parent, { anime }, context) => {
-      console.log(context)
     
       if (context.user) {
-        let animeExists = await Anime.findOne({ animeId: anime.animeId }); // Check if the anime already exists
+        let animeExists = await Anime.findOne({ animeId: anime.animeId }); 
     
-        // If the anime does not exist in the database, create a new one
+        
         if (!animeExists) {
           animeExists = await Anime.create(anime);
         }
     
-        // Add the anime to the user's list
+       
         return User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { animes: animeExists._id } }, // push the _id of the anime
-          { new: true } // return the updated document
-        ).populate('animes'); // populate the animes field before returning
+          { $addToSet: { animes: animeExists._id } },
+          { new: true }
+        ).populate('animes');
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -209,7 +203,7 @@ const resolvers = {
             $pull: { animes: animeId }
           },
           { new: true }
-        ).populate('animes'); // populate the animes field before returning
+        ).populate('animes');
       }
       throw new AuthenticationError('You need to be logged in!');
     },

@@ -76,16 +76,16 @@ const Recommend = () => {
                 }
             }
             setContent(showsCache)
-            console.log("Shows Cache", showsCache);
+            // console.log("Shows Cache", showsCache);
             setIsLoading(false);
             setNeedsSignIn(false)
         };
 
         fetchShows();
     }, [user, db1, db2]);
-    useEffect(() => {
-        console.log("bcdshcjusbckjsdbcjkds:", content);
-    }, [content])
+    // useEffect(() => {
+    //         console.log("🚀 ~ file: Recommend.js:89 ~ Recommend ~ content:", content)
+    // }, [content])
     return (
         <div className='trending__product' style={{ margin: '70px 0px 70px 0px' }}>
             <h4 data-aos="fade-up"

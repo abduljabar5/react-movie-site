@@ -5,7 +5,6 @@ import API2 from '../api/AnimeDetails';
 import { Modal, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import IconMovieOpenPlayOutline from '../components/Icons/Movie';
-import Shows from '../components/Icons/Shows'
 import Naruto from '../styles/images/anime.svg'
 import searchIcon from '../styles/images/search.svg'
 import IconTvSharp from "../components/Icons/Shows";
@@ -30,7 +29,7 @@ const Search = () => {
                 setIsLoading(false);
             })
             .catch((err) => {
-                // handle errors
+                console.log("🚀 ~ file: Search.js:32 ~ search ~ err:", err)
                 setIsLoading(false);
             });
     };
@@ -38,12 +37,11 @@ const Search = () => {
     const getAnime = async () => {
         try {
             setIsLoading(true);
-            console.log('trying to run news');
             const res = await API2.AnimeDetails(searching);
             setAnimeView(res.data.data);
             setIsLoading(false);
         } catch (err) {
-            // handle errors
+            console.log("🚀 ~ file: Search.js:44 ~ getAnime ~ err:", err)
             setIsLoading(false);
         }
     };
@@ -62,16 +60,16 @@ const Search = () => {
             }
         }, 1500);
         return () => clearTimeout(timer);
-    }, [isMovie, searching, isAnime, show]);  // Add show to the dependency array
+    }, [isMovie, searching, isAnime, show]); 
 
-    useEffect(() => {
-        console.log(views);
-        console.log(animeviews);
-    }, [views, animeviews]);
+    // useEffect(() => {
+    //     console.log(views);
+    //     console.log(animeviews);
+    // }, [views, animeviews]);
 
     return (
         <div>
-            {/* Add a loading indicator */}
+            {/*loading indicator */}
             <div>
                 {/* <Button variant="outline-info" >
                     Search
@@ -110,7 +108,7 @@ const Search = () => {
                                             </button>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control" onChange={(e) => setSearching(e.target.value)}></input>
+                                    <input type="text" class="form-control" autoFocus onChange={(e) => setSearching(e.target.value)}></input>
                                     <div class="input-group-append">
                                         <span class="input-group-text microphone">{!isAnime ? (<button type="submit" style={{ borderStyle: 'none', backgroundColor: '#e9ecef' }}><img style={{ width: '45px' }} src={searchIcon}></img></button>) : (<img style={{ width: '47px' }} src={Naruto}></img>)}</span>
                                     </div>

@@ -1,15 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import Auth from '../../utils/auth';
-import {MyContext,MyProvider} from '../MyContext';
+import {MyContext} from '../MyContext';
 import Search from '../Search';
 import IconHome from '../Icons/Home';
 import IconMovieOpenPlayOutline from '../Icons/Movie';
@@ -19,22 +16,21 @@ import pop from '../../styles/images/pop.png'
 const Header = () => {
   const { myState } = useContext(MyContext);
   const [navbar, setNavbar] = useState(false);
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
   };
   const changeBackground = () => {
-    if (window.scrollY >= 180) { // You can adjust this value as per your navbar height
+    if (window.scrollY >= 180) {
       setNavbar(true);
     } else {
       setNavbar(false);
     }
   }
-
-  // Add scroll event listener
+  const handleOffcanvasClose = () => setShowOffcanvas(false);
   useEffect(() => {
     window.addEventListener('scroll', changeBackground);
-    // cleanup the listener on component unmount
     return () => {
       window.removeEventListener('scroll', changeBackground);
     };
@@ -58,11 +54,13 @@ const Header = () => {
           <Navbar.Brand className='brand' href="/" style={{ fontSize:'30px'}}>
             <img src={pop} style={{width: '100px', height:'57px', backgroundColor:'transparent'}}></img>
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} />
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-$'lg'`} onClick={() => setShowOffcanvas(true)}  />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-$'lg'`}
             aria-labelledby={`offcanvasNavbarLabel-expand-$'lg'`}
             placement="end"
+            show={showOffcanvas}
+            onHide={handleOffcanvasClose}
           >
             <Offcanvas.Header closeButton>
               <Offcanvas.Title id={`offcanvasNavbarLabel-expand-$'lg'`}>
@@ -71,10 +69,10 @@ const Header = () => {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Link className='nav-link' to="/"><IconHome /> Home</Link>
-                <Nav.Link href="/movies"><IconMovieOpenPlayOutline /> Movies</Nav.Link>
-                <Nav.Link href="/TV-Shows"><Shows /> Shows</Nav.Link>
-                <Nav.Link href="/animepage">
+                <Link className='nav-link' to="/" onClick={handleOffcanvasClose}><IconHome /> Home</Link>
+                <Nav.Link href="/movies" onClick={handleOffcanvasClose}><IconMovieOpenPlayOutline /> Movies</Nav.Link>
+                <Nav.Link href="/TV-Shows" onClick={handleOffcanvasClose}><Shows /> Shows</Nav.Link>
+                <Nav.Link href="/animepage" onClick={handleOffcanvasClose}>
                   <img className='naruto' src={Naruto}></img>
                    Anime</Nav.Link>
                 {/* <NavDropdown
@@ -103,10 +101,10 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link className="nav-link" to="/login">
+              <Link className="nav-link" onClick={handleOffcanvasClose} to="/login">
                 Login
               </Link>
-              <Link className="nav-link" to="/signup">
+              <Link className="nav-link" onClick={handleOffcanvasClose} to="/signup">
                 Signup
               </Link>
             </>
