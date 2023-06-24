@@ -40,7 +40,7 @@ PopcornPeek is designed to be user-friendly and engaging. Here are quick steps o
 
 
 ## Credits
-google, stackoverflow, bing, https://www.freepik.com/free-photo/3d-cartoon-lumberjack-character_38990025.htm#query=spying%203d&position=20&from_view=search&track=ais , https://webartdevelopers.com/blog/
+google, stackoverflow, bing, https://www.freepik.com/free-photo/3d-cartoon-lumberjack-character_38990025.htm#query=spying%203d&position=20&from_view=search&track=ais , https://webartdevelopers.com/blog/ , https://codepen.io/trending , https://uiverse.io/
 
 ## License
 
