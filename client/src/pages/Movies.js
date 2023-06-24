@@ -60,13 +60,14 @@ const Movies = () => {
             <p>
               <img className='' src={filterlist}></img>
             </p>
-            <Form.Control className='sort' as="select" value={filter} onChange={handleFilterChange}>
+            <Form.Control className='sort mt-5' as="select" value={filter} onChange={handleFilterChange}>
               <option value="popular">popular</option>
               <option value="top_rated">Top Rated</option>
               <option value="now_playing">Now Playing</option>
               <option value="upcoming">Up Coming</option>
             </Form.Control>
           </div>
+          <h1 className='text-center'>Movies</h1>
           <Row xs={1} md={4} className="g-5 m-4">
             {contents.map((content) => (
               <Col key={content.id}>

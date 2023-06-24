@@ -7,7 +7,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 
 import Auth from '../utils/auth';
-import helper from '../styles/images/helper.svg'
+import helper from '../styles/images/chat.svg'
 function App() {
   //   const [generatedText, setGeneratedText] = useState('');
   const [showName, setShowName] = useState('');
@@ -35,9 +35,10 @@ function App() {
 
     try {
       setloading(true);
+      const historyPrompt = conversationHistory.map(conv => conv.generatedText).join(' ');
 
       const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-        prompt: `Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. answer the following question in a proffesional way and try to repeat my name in your response. ${showName} `,
+        prompt: `${historyPrompt} Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. Please answer the following question in a professional way and try to repeat my name in your response. ${showName} `,
         max_tokens: 400,
         n: 1,
         stop: null,
@@ -164,7 +165,9 @@ function App() {
             </div>
           )}
           {!showChat && (
-            <a className='chat-container' id='chat' onClick={handleShowChat}><img className='helpericon' src={helper}></img></a>
+            <a className='chat-container' id='chat' onClick={handleShowChat}>
+              <img className='helpericon' src={helper}></img>
+              </a>
 
           )}</div>
       ) : (<div></div>)

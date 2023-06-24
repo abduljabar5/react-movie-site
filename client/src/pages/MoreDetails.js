@@ -99,9 +99,9 @@ const MoreDetails = () => {
 
         fetchData();
     }, [id]);
-    // useEffect(() => {
-    //     console.log("show:", show);
-    // }, [show])
+    useEffect(() => {
+        console.log("show:", show);
+    }, [show])
     const handleSaveShow = async () => {
         if (heartFilled) {
             setNotification({
@@ -143,7 +143,15 @@ const MoreDetails = () => {
 
     };
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div><div id="load">
+  <div>G</div>
+  <div>N</div>
+  <div>I</div>
+  <div>D</div>
+  <div>A</div>
+  <div>O</div>
+  <div>L</div>
+</div></div>;
     }
     const percentage = show.show.vote_average;
     // Define the style
@@ -162,7 +170,15 @@ const MoreDetails = () => {
     return (
         <div>
             {isLoading ? (
-                <p>Loading...</p>
+                <p><div id="load">
+  <div>G</div>
+  <div>N</div>
+  <div>I</div>
+  <div>D</div>
+  <div>A</div>
+  <div>O</div>
+  <div>L</div>
+</div></p>
             ) : (
                 <div>
                     <div>

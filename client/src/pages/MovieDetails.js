@@ -51,6 +51,8 @@ const MoreDetails = () => {
     }, [loading, data, id]);
 
     useEffect(() => {
+        setIsLoading(true);
+
         const fetchData = async () => {
             const db = await setupDB();
 
@@ -86,9 +88,9 @@ const MoreDetails = () => {
 
         fetchData();
     }, [id]);
-    // useEffect(() => {
-    //     console.log('movie:', movie);
-    // }, [movie]);
+    useEffect(() => {
+        console.log('movie:', movie);
+    }, [movie]);
     const handleSaveMovie = async () => {
         if (heartFilled) {
             return;
@@ -269,7 +271,7 @@ const MoreDetails = () => {
                     <section id='trailers'>
                         <h1 className='title my-4'>Trailers</h1>
                         <Carousel className='carousel-btn'>
-                            {movie.videos.map((video) =>
+                            {movie.videos.slice(0,10).map((video) =>
                                 <Carousel.Item interval={16000}>
                                     <div key={video.id} className='video-center'>
                                         {video.key && (

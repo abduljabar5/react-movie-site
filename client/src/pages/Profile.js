@@ -210,7 +210,15 @@ const Profile = () => {
   }
 
   if (loading || isLoading) {
-    return <div>Loading...</div>;
+    return <div><div id="load">
+  <div>G</div>
+  <div>N</div>
+  <div>I</div>
+  <div>D</div>
+  <div>A</div>
+  <div>O</div>
+  <div>L</div>
+</div></div>;
   }
 
   if (!user?.username) {
@@ -308,8 +316,11 @@ const Profile = () => {
 
                     </li>
                     <li className="tag__item">
-                      {card.show ? (card.show.networks[0].name) : (card.reviewsAndEpisodeGroups.episodeGroups.networks[0].name)}
+                      <a href={card.show ? (card.show.homepage) : (card.reviewsAndEpisodeGroups.episodeGroups.homepage)} target='_blank'>
+                         {card.show ? (card.show.networks[0].name) : (card.reviewsAndEpisodeGroups.episodeGroups.networks[0].name)}
                    <FontAwesomeIcon icon={faArrowRight} className="mx-2" />
+                      </a>
+                     
                     </li>
                    
                   </ul>
@@ -403,12 +414,20 @@ const Profile = () => {
       </Col>
 
       {isLoading ? (
-        <Col>loading...</Col>
+        <Col><div id="load">
+  <div>G</div>
+  <div>N</div>
+  <div>I</div>
+  <div>D</div>
+  <div>A</div>
+  <div>O</div>
+  <div>L</div>
+</div></Col>
       ) : (
         <Col>
           <Dropdown onSelect={(value) => setView(value)}>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
-              Choose View
+              {view}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>

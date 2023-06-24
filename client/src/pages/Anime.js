@@ -90,6 +90,7 @@ const Series = () => {
                         <option value="upcoming">upcoming</option>
                         <option value="favorite">favorite</option>
                     </Form.Control>
+                    <h1 className='text-center'>Anime</h1>
                     <Row xs={1} md={4} className="g-5 m-4">
                         {contents.map((content, index) => (
                             <Col key={`${content.mal_id}-${index}`}>

@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 import { useParams } from 'react-router-dom';
 import 'react-circular-progressbar/dist/styles.css';
+import { Link } from 'react-router-dom';
 import { openDB } from 'idb';
 import { Card } from 'react-bootstrap';
 const Recommend = () => {
@@ -97,6 +98,7 @@ const Recommend = () => {
             <div style={{ display: 'flex', overflowX: 'auto', padding: '1rem', scrollSnapType:'x mandatory' , margin:' 0 18px'}}>
                 {content && content.map((show, index) => (
                     <div className="product__item mx-auto" style={{scrollSnapAlign:'strat'}} >
+                        <Link to={`/show?id=${show.additionalData?.similars?.[0]?.id || show.imdb?.similars?.[0]?.id}`}>
                         <Card className='contentcard product__item__pic set-bg' key={index} style={{width:'285px'}} >
                         {show.additionalData ? (
                             <Card.Img className='cardimage' src={show.additionalData.similars[0].image} alt="Card image" style={{ height: '30rem', objectFit: 'cover' }}/>
@@ -109,7 +111,7 @@ const Recommend = () => {
                                     <Card.Text>{show.additionalData?.similars?.[0]?.imDbRating || show.imdb?.similars?.[0]?.imDbRating}</Card.Text>
                                 </div>
                             </Card.ImgOverlay>
-                        </Card>
+                        </Card></Link>
                     </div>
                 ))}
             </div>}

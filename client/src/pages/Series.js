@@ -124,6 +124,7 @@ const Series = () => {
                             <div class="slider"></div>
                         </label>
                     </div>
+                    <h1 className='text-center'>TV-Shows</h1>
                     <Row xs={1} md={4} className="g-5 m-4">
                         {searchUs
                             ? contents2.slice(0, displayLimit).map((content) => (
@@ -163,7 +164,7 @@ const Series = () => {
                     </Row>
 
 
-                    <Button onClick={handleLoadMore}>Load more</Button> {/* add a button at the end */}
+                    <Button onClick={handleLoadMore}>Load more</Button> 
                 </>
             )}
         </div>
