@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import Spinner from 'react-bootstrap/Spinner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 import { QUERY_USER, QUERY_ME } from '../utils/queries';
 
@@ -108,8 +110,7 @@ function App() {
                       <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image"></img>
 
                       <div class="direct-chat-text">
-                        For what reason would it be advisable for me to think about business content?
-                      </div>
+                      Hello, I'm FilmBot, an AI here to answer your questions on movies, TV shows, and anime. How can i help?                      </div>
                       {conversationHistory.map((conversation) => (
                         <><div class="direct-chat-msg right">
                           <div class="direct-chat-info clearfix">
@@ -152,7 +153,7 @@ function App() {
                         <div className="input-group">
                           <input className='form-control' type="text" value={showName} onChange={(e) => setShowName(e.target.value)} />
                           <span className="input-group-btn">
-                            <button type="submit" className="btn btn-primary">Send</button>
+                            <button type="submit" className="btn btn-primary"> Send <FontAwesomeIcon icon={faPaperPlane} /></button>
                           </span>
                         </div>
                       </form>
