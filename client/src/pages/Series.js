@@ -36,7 +36,7 @@ const Series = () => {
                 if (savedDataIMDb && currentTime - savedDataIMDb.time < oneDayInMilliseconds) {
                     setContent2(prevContents => [...prevContents, ...savedDataIMDb.contents]);
                 } else {
-                    res = await axios.get(`https://imdb-api.com/en/API/MostPopularTVs/k_ulmw7xr8`);
+                    res = await axios.get(`https://imdb-api.com/en/API/MostPopularTVs/k_mmsg1u7d`);
                     const newData = {
                         time: currentTime,
                         contents: res.data.items,
