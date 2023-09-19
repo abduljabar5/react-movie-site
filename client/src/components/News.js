@@ -74,7 +74,7 @@ const News = () => {
     //   setModalShow(true);
     // };
     return (
-        <section className='news-block-container' id='news-block'>
+        <section className='news-block-container m-4 rounded-4' id='news-block'>
              <h1  data-aos="fade-up"
   data-aos-delay="700" style={{margin:'5px 25px'}}>Trending
   <div className='header-underline'></div>

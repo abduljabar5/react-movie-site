@@ -239,10 +239,10 @@ const MoreDetails = () => {
 
                                         </div>
                                         <div className='mx-auto'>
-                                            <h1 className="text-white mx-auto mt-5 mb-5">{additionalData.title}</h1>
+                                            <h1 className="text-white mx-auto my-5">{additionalData.title}</h1>
                                             <div className='w-25 ratingcontainer'>
                                                 <img src={imdblogo}></img>
-                                                <p>{additionalData.imDbRating}</p>
+                                                <h5 className='fs-1 align-baseline mx-4'>{additionalData.imDbRating}</h5>
                                                 <div>
                                                     {/* <CircularProgressbar value={percentage} maxValue={10} text={`${percentage}%`} /> */}
                                                 </div>
@@ -351,7 +351,7 @@ const MoreDetails = () => {
                     <section>
                         <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
                             <div style={{ display: 'flex' }}>
-                                <h1 className='position-absolute' style={{ margin: '20px 63px', color: 'white' }}>Cast</h1>
+                                <h1 className='position-absolute' style={{ margin: '20px 63px', color: 'white' }}>Cast:</h1>
                                 <div class="cast-container mx-auto" style={{ width: "87vw" }}>
                                     {additionalData.actorList.map((item, index) => (
                                         <div class="cast-item">
@@ -379,7 +379,7 @@ const MoreDetails = () => {
                     </section>
                     <section id='trailers'>
                         <Carousel>
-                            <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers</h1>
+                            <h1 style={{ margin: '20px 63px', color: 'white' }}>Trailers:</h1>
 
                             {reviewsAndEpisodeGroups.trailers.map((video) =>
 

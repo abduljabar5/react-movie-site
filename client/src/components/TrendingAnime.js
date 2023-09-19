@@ -25,9 +25,9 @@ const Trendinganime = () => {
         trending();
     }, []);
 
-    // useEffect(() => {
-    //     console.log('hi', animes);
-    // }, [animes]);
+    useEffect(() => {
+        console.log('hi', animes);
+    }, [animes]);
 
     return (
         <aside className='anime-container'>
@@ -56,11 +56,14 @@ const Trendinganime = () => {
                         <div className='img-container'>
                             {animes.map((animee) => {
                                 const name = animee.attributes.canonicalTitle;
+                                const imageUrl = animee.attributes.coverImage && animee.attributes.coverImage.original
+                                                ? animee.attributes.coverImage.original
+                                                : 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'
                                 return (
-                                    <Link to={`/anime?name=${name}`}>
-                                    <div class="filter__gallery" key={animee.id}>
+                                    <Link to={`/anime?name=${name}`}key={animee.id}>
+                                    <div class="filter__gallery" >
                                         <div class="product__sidebar__view__item set-bg"
-                                            style={{ backgroundImage: `url(${animee.attributes.coverImage.original})` }}>
+                                            style={{ backgroundImage: `url(${imageUrl})` }}>
                                             <div class="ep">{animee.attributes.totalLength}</div>
                                             <div class="view"><i class="fa fa-eye"></i> {animee.id}</div>
                                             <h5><a href="#">{animee.attributes.titles.en === undefined ? animee.attributes.titles.en_jp : animee.attributes.titles.en}</a></h5>

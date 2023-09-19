@@ -190,7 +190,7 @@ const MoreDetails = () => {
                             />
                         )}
                     </div>
-                    <header className="" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${show.show.backdrop_path})` }}>
+                    <header className="masthead" style={{ ...style, backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 75%, #000 100%), url(https://image.tmdb.org/t/p/original/${show.show.backdrop_path})` }}>
                         <div className="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                             <div className="d-flex justify-content-center">
                                 <div className="text-center">

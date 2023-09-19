@@ -17,7 +17,7 @@ import MovieNews from '../components/Movie-tv-news';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Recommend from '../components/Recommend';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
+import { Loader } from '../components/Loader';
 import youtube from '../styles/images/youtubetv.png'
 import axios from 'axios';
 const Movies = () => {

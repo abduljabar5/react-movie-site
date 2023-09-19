@@ -9,6 +9,7 @@ import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
 
 import './styles/index.css';
+import './styles/loader.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

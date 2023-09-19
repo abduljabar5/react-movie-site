@@ -134,10 +134,10 @@ const updatedSavedAnimes = {
                     <div class="view"><i class="fa fa-eye"></i> 9141</div> */}
                             </div>
                         </div>
-                        <div class="col-lg-9">
+                        <div class="col-lg-9 masthead">
                             <div class="anime__details__text">
                                 <div class="anime__details__title">
-                                    <h3>{anime.data.attributes.titles.en}</h3>
+                                    <h1>{anime.data.attributes.titles.en}</h1>
                                     <span>{anime.data.attributes.titles.ja_jp}, {anime.data.attributes.titles.en_jp}</span>
                                 </div>
                                 <div class="anime__details__rating">

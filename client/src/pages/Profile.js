@@ -406,10 +406,10 @@ const Profile = () => {
 
   return (
     <Container>
-    <Row className="justify-content-md-center mb-3">
-      <Col xs={12} md={10} className="bg-dark text-light p-3 mb-5">
-        <h2>
-          Viewing {userParam ? `${user.username}'s` : 'your'} profile.
+    <Row className="justify-content-md-center mb-3 pill">
+      <Col xs={12} md={10} className="bg-dark text-light p-3 mb-5 rounded-4">
+        <h2 className='text-center'>
+          Viewing your profile
         </h2>
       </Col>
 
