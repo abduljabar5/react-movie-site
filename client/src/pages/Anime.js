@@ -63,21 +63,6 @@ const Series = () => {
     };
     return (
         <div>
-            {isLoading ? (
-                <Card.Body>
-                    <Placeholder as={Card.Title} animation="glow">
-                        <Placeholder xs={6} />
-                    </Placeholder>
-                    <Placeholder as={Card.Text} animation="glow">
-                        <Placeholder xs={7} />
-                        <Placeholder xs={4} />
-                        <Placeholder xs={4} />
-                        <Placeholder xs={6} />
-                        <Placeholder xs={8} />
-                    </Placeholder>
-                    <Placeholder.Button variant="primary" xs={6} />
-                </Card.Body>
-            ) : (
                 <>
                     <Form.Control
                         className='sort ms-auto m-4'
@@ -91,6 +76,20 @@ const Series = () => {
                         <option value="favorite">favorite</option>
                     </Form.Control>
                     <h1 className='text-center'>Anime</h1>
+                    {isLoading ? (
+                <div className="container mt-5">
+                <div className="row">
+                    {Array(4).fill(null).map((_, idx) => (
+                        <div key={idx} className="col-md-3 mb-4">
+                            <div className="card border-0 bg-dark">
+                                <img src="https://www.oncorp.com/oncorphome/Images/loading.gif" alt="Placeholder" className="card-img-top mx-auto" style={{width: "300px", height:"440px", objectFit:"cover"}}/>
+                                
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            ) : (
                     <Row xs={1} md={4} className="g-5 m-4">
                         {contents.map((content, index) => (
                             <Col key={`${content.mal_id}-${index}`}>
@@ -113,7 +112,7 @@ const Series = () => {
                                 </Link>
                             </Col>
                         ))}
-                    </Row>
+                    </Row> )}
                     {loadmore ? (<div class="anime1-wrapper">
                         <div class="anime1-circle"></div>
                         <div class="anime1-circle"></div>
@@ -131,7 +130,7 @@ const Series = () => {
                     )}
 
                 </>
-            )}
+           
         </div>
     );
 };

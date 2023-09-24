@@ -44,17 +44,6 @@ const Movies = () => {
   }
   return (
     <div>
-      {isLoading ? (
-        <Card.Body>
-          <Placeholder as={Card.Title} animation="glow">
-            <Placeholder xs={6} />
-          </Placeholder>
-          <Placeholder as={Card.Text} animation="glow">
-            <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} /> <Placeholder xs={6} /> <Placeholder xs={8} />
-          </Placeholder>
-          <Placeholder.Button variant="primary" xs={6} />
-        </Card.Body>
-      ) : (
         <>
           <div className='sort-container'>
             <p>
@@ -68,6 +57,20 @@ const Movies = () => {
             </Form.Control>
           </div>
           <h1 className='text-center'>Movies</h1>
+          {isLoading ? (
+        <div className="container mt-5">
+        <div className="row">
+            {Array(4).fill(null).map((_, idx) => (
+                <div key={idx} className="col-md-3 mb-4">
+                    <div className="card border-0 bg-dark">
+                        <img src="https://www.oncorp.com/oncorphome/Images/loading.gif" alt="Placeholder" className="card-img-top mx-auto" style={{width: "300px", height:"440px", objectFit:"cover"}}/>
+                        
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+      ) : (
           <Row xs={1} md={4} className="g-5 m-4">
             {contents.map((content) => (
               <Col key={content.id}>
@@ -86,9 +89,10 @@ const Movies = () => {
               </Col>
             ))}
           </Row>
-          <Button onClick={handleLoadMore}>Load more</Button>
+          )}
+          <Button className='p-2 w-50 mx-5 bg-secondary border-0' onClick={handleLoadMore}>Load more</Button>
         </>
-      )}
+      
     </div>
   );
 };

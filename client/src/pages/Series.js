@@ -94,81 +94,86 @@ const Series = () => {
 
     return (
         <div>
-            {isLoading ? (
-                <Card.Body>
-                    <Placeholder as={Card.Title} animation="glow">
-                        <Placeholder xs={6} />
-                    </Placeholder>
-                    <Placeholder as={Card.Text} animation="glow">
-                        <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} /> <Placeholder xs={6} /> <Placeholder xs={8} />
-                    </Placeholder>
-                    <Placeholder.Button variant="primary" xs={6} />
-                </Card.Body>
-            ) : (
+        <div className='sort-container'>
+            {!searchUs ? (
                 <>
-                    <div className='sort-container'>
-
-                        {!searchUs ? (
-                            <><p>
-                                <img className='' src={filterlist}></img>
-                            </p><Form.Control className='sort mt-5' as="select" value={filter} onChange={handleFilterChange}>
-                                    <option value="popular">popular</option>
-                                    <option value="top_rated">Top Rated</option>
-                                    <option value="airing_today">Airing Today</option>
-                                    <option value="on_the_air">On The Air</option>
-                                </Form.Control></>
-                        ) : (<div></div>)}
-
-                        <label class="switch mx-5 mt-5"> Search All
-                            <input type="checkbox" class="checkbox" onClick={() => setSearchUS(searchUs === false ? true : false)}></input>
-                            <div class="slider"></div>
-                        </label>
-                    </div>
-                    <h1 className='text-center'>TV-Shows</h1>
-                    <Row xs={1} md={4} className="g-5 m-4">
-                        {searchUs
-                            ? contents2.slice(0, displayLimit).map((content) => (
-                                <Col key={content.id}>
-                                    <Link to={`/show?id=${content.id}`}>
-                                        <Card className='contentcard'>
-                                            <Card.Img className='cardimage' src={content.image} alt="Card image" />
-                                            <Card.ImgOverlay >
-                                                <img className='playbtn' src={play}></img>
-                                                <div className='imageoverlay'>
-                                                    <Card.Title>{content.fullTitle}</Card.Title>
-                                                    <Card.Text>{content.year}</Card.Text>
-                                                </div>
-                                                <div className={content.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>{content.rankUpDown}</div>
-                                                <div className="view">{content.imDbRating}</div>
-                                            </Card.ImgOverlay>
-                                        </Card>
-                                    </Link>
-                                </Col>
-                            ))
-                            : contents.map((content) => (
-                                <Col key={content.id}>
-                                    <Link to={`/details?id=${content.id}`}>
-                                        <Card className='contentcard'>
-                                            <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w500${content.poster_path}`} alt="Card image" />
-                                            <Card.ImgOverlay >
-                                                <img className='playbtn' src={play}></img>
-                                                <div className='imageoverlay'>
-                                                    <Card.Title>{content.original_name}</Card.Title>
-                                                    <Card.Text>{content.first_air_date}</Card.Text>
-                                                </div>
-                                            </Card.ImgOverlay>
-                                        </Card>
-                                    </Link>
-                                </Col>
-                            ))}
-                    </Row>
-
-
-                    <Button onClick={handleLoadMore}>Load more</Button> 
+                    <p>
+                        <img className='' src={filterlist} alt="Filter List" />
+                    </p>
+                    <Form.Control className='sort mt-5' as="select" value={filter} onChange={handleFilterChange}>
+                        <option value="popular">popular</option>
+                        <option value="top_rated">Top Rated</option>
+                        <option value="airing_today">Airing Today</option>
+                        <option value="on_the_air">On The Air</option>
+                    </Form.Control>
                 </>
-            )}
+            ) : null}
+            <label className="switch mx-5 mt-5"> Search All
+                <input type="checkbox" className="checkbox" onClick={() => setSearchUS(!searchUs)} />
+                <div className="slider"></div>
+            </label>
         </div>
-    );
+        <h1 className='text-center'>TV-Shows</h1>
+        {isLoading ? (
+            <div className="container mt-5">
+                <div className="row">
+                    {Array(4).fill(null).map((_, idx) => (
+                        <div key={idx} className="col-md-3 mb-4">
+                            <div className="card border-0 bg-dark">
+                                <img src="https://www.oncorp.com/oncorphome/Images/loading.gif" alt="Placeholder" className="card-img-top mx-auto" style={{width: "300px", height:"440px", objectFit:"cover"}}/>
+                                
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        ) : (
+            <Row xs={1} md={4} className="g-5 m-4">
+                {searchUs
+                    ? contents2.slice(0, displayLimit).map((content) => (
+                        <Col key={content.id}>
+    <Link to={`/show?id=${content.id}`}>
+        <Card className='contentcard'>
+            <Card.Img className='cardimage' src={content.image} alt="Card image" />
+            <Card.ImgOverlay>
+                <img className='playbtn' src={play} alt="Play Button" />
+                <div className='imageoverlay'>
+                    <Card.Title>{content.fullTitle}</Card.Title>
+                    <Card.Text>{content.year}</Card.Text>
+                </div>
+                <div className={content.rankUpDown.includes('+') ? ('comment bg-success') : ('comment bg-danger')}>
+                    {content.rankUpDown}
+                </div>
+                <div className="view">{content.imDbRating}</div>
+            </Card.ImgOverlay>
+        </Card>
+    </Link>
+</Col>
+
+                    ))
+                    : contents.map((content) => (
+                        <Col key={content.id}>
+                        <Link to={`/details?id=${content.id}`}>
+                            <Card className='contentcard'>
+                                <Card.Img className='cardimage' src={`https://image.tmdb.org/t/p/w500${content.poster_path}`} alt="Card image" />
+                                <Card.ImgOverlay>
+                                    <img className='playbtn' src={play} alt="Play Button" />
+                                    <div className='imageoverlay'>
+                                        <Card.Title>{content.original_name}</Card.Title>
+                                        <Card.Text>{content.first_air_date}</Card.Text>
+                                    </div>
+                                </Card.ImgOverlay>
+                            </Card>
+                        </Link>
+                    </Col>
+                    
+                    ))}
+            </Row>
+        )}
+        <Button className='p-2 w-50 mx-5 bg-secondary border-0' onClick={handleLoadMore}>Load more</Button>
+    </div>
+    
+    )
 };
 
 export default Series;

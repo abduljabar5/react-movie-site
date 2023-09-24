@@ -61,7 +61,24 @@ const MovieNews = () => {
           </div>
 
           {isLoading ? (
-            <p>Loading...</p>
+            <div class="">
+          <div class="card bg-dark mx-3 me-4" style={{marginTop: "74px"}} aria-hidden="true">
+            <img src="https://www.lake-link.com/images/lakeTiles/placeHolder.jpg" class="card-img-top" alt="..."></img>
+            <div class="card-body">
+              <h5 class="card-title placeholder-glow">
+                <span class="placeholder col-6"></span>
+              </h5>
+              <p class="card-text placeholder-glow">
+                <span class="placeholder col-7"></span>
+                <span class="placeholder col-4"></span>
+                <span class="placeholder col-4"></span>
+                <span class="placeholder col-6"></span>
+                <span class="placeholder col-8"></span>
+              </p>
+              <a class="btn btn-primary disabled placeholder col-6" aria-disabled="true"></a>
+            </div>
+          </div>
+          </div>
           ) : (
             <div className="img-container2">
               {news.map((network, index) => {
