@@ -40,7 +40,7 @@ function App() {
       const historyPrompt = conversationHistory.map(conv => conv.generatedText).join(' ');
 
       const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-        prompt: `${historyPrompt} Hi, my name is ${Auth.getProfile().data.username}. I have some questions about movies, TV shows, or anime. Please answer the following question in a professional way and try to repeat my name in your response. ${showName} `,
+        prompt: `${historyPrompt} You are a helpful and knowledgeable AI, similar to Jarvis from Iron Man. Address the user with respect and provide informative and concise answers. The user's name is ${Auth.getProfile().data.username}.\n\n: ${showName} ?`,
         max_tokens: 400,
         n: 1,
         stop: null,
@@ -48,7 +48,7 @@ function App() {
         user: "Jake",
       }, {
         headers: {
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY2}`,
           'Content-Type': 'application/json',
         },
       });
